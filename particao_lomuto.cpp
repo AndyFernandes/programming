@@ -34,18 +34,46 @@ int* particao_lomuto(int *inicio, int *pivo, int *fim){
     return m;
 }
 
-int main(){
-    int tamanho = 7;
-    int vetor[] = {7,5,4,3,1,2,0};
+int QuickSort(int *inicio, int *pivo, int *fim){
+    // 1. particiono o vetor de acordo com o pivo
+    // 2. pra cada metade eu ordeno recursivamento
+
     
-    int *new_pivo = particao_lomuto(vetor, vetor + 4, vetor + tamanho);
-    cout << "PIVO:" << *new_pivo << "\n";
-    
-    int *v = vetor;
-    cout <<"-------------\n";
-    for(int *i = v; i != v + tamanho; i++){
-        cout << *i << "-";
+    if(inicio >= fim){
+        cout << "a";
+        return 0;
+    } else {
+        // fazer as verificações detalhdas
+        int *pivo = particao_lomuto(inicio, fim, fim);
+        int esquerda = QuickSort(inicio, pivo, pivo);
+        int direita = QuickSort(pivo+1, pivo+1, fim);
+
+        int *v = inicio;
+        cout <<"-------------\n";
+        for(int *i = v; i != fim; i++){
+            cout << *i << "-";
+        }
     }
+}
+
+
+
+// }
+
+int main(){
+    int tamanho = 9;
+    int vetor[] = {7,11, 12,5,4,3,1,2,0};
+    
+    // int *new_pivo = particao_lomuto(vetor, vetor + 3, vetor + tamanho);
+    // cout << "PIVO:" << *new_pivo << "\n";
+    
+    int b = QuickSort(vetor, vetor + 4, vetor + tamanho);
+
+    // int *v = vetor;
+    // cout <<"-------------\n";
+    // for(int *i = v; i != v + tamanho; i++){
+    //     cout << *i << "-";
+    // }
 
     return 0;
 }
