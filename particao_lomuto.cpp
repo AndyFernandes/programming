@@ -5,39 +5,47 @@ using namespace std;
 
 
 int* particao_lomuto(int *inicio, int *pivo, int *fim){
-    int *m = inicio, *aux = inicio, *aux2 = inicio;
-    int cont_m, cont_j;
-
-    // 1a parte: troca das posições inciais <-> pivô
+    // 1A PARTE: 
     // j inicializa na posição inicio + 1, m inicializa na posição inicio
-    inicio = pivo;
-    pivo = aux;
+    int *m = inicio, *j = inicio + 1, aux = *inicio, *v = inicio;
+    // troca das posições inicio <-> pivo
+    *inicio = *pivo;
+    *pivo = aux;
 
-    // 2a parte: A partir da posição inicio + 1, que é o j
-    // eu comparo se o elemento na posição j é <= que o pivo (que se encontra na posicao inicio)
-    // Se for <=, troca o maior numero do m (da partição dos menores) pelo o da posição atualmente apontada
-    // e incremento +1
-    // AJEITAR ESSA PARTE
-    for(int *j = aux + 1; j != fim+1; ++j){
-       if (*j <= *inicio){
-           cout << "J: " << *j << " | inicio: " << *inicio << "\n";
-           aux2 = m;
-           m = j;
-           j = m;
-           m++;
+    // 2A PARTE: 
+    // a partir da posição inicio + 1(j) compara se o elemento na posição j <= pivo (está na posicao inicio)
+    // se for <=, troca o maior numero do m (da partição dos menores) pelo o da posição atualmente apontada
+    // e incremento +1 em m e j
+    for(;j != fim; ++j){
+       if (*j < *inicio){
+            m++;
+            aux = *j;
+            *j = *m;
+            *m = aux; 
        }
     }
 
-    // 3a parte: no final eu destroco a posicao do inicio <-> pivo
-    aux2 = inicio;
-    inicio = pivo;
-    pivo = aux2;
+    // 3A PARTE: 
+    // no final eu destroca a posicao do inicio <-> pivo(que é agora o m)
+    aux = *inicio;
+    *inicio = *m;
+    *m = aux;
 
-    return pivo;
+    return m;
 }
 
 int main(){
-    int vetor[6] = {8,8,4,8,6,7};
-    int *new_pivo = particao_lomuto(vetor, vetor + 3, vetor + 5);
+    int tamanho = 7;
+    int vetor[] = {7,5,4,3,1,2,0};
+    
+    int *new_pivo = particao_lomuto(vetor, vetor + 4, vetor + tamanho);
+    cout << "PIVO:" << *new_pivo << "\n";
+    
+    int *v = vetor;
+    cout <<"-------------\n";
+    for(int *i = v; i != v + tamanho; i++){
+        cout << *i << "-";
+    }
+
     return 0;
 }
