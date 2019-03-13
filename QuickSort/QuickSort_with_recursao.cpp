@@ -20,7 +20,7 @@ int* particao_lomuto(int *inicio, int *pivo, int *fim){
         3A PARTE:   No final eu destroca a posicao do inicio <-> pivo (que é agora o m).
     */
    
-    int *m = inicio, *j = inicio + 1, aux = *inicio, *v = inicio;
+    int *m = inicio, *j = inicio + 1, aux = *inicio;
     // troca das posições inicio <-> pivo
     *inicio = *pivo;
     *pivo = aux;
@@ -59,10 +59,6 @@ void QuickSort(int *inicio, int *pivo, int *fim){
             QuickSort(pivo+1, fim, fim); // chamada a direita
     }
 }
-
-// int QuickSort_cauda(int *inicio, int *pivo, int *fim){
-
-// }
 
 int main(){
     int tamanho = 9;

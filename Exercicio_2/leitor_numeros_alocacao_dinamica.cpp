@@ -3,6 +3,7 @@
 #include <stdio.h>
 using namespace std;
 
+// DOING
 // exe1
 // void exercicio1(){
 //     int tam = 1;
