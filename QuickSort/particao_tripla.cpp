@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
+#include<tuple> // for tuple 
 using namespace std;
 
 void print_vector(int *inicio, int *fim){
@@ -17,17 +18,19 @@ void trocar(int* posicao1, int *posicao2){
 }
 
 //DOING
-void particao_tripla(int *inicio, int *pivo, int *fim, int *fim_menores, int *inicio_maiores){
+tuple<int*, int*> particao_tripla(int *inicio, int *pivo, int *fim){
     /*
         1A PARTE:   J inicializa na posição inicio + 1, m&i inicializa na posição inicio.
         2A PARTE:   A partir da posição inicio + 1(j) compara:
                     j < pivo:  incrementa m, guarda o valor de m, m <- j, incrementa i, j <- i, i <- valor de m guardado
-                    j = pivo: incrementa i, troca i com j
+                    j = pivo: incrementa i
                     j > pivo: incrementa j
         3A PARTE:   No final eu destroca a posicao do inicio <-> pivo (que é agora o m).
     */
     int *m = inicio, *i = inicio, *j = inicio + 1, aux;
     // troca das posições inicio <-> pivo
+    //cout << "\n";
+    //cout << (int)(pivo - inicio)/2;
     trocar(inicio, pivo);
 
     for(;j != fim; ++j){
@@ -42,22 +45,28 @@ void particao_tripla(int *inicio, int *pivo, int *fim, int *fim_menores, int *in
        } else if(*j == *inicio ){
             i++;
             trocar(i, j); 
+       } else {
+
        }
     }
     
+    trocar(m, inicio);
     // duvida se ele aponta pra posicao mesmo ou uma depois
-    fim_menores = m;
-    inicio_maiores = i + 1;
+    return make_tuple(m-1, i+1);   
 }
 
 int main(){
-    int tamanho = 9, *inicio, *fim;
-    int vetor[] = {7, 11, 12, 5, 5, 3, 1, 2, 0};
-
-    cout << "\nPIVO: " << *(vetor + 3);
-    particao_tripla(vetor, vetor + 3, vetor + tamanho, inicio, fim);
+    int tamanho = 9;
     
-    cout << "\nFIM MENORES:\t" << *inicio << "\t|\tINICIO MAIORES:\t" << *fim << "\n";
+    int vetor[] = {7, 11, 12, 5, 5, 3, 1, 2, 0};
+    //int *menores = vetor, *iguais = vetor;
+
+
+    cout << "\nPIVO: " << *(vetor + 3) << "\n";
+    // particao_tripla(vetor, vetor + 3, vetor + tamanho, menores, iguais);
+    tuple <int*, int*> ponteiros = particao_tripla(vetor, vetor + 3, vetor + tamanho);
+                                  
+    cout << "\nFIM MENORES:\t" << *get<0>(ponteiros) << "\t|\tINICIO MAIORES:\t" << *get<1>(ponteiros) << "\n";
     print_vector(vetor, vetor + tamanho);
-    return 0;
+    return 0;                   
 }

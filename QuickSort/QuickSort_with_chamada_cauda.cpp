@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
+#include <cmath>
 using namespace std;
 
 void print_vector(int *inicio, int *fim){
