@@ -17,7 +17,6 @@ void trocar(int* posicao1, int *posicao2){
   *posicao2 = aux;
 }
 
-//DOING
 tuple<int*, int*> particao_tripla(int *inicio, int *pivo, int *fim){
     /*
         1A PARTE:   J inicializa na posição inicio + 1, m&i inicializa na posição inicio.
@@ -29,8 +28,6 @@ tuple<int*, int*> particao_tripla(int *inicio, int *pivo, int *fim){
     */
     int *m = inicio, *i = inicio, *j = inicio + 1, aux;
     // troca das posições inicio <-> pivo
-    //cout << "\n";
-    //cout << (int)(pivo - inicio)/2;
     trocar(inicio, pivo);
 
     for(;j != fim; ++j){

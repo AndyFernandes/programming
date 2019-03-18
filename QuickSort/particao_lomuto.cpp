@@ -41,7 +41,6 @@ int* particao_lomuto(int *inicio, int *pivo, int *fim){
     return m;
 }
 
-
 int main(){
     int tamanho = 9;
     int vetor[] = {7, 11, 12, 5, 4, 3, 1, 2, 0};
