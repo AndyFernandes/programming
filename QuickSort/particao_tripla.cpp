@@ -42,8 +42,6 @@ tuple<int*, int*> particao_tripla(int *inicio, int *pivo, int *fim){
        } else if(*j == *inicio ){
             i++;
             trocar(i, j); 
-       } else {
-
        }
     }
     

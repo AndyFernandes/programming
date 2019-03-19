@@ -59,8 +59,6 @@ tuple<int*, int*> particao_tripla(int *inicio, int *pivo, int *fim){
     */
     int *m = inicio, *i = inicio, *j = inicio + 1, aux;
     // troca das posições inicio <-> pivo
-    //cout << "\n";
-    //cout << (int)(pivo - inicio)/2;
     trocar(inicio, pivo);
 
     for(;j != fim; ++j){
@@ -75,8 +73,6 @@ tuple<int*, int*> particao_tripla(int *inicio, int *pivo, int *fim){
        } else if(*j == *inicio ){
             i++;
             trocar(i, j); 
-       } else {
-
        }
     }
     
@@ -104,27 +100,30 @@ void QuickSort_lomuto(int *inicio, int *pivo, int *fim){
     }
 }
 
-// FALTA TESTAR
+// ta um pouc bugado
 void QuickSort_tripla(int *inicio, int *pivo, int *fim){
-    if(inicio < fim) {
-        tuple <int*, int*> ponteiros = particao_tripla(inicio, pivo, fim);
-        if(pivo > inicio)
+    tuple <int*, int*> ponteiros = particao_tripla(inicio, pivo, fim);
+        //cout << *get<0>(ponteiros) << " | " << *get<1>(ponteiros) << endl;
+    if (inicio < fim){
+        if(get<0>(ponteiros) > inicio)
             QuickSort_tripla(inicio, get<0>(ponteiros), get<0>(ponteiros)); // chamada a esquerda
         
-        if(pivo < fim)
+        if(get<1>(ponteiros) < fim)
             QuickSort_tripla(get<1>(ponteiros), fim, fim); // chamada a direita
     }
 }
 
 int main(){
     int tamanho = 9;
-    int vetor[] = {7, 11, 12, 5, 4, 3, 1, 2, 0};
+    int vetor[] = {7, 0, 12, 5, 5, 3, 1, 2, 8};
+    int *pivo = vetor + 4; 
+    
+    //QuickSort_lomuto(vetor, vetor + 4, vetor + tamanho - 1);
+    //print_vector(vetor, vetor+tamanho);
 
-    QuickSort_lomuto(vetor, vetor + 4, vetor + tamanho - 1);
+    cout << "PIVO: " << *pivo << endl;
     print_vector(vetor, vetor+tamanho);
-
-    QuickSort_tripla(vetor, vetor + 4, vetor + tamanho - 1);
+    QuickSort_tripla(vetor, pivo, vetor + tamanho - 1);
     print_vector(vetor, vetor+tamanho);
-
     return 0;
 }
