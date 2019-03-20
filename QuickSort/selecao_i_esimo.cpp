@@ -46,7 +46,6 @@ void selecao_i_esimo(int *inicio, int *fim, int *i){
         int *pivo = particao_lomuto(inicio, fim, fim);
         if(i < pivo)
             selecao_i_esimo(inicio, pivo-1, i); // chamada a esquerda
-        
         if(i > pivo)
             selecao_i_esimo(pivo+1, fim, i); // chamada a direita
     }
