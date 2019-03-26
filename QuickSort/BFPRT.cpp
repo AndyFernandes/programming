@@ -30,6 +30,11 @@ void BFPRT(int* inicio, int* fim){
   cout << abs(len/5);
 }
 
+// DOING 
+void QuickSort_BFPRT(int *inicio, int *i, int *fim){
+
+}
+
 int main(){
     int tamanho = 18;
     int vetor[] = {7, 0, 12, 5, 5, 3, 1, 2, 8, 4, 7, 0, 12, 5, 5, 3, 1, 2};

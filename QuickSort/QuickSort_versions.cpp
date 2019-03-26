@@ -5,14 +5,20 @@
 using namespace std;
 
 void print_vector(int *inicio, int *fim){
-    cout << "-------------------------------------\n\t\t";
+    cout << "-----------------------------------------------------------------------------------------------\n\t\t";
     for(; inicio != fim; inicio++){
         cout << *inicio << "  ";
     }
-    cout << "\n-------------------------------------\n";
+    cout << "\n---------------------------------------------------------------------------------------------\n";
 }
 
-int* particao_lomuto(int *inicio, int *pivo, int *fim){
+void trocar(int* posicao1, int *posicao2){
+  int aux = *posicao1;
+  *posicao1 = *posicao2;
+  *posicao2 = aux;
+}
+
+int* Particao_Lomuto(int *inicio, int *pivo, int *fim){
     /*
         1A PARTE:   J inicializa na posição inicio + 1, m inicializa na posição inicio.
         2A PARTE:   A partir da posição inicio + 1(j) compara se o elemento na posição j <= pivo (está na posicao inicio)
@@ -26,7 +32,7 @@ int* particao_lomuto(int *inicio, int *pivo, int *fim){
     *inicio = *pivo;
     *pivo = aux;
 
-    for(;j != fim; ++j){
+    for(;j != fim+1; ++j){
        if (*j < *inicio){
             m++;
             aux = *j;
@@ -42,13 +48,7 @@ int* particao_lomuto(int *inicio, int *pivo, int *fim){
     return m;
 }
 
-void trocar(int* posicao1, int *posicao2){
-  int aux = *posicao1;
-  *posicao1 = *posicao2;
-  *posicao2 = aux;
-}
-
-tuple<int*, int*> particao_tripla(int *inicio, int *pivo, int *fim){
+tuple<int*, int*> Particao_Tripla(int *inicio, int *pivo, int *fim){
     /*
         1A PARTE:   J inicializa na posição inicio + 1, m&i inicializa na posição inicio.
         2A PARTE:   A partir da posição inicio + 1(j) compara:
@@ -61,7 +61,7 @@ tuple<int*, int*> particao_tripla(int *inicio, int *pivo, int *fim){
     // troca das posições inicio <-> pivo
     trocar(inicio, pivo);
 
-    for(;j != fim; ++j){
+    for(;j != fim+1; ++j){
        if (*j < *inicio){
             m++;
             aux = *m;
@@ -77,21 +77,10 @@ tuple<int*, int*> particao_tripla(int *inicio, int *pivo, int *fim){
     }
     
     trocar(m, inicio);
-    // duvida se ele aponta pra posicao mesmo ou uma depois
-    return make_tuple(m-1, i+1);   
+    return make_tuple(m, i);   
 }
 
-void selecao_i_esimo(int *inicio, int *fim, int *i){
-    if(inicio < fim) {
-        int *pivo = particao_lomuto(inicio, fim, fim);
-        if(i < pivo)
-            selecao_i_esimo(inicio, pivo-1, i); // chamada a esquerda   
-        if(i > pivo)
-            selecao_i_esimo(pivo+1, fim, i); // chamada a direita
-    }
-}
-
-void QuickSort_lomuto(int *inicio, int *pivo, int *fim){
+void QuickSort_Lomuto(int *inicio, int *pivo, int *fim){
     /*
         1. particiono o vetor de acordo com o pivo
         2. pra cada metade eu ordeno recursivamento
@@ -101,74 +90,36 @@ void QuickSort_lomuto(int *inicio, int *pivo, int *fim){
     */
 
     if(inicio < fim) {
-        int *pivo = particao_lomuto(inicio, fim, fim);
+        int *pivo = Particao_Lomuto(inicio, fim, fim);
         if(pivo > inicio)
-            QuickSort_lomuto(inicio, pivo-1, pivo-1); // chamada a esquerda
+            QuickSort_Lomuto(inicio, pivo-1, pivo-1); // chamada a esquerda
         
         if(pivo < fim)
-            QuickSort_lomuto(pivo+1, fim, fim); // chamada a direita
+            QuickSort_Lomuto(pivo+1, fim, fim); // chamada a direita
     }
 }
 
-// BUGADO
-void QuickSort_tripla(int *inicio, int *pivo, int *fim){
-    tuple <int*, int*> ponteiros = particao_tripla(inicio, pivo, fim);
-        //cout << *get<0>(ponteiros) << " | " << *get<1>(ponteiros) << endl;
-    if (inicio < fim){
-        if(get<0>(ponteiros) > inicio)
-            QuickSort_tripla(inicio, get<0>(ponteiros), get<0>(ponteiros)); // chamada a esquerda
-        
-        if(get<1>(ponteiros) < fim)
-            QuickSort_tripla(get<1>(ponteiros), fim, fim); // chamada a direita
-    }
-}
-
-// DOING
-void QuickSort_cauda_lomuto(int *inicio, int *pivo, int *fim){
+void Selecao_Hoare(int *inicio, int *fim, int *i){
     if(inicio < fim) {
-        int *pivo = particao_lomuto(inicio, fim, fim);
-        if(pivo > inicio)
-             QuickSort_cauda_lomuto(inicio, pivo-1, pivo-1); // chamada a esquerda
-        
-        if(pivo < fim){
-            // AQUI É UM LAÇO P/ METADE DIREITA
-        }      
+        int *pivo = Particao_Lomuto(inicio, fim, fim);
+        if(i < pivo)
+            Selecao_Hoare(inicio, pivo-1, i); // chamada a esquerda
+        if(i > pivo)
+            Selecao_Hoare(pivo+1, fim, i); // chamada a direita
     }
 }
 
-// DOING
-void QuickSort_cauda_tripla(int *inicio, int *pivo, int *fim){
+void QuickSort_Hoare(int *inicio, int *pivo, int *fim){
     if(inicio < fim) {
-        int *pivo = particao_lomuto(inicio, fim, fim);
+        Selecao_Hoare(inicio, fim, pivo);
         if(pivo > inicio)
-             QuickSort_cauda_lomuto(inicio, pivo-1, pivo-1); // chamada a esquerda
+            QuickSort_Hoare(inicio, pivo-1, pivo-1); // chamada a esquerda
         
-        if(pivo < fim){
-            // AQUI É UM LAÇO P/ METADE DIREITA
-        }     
+        if (pivo < fim)
+            QuickSort_Hoare(pivo+1, fim, fim); // chamada a direita
+        
     }
 }
-
-// DOING
-void QuickSort_o_n_with_cauda(int *inicio, int *pivo, int *fim){
-    //cout << "\n";
-    //cout << (int)(pivo - inicio)/2;
-    if(inicio < fim) {
-        int *pivo = particao_lomuto(inicio, fim, fim);
-        if(pivo > inicio)
-             QuickSort_cauda_lomuto(inicio, pivo-1, pivo-1); // chamada a esquerda
-        
-        if(pivo < fim){
-            // AQUI É UM LAÇO P/ METADE DIREITA
-        }  
-    }
-}
-
-// DOING 
-void QuickSort_BFPRT(int *inicio, int *i, int *fim){
-
-}
-
 int main(){
     int tamanho = 9;
     int vetor[] = {7, 0, 12, 5, 5, 3, 1, 2, 8};
@@ -179,7 +130,7 @@ int main(){
 
     cout << "PIVO: " << *pivo << endl;
     print_vector(vetor, vetor+tamanho);
-    QuickSort_tripla(vetor, pivo, vetor + tamanho - 1);
+    //QuickSort_tripla(vetor, pivo, vetor + tamanho - 1);
     print_vector(vetor, vetor+tamanho);
     return 0;
 }

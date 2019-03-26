@@ -4,14 +4,14 @@
 using namespace std;
 
 void print_vector(int *inicio, int *fim){
-    cout << "-----------------------------------------------------------------------------------------------\n\t\t";
+    cout << "-------------------------------------\n\t\t";
     for(; inicio != fim; inicio++){
         cout << *inicio << "  ";
     }
-    cout << "\n---------------------------------------------------------------------------------------------\n";
+    cout << "\n-------------------------------------\n";
 }
 
-int* Particao_Lomuto(int *inicio, int *pivo, int *fim){
+int* particao_lomuto(int *inicio, int *pivo, int *fim){
     /*
         1A PARTE:   J inicializa na posição inicio + 1, m inicializa na posição inicio.
         2A PARTE:   A partir da posição inicio + 1(j) compara se o elemento na posição j <= pivo (está na posicao inicio)
@@ -25,7 +25,7 @@ int* Particao_Lomuto(int *inicio, int *pivo, int *fim){
     *inicio = *pivo;
     *pivo = aux;
 
-    for(;j != fim+1; ++j){
+    for(;j != fim; ++j){
        if (*j < *inicio){
             m++;
             aux = *j;
@@ -41,7 +41,7 @@ int* Particao_Lomuto(int *inicio, int *pivo, int *fim){
     return m;
 }
 
-void QuickSort_Lomuto(int *inicio, int *pivo, int *fim){
+void QuickSort_lomuto(int *inicio, int *pivo, int *fim){
     /*
         1. particiono o vetor de acordo com o pivo
         2. pra cada metade eu ordeno recursivamento
@@ -51,22 +51,21 @@ void QuickSort_Lomuto(int *inicio, int *pivo, int *fim){
     */
 
     if(inicio < fim) {
-        int *pivo = Particao_Lomuto(inicio, fim, fim);
+        int *pivo = particao_lomuto(inicio, fim, fim);
         if(pivo > inicio)
-            QuickSort_Lomuto(inicio, pivo-1, pivo-1); // chamada a esquerda
+            QuickSort_lomuto(inicio, pivo-1, pivo-1); // chamada a esquerda
         
         if(pivo < fim)
-            QuickSort_Lomuto(pivo+1, fim, fim); // chamada a direita
+            QuickSort_lomuto(pivo+1, fim, fim); // chamada a direita
     }
 }
 
 int main(){
-    int tamanho = 10;
-     int vetor[] =  {1, 20, 51, 3, 5, 100, -1, 30, 2, 4};
+    int tamanho = 9;
+     int vetor[] = {7, 0, 12, 5, 5, 3, 1, 2, 8};
     int *pivo = vetor + 4; 
     
-    QuickSort_Lomuto(vetor, vetor + 4, vetor + tamanho);
-    cout << "PIVÔ: " << *pivo << endl;
+    QuickSort_lomuto(vetor, vetor + 4, vetor + tamanho - 1);
     print_vector(vetor, vetor+tamanho);
 
     return 0;

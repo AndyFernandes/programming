@@ -17,7 +17,7 @@ void trocar(int* posicao1, int *posicao2){
   *posicao2 = aux;
 }
 
-tuple<int*, int*> particao_tripla(int *inicio, int *pivo, int *fim){
+tuple<int*, int*> Particao_Tripla(int *inicio, int *pivo, int *fim){
     /*
         1A PARTE:   J inicializa na posição inicio + 1, m&i inicializa na posição inicio.
         2A PARTE:   A partir da posição inicio + 1(j) compara:
@@ -30,7 +30,7 @@ tuple<int*, int*> particao_tripla(int *inicio, int *pivo, int *fim){
     // troca das posições inicio <-> pivo
     trocar(inicio, pivo);
 
-    for(;j != fim; ++j){
+    for(;j != fim+1; ++j){
        if (*j < *inicio){
             m++;
             aux = *m;
@@ -46,22 +46,40 @@ tuple<int*, int*> particao_tripla(int *inicio, int *pivo, int *fim){
     }
     
     trocar(m, inicio);
-    // duvida se ele aponta pra posicao mesmo ou uma depois
-    return make_tuple(m-1, i+1);   
+    return make_tuple(m, i);   
+}
+
+// BUGADO
+void QuickSort_Tripla(int *inicio, int *pivo, int *fim){
+     if(inicio < fim){
+        tuple <int*, int*> ponteiros = Particao_Tripla(inicio, fim, pivo);
+
+        if(get<0>(ponteiros) > inicio){
+            QuickSort_Tripla(inicio, get<0>(ponteiros)-1, get<0>(ponteiros)-1);
+        }
+
+        if(get<1>(ponteiros) < fim){
+            QuickSort_Tripla(get<1>(ponteiros)+1, fim, fim);
+        }
+    }
 }
 
 int main(){
-    int tamanho = 9;
-    
-    int vetor[] = {7, 11, 12, 5, 5, 3, 1, 2, 0};
-    //int *menores = vetor, *iguais = vetor;
+    int tamanho = 12;
+    int vetor[] = {12, 2, 6, 8, 6 , 6, 3, 4, 6, 5, -1, 13};
+    int *menores = vetor, *iguais = vetor;
 
-
-    cout << "\nPIVO: " << *(vetor + 3) << "\n";
-    // particao_tripla(vetor, vetor + 3, vetor + tamanho, menores, iguais);
-    tuple <int*, int*> ponteiros = particao_tripla(vetor, vetor + 3, vetor + tamanho);
+    /*cout << "\nPIVO: " << *(vetor + 3) << "\n";
+    //Particao_Tripla(vetor, vetor + 3, vetor + tamanho, menores, iguais);
+    tuple <int*, int*> ponteiros = Particao_Tripla(vetor, vetor + 3, vetor + tamanho);
                                   
     cout << "\nFIM MENORES:\t" << *get<0>(ponteiros) << "\t|\tINICIO MAIORES:\t" << *get<1>(ponteiros) << "\n";
-    print_vector(vetor, vetor + tamanho);
+    print_vector(vetor, vetor + tamanho);*/
+
+    int *pivo = vetor + 7; 
+
+    cout << "PIVO: " << *pivo << endl;
+    QuickSort_Tripla(vetor, pivo, vetor + tamanho-1);
+    print_vector(vetor, vetor+tamanho);
     return 0;                   
 }
