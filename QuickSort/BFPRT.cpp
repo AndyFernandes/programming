@@ -48,23 +48,59 @@ void Selecao_Hoare(int *inicio, int *fim, int *i){
             Selecao_Hoare(pivo+1, fim, i); // chamada a direita
     }
 }
-
-
-
 /*
       1.  Colete os elementos da matriz em grupos de 5. Se o número de elementos na matriz não for um múltiplo de 5, crie um grupo adicional (que conterá no máximo 4 elementos).
       2.  Encontre a mediana de cada grupo.
+      2.a. Jogue as medianas pro inicio do vetor trocando os lugares com os demais elementos
       3.  Por meio de uma chamada recursiva, encontre a mediana das medianas.
-      4.  Use a mediana das M medianas como um pivô e chame o algoritmo recursivamente na matriz apropriada, exatamente como no algoritmo quickselect .
+      4.  Use a mediana das M medianas como um pivô da seleção de hoare 
+      //e chame o algoritmo recursivamente na matriz apropriada, exatamente como no algoritmo quickselect .
 */
 // DOING
 void BFPRT(int* inicio, int* fim, int *pivo){
-  int tamanho_vetor_ponteiros = abs((fim - inicio)/5) + 1;
-  // vou montar um vetor pra pegar os ponteiros pros elementos ou então definir uma struct
-  int* medianas[tamanho_vetor_ponteiros];
-  for(int i = 0; i < tamanho_vetor_ponteiros; ++i){
-    medianas[i] = inicio + i*5;
-  }
+    int tamanho_vetor_ponteiros = abs((fim - inicio)/5) + 1;
+    // vou montar um vetor pra pegar os ponteiros pros elementos ou então definir uma struct
+    int* medianas[tamanho_vetor_ponteiros];
+    // mediana = inicio + 2; fim = inicio + 4
+    int *init, *meio, *finish;
+    for(int i = 0; i < tamanho_vetor_ponteiros-1; ++i){
+        init = inicio + i*5;
+        meio = inicio + 2 + i*5;
+        finish = inicio + 4 + i*5;
+        cout << "INICIO: " << *init << " | MEIO: " << *meio << " | FIM: " << *finish << endl;
+        Selecao_Hoare(init, finish, meio);
+        medianas[i] = inicio + 2 + i*5;
+    }
+    // TODO: tá faltando eu catar a mediana do ultimo segmento
+    
+    cout << endl;
+    for(int i = 0; i < tamanho_vetor_ponteiros - 1; i++){
+          cout << " | " << *medianas[i];
+    }
+    cout << endl;
+
+    // 2o passo: Botar as medianas pras posicoes iniciais do vetor
+    for(int i = 0; i < tamanho_vetor_ponteiros - 1; i++){
+        trocar(medianas[i], inicio+i);
+    }
+
+    // no caso seria quando eu ajeitar o elemento do ultimo segmento:
+    init = medianas[0];
+    cout << tamanho_vetor_ponteiros;
+    finish = medianas[0] + 2;
+    meio = init + abs((finish - init)/2);
+    cout << "INICIO: " << *init << " | MEIO: " << *meio << " | FIM: " << *finish << endl;
+    //Selecao_Hoare(init, finish, meio);
+
+
+
+        
+
+    // teste pra como acessar os ponteiros
+    //   cout << *medianas[0] << endl;
+    //   cout << *medianas[1] << endl;
+    //   cout << *medianas[2] << endl;
+      
 }
 
 // DOING 
@@ -82,9 +118,9 @@ void QuickSort_BFPRT(int *inicio, int *pivo, int *fim){
 int main(){
     int tamanho = 18;
     int vetor[] = {7, 0, 12, 5, 5, 3, 1, 2, 8, 4, 7, 0, 12, 5, 5, 3, 1, 2};
-    //int *pivo = vetor + 4; 
-    BFPRT(vetor, vetor + tamanho);
-
+    int *fim = vetor + tamanho; 
+    print_vector(vetor, vetor + tamanho);
+    BFPRT(vetor, fim, fim);
     print_vector(vetor, vetor + tamanho);
     return 0;
 }
