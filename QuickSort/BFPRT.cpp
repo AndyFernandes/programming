@@ -67,24 +67,31 @@ void BFPRT(int* inicio, int* fim, int *pivo){
         init = inicio + i*5;
         meio = inicio + 2 + i*5;
         finish = inicio + 4 + i*5;
-        cout << "INICIO: " << *init << " | MEIO: " << *meio << " | FIM: " << *finish << endl;
+        //cout << "INICIO: " << *init << " | MEIO: " << *meio << " | FIM: " << *finish << endl;
         Selecao_Hoare(init, finish, meio);
         medianas[i] = inicio + 2 + i*5;
     }
+    // pegando o ultimo elemento
+    init = medianas[tamanho_vetor_ponteiros - 2]+2;
+    finish = init + ((fim-1) - init);
+    meio = init + abs((finish - init)/2);
+    Selecao_Hoare(init, finish, meio);
+    medianas[tamanho_vetor_ponteiros - 1] = meio;
+
     // TODO: tá faltando eu catar a mediana do ultimo segmento
     
-    cout << endl;
-    for(int i = 0; i < tamanho_vetor_ponteiros - 1; i++){
-          cout << " | " << *medianas[i];
-    }
-    cout << endl;
+    // cout << endl;
+    // for(int i = 0; i < tamanho_vetor_ponteiros; i++){
+    //       cout << " | " << *medianas[i];
+    // }
+    // cout << endl;
 
     // 2o passo: Botar as medianas pras posicoes iniciais do vetor
-    for(int i = 0; i < tamanho_vetor_ponteiros - 1; i++){
+    for(int i = 0; i < tamanho_vetor_ponteiros; i++){
         trocar(medianas[i], inicio+i);
     }
 
-    // no caso seria quando eu ajeitar o elemento do ultimo segmento:
+    // 3o passo: Selecionar o elemento do meio (na suapociao correta se tivesse ordenado) e retornar ele pro QuickSort
     init = medianas[0];
     cout << tamanho_vetor_ponteiros;
     finish = medianas[0] + 2;
@@ -117,7 +124,7 @@ void QuickSort_BFPRT(int *inicio, int *pivo, int *fim){
 
 int main(){
     int tamanho = 18;
-    int vetor[] = {7, 0, 12, 5, 5, 3, 1, 2, 8, 4, 7, 0, 12, 5, 5, 3, 1, 2};
+    int vetor[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};
     int *fim = vetor + tamanho; 
     print_vector(vetor, vetor + tamanho);
     BFPRT(vetor, fim, fim);
