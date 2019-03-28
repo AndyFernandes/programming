@@ -57,9 +57,13 @@ void Selecao_Hoare(int *inicio, int *fim, int *i){
       //e chame o algoritmo recursivamente na matriz apropriada, exatamente como no algoritmo quickselect .
 */
 // DOING
-void BFPRT(int* inicio, int* fim, int *pivo){
+int* BFPRT(int* inicio, int* fim, int *pivo){
     int tamanho_vetor_ponteiros = abs((fim - inicio)/5) + 1;
     // vou montar um vetor pra pegar os ponteiros pros elementos ou então definir uma struct
+    if(tamanho_vetor_ponteiros > 5){
+        Selecao_Hoare(inicio, fim, inicio + abs((fim - inicio)/2));
+        return (inicio + abs((fim - inicio)/2);
+    } 
     int* medianas[tamanho_vetor_ponteiros];
     // mediana = inicio + 2; fim = inicio + 4
     int *init, *meio, *finish;
@@ -96,18 +100,9 @@ void BFPRT(int* inicio, int* fim, int *pivo){
     cout << tamanho_vetor_ponteiros;
     finish = medianas[0] + 2;
     meio = init + abs((finish - init)/2);
-    cout << "INICIO: " << *init << " | MEIO: " << *meio << " | FIM: " << *finish << endl;
-    //Selecao_Hoare(init, finish, meio);
-
-
-
-        
-
-    // teste pra como acessar os ponteiros
-    //   cout << *medianas[0] << endl;
-    //   cout << *medianas[1] << endl;
-    //   cout << *medianas[2] << endl;
-      
+    //cout << "INICIO: " << *init << " | MEIO: " << *meio << " | FIM: " << *finish << endl;
+    BFPRT(init, finish, meio);
+    return medianas[abs(tamanho_vetor_ponteiros/2)];
 }
 
 // DOING 
