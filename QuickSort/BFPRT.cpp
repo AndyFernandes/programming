@@ -1,7 +1,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
-#include<tuple> // for tuple 
+#include <tuple> // for tuple 
 using namespace std;
 
 void print_vector(int *inicio, int *fim){
@@ -58,46 +58,36 @@ void Selecao_Hoare(int *inicio, int *fim, int *i){
 */
 int* BFPRT(int* inicio, int* fim, int *pivo){
     int tamanho_vetor_ponteiros = abs((fim - inicio)/5) + 1;
-    // vou montar um vetor pra pegar os ponteiros pros elementos ou então definir uma struct
+ 
     if(tamanho_vetor_ponteiros <= 5){
         Selecao_Hoare(inicio, fim, inicio + abs((fim - inicio)/2));
         return (inicio + abs((fim - inicio)/2));
     } 
 
-    int* medianas[tamanho_vetor_ponteiros];
     int *init, *meio, *finish;
 
-    for(int i = 0; i < tamanho_vetor_ponteiros-1; ++i){
+    for(int i = 0; i < tamanho_vetor_ponteiros; ++i){
         init = inicio + i*5;
-        meio = inicio + 2 + i*5;
-        finish = inicio + 4 + i*5;
+        if(i == tamanho_vetor_ponteiros-1){
+            finish = init + ((fim-1) - init);
+            meio = init + abs((finish - init)/2);
+        } else {
+            meio = inicio + 2 + i*5;
+            finish = inicio + 4 + i*5;
+        }
+
         Selecao_Hoare(init, finish, meio);
-        medianas[i] = inicio + 2 + i*5;
-        trocar(medianas[i], inicio+i);
+        trocar(meio, inicio+i);
     }
-    // pegando o ultimo elemento
-    init = medianas[tamanho_vetor_ponteiros - 2]+2;
-    finish = init + ((fim-1) - init);
-    meio = init + abs((finish - init)/2);
-    Selecao_Hoare(init, finish, meio);
-    medianas[tamanho_vetor_ponteiros - 1] = meio;
-    // Como o pablo sugeriu: unir o passo b com o c
-    trocar(medianas[tamanho_vetor_ponteiros - 1], inicio + tamanho_vetor_ponteiros - 1);
-
-    // 2o passo: Botar as medianas pras posicoes iniciais do vetor
-    /*for(int i = 0; i < tamanho_vetor_ponteiros; i++){
-        trocar(medianas[i], inicio+i);
-    }*/
-
+    
     // 3o passo: Selecionar o elemento do meio (na sua posicao correta se tivesse ordenado) e retornar ele pro QuickSort
-    init = medianas[0];
-    finish = medianas[0] + 2;
+    init = inicio;
+    finish = inicio + tamanho_vetor_ponteiros - 1;
     meio = init + abs((finish - init)/2);
-    BFPRT(init, finish, meio);
-    return medianas[abs(tamanho_vetor_ponteiros/2)];
+    meio = BFPRT(init, finish, meio); 
+    return meio;
 }
-
-// DOING 
+ 
 void QuickSort_BFPRT(int *inicio, int *pivo, int *fim){
    if(inicio < fim) {
         int *pivo = BFPRT(inicio, fim, pivo);
@@ -114,7 +104,7 @@ int main(){
     int vetor[] = {20, 1, 1, 4, 100, 12, 4, 3, 3, 8, 7, 6, 5, 4, 3, 2, 1, 0};
     int *fim = vetor + tamanho; 
     print_vector(vetor, vetor + tamanho);
-    //BFPRT(vetor, fim, vetor + 6);
+    //int * a = BFPRT(vetor, fim, vetor + 6);
     QuickSort_BFPRT(vetor, vetor + 6, fim);
     print_vector(vetor, vetor + tamanho);
     return 0;

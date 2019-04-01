@@ -36,23 +36,14 @@ int* Particao_Lomuto(int *inicio, int *pivo, int *fim){
 // Ver se tá certo
 // se  a troca dos ponteiros é assim mesmo ou é só por conteúdo como a arina sempre diz
 void QuickSort_Cauda(int *inicio, int *pivo, int *fim){
-    if(inicio < fim) {
+    for(;;){
+        if(inicio >= fim)
+            break;
         int *pivo = Particao_Lomuto(inicio, fim, fim);
         if(pivo > inicio)
-            QuickSort_Cauda(inicio, pivo-1, pivo-1); // chamada a esquerda
-        
-        if(pivo < fim){
-            int *aux_inicio = pivo+1;
-            for(;;){
-                if(inicio >= fim)
-                    break;
-                int *pivo = Particao_Lomuto(inicio, fim, fim);
-                if(pivo > inicio)
-                    QuickSort_Cauda(inicio, pivo-1, pivo-1);
-                aux_inicio = pivo + 1;
-                pivo = fim;
-            }
-        }
+            QuickSort_Cauda(inicio, pivo-1, pivo-1);
+        inicio = pivo + 1;
+        pivo = fim;
     }
 }
 
