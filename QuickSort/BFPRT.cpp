@@ -39,6 +39,30 @@ int* Particao_Lomuto(int *inicio, int *pivo, int *fim){
     return m;
 }
 
+tuple<int*, int*> Particao_Tripla(int *inicio, int *pivo, int *fim){
+    int *m = inicio, *i = inicio, *j = inicio + 1, aux;
+    // troca das posições inicio <-> pivo
+    trocar(inicio, pivo);
+
+    for(;j != fim+1; ++j){
+       if (*j < *inicio){
+            m++;
+            aux = *m;
+            *m = *j;
+
+            i++;
+            *j = *i;
+            *i = aux;
+       } else if(*j == *inicio ){
+            i++;
+            trocar(i, j); 
+       }
+    }
+    
+    trocar(m, inicio);
+    return make_tuple(m, i);   
+}
+
 void Selecao_Hoare(int *inicio, int *fim, int *i){
     if(inicio < fim) {
         int *pivo = Particao_Lomuto(inicio, fim, fim);
@@ -56,14 +80,16 @@ void Selecao_Hoare(int *inicio, int *fim, int *i){
       4.  Use a mediana das M medianas como um pivô da seleção de hoare 
       //e chame o algoritmo recursivamente na matriz apropriada, exatamente como no algoritmo quickselect .
 */
+// TODO: Ajeitar isso, finalizar o que tem escrito no PDF que eu não tinha visto
 int* BFPRT(int* inicio, int* fim, int *pivo){
     int tamanho_vetor_ponteiros = abs((fim - inicio)/5) + 1;
  
-    if(tamanho_vetor_ponteiros <= 5){
+    // if(tamanho_vetor_ponteiros <= 5){
+    if((fim - inicio) <= 5){
         Selecao_Hoare(inicio, fim, inicio + abs((fim - inicio)/2));
         return (inicio + abs((fim - inicio)/2));
     } 
-
+    
     int *init, *meio, *finish;
 
     for(int i = 0; i < tamanho_vetor_ponteiros; ++i){
@@ -85,6 +111,11 @@ int* BFPRT(int* inicio, int* fim, int *pivo){
     finish = inicio + tamanho_vetor_ponteiros - 1;
     meio = init + abs((finish - init)/2);
     meio = BFPRT(init, finish, meio); 
+    
+    // falta terminar esta bosta
+    // item e)
+    tuple<int*, int*> ponteiros = Particao_Tripla(init, meio, finish);
+    cout << "\nR\t" << *get<0>(ponteiros) << "\t|\tS:\t" << *get<1>(ponteiros) << "\n";
     return meio;
 }
  
@@ -104,7 +135,7 @@ int main(){
     int vetor[] = {20, 1, 1, 4, 100, 12, 4, 3, 3, 8, 7, 6, 5, 4, 3, 2, 1, 0};
     int *fim = vetor + tamanho; 
     print_vector(vetor, vetor + tamanho);
-    //int * a = BFPRT(vetor, fim, vetor + 6);
+    // /int * a = BFPRT(vetor, fim, vetor + 6);
     QuickSort_BFPRT(vetor, vetor + 6, fim);
     print_vector(vetor, vetor + tamanho);
     return 0;
