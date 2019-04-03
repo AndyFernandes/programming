@@ -1,7 +1,8 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
-#include<tuple> // for tuple 
+#include<tuple>
+#include "QuickSort_versions.h"
 using namespace std;
 
 void print_vector(int *inicio, int *fim){
@@ -49,27 +50,15 @@ int* Particao_Lomuto(int *inicio, int *pivo, int *fim){
 }
 
 tuple<int*, int*> Particao_Tripla(int *inicio, int *pivo, int *fim){
-    /*
-        1A PARTE:   J inicializa na posição inicio + 1, m&i inicializa na posição inicio.
-        2A PARTE:   A partir da posição inicio + 1(j) compara:
-                    j < pivo:  incrementa m, guarda o valor de m, m <- j, incrementa i, j <- i, i <- valor de m guardado
-                    j = pivo: incrementa i
-                    j > pivo: incrementa j
-        3A PARTE:   No final eu destroca a posicao do inicio <-> pivo (que é agora o m).
-    */
     int *m = inicio, *i = inicio, *j = inicio + 1, aux;
-    // troca das posições inicio <-> pivo
     trocar(inicio, pivo);
 
     for(;j != fim+1; ++j){
        if (*j < *inicio){
-            m++;
-            aux = *m;
-            *m = *j;
-
             i++;
-            *j = *i;
-            *i = aux;
+            trocar(i, j); 
+            m++;
+            trocar(m, i);
        } else if(*j == *inicio ){
             i++;
             trocar(i, j); 
@@ -77,7 +66,7 @@ tuple<int*, int*> Particao_Tripla(int *inicio, int *pivo, int *fim){
     }
     
     trocar(m, inicio);
-    return make_tuple(m, i);   
+    return make_tuple(m-1, i+1);   
 }
 
 void QuickSort_Lomuto(int *inicio, int *pivo, int *fim){
@@ -96,6 +85,20 @@ void QuickSort_Lomuto(int *inicio, int *pivo, int *fim){
         
         if(pivo < fim)
             QuickSort_Lomuto(pivo+1, fim, fim); // chamada a direita
+    }
+}
+
+void QuickSort_Tripla(int *inicio, int *pivo, int *fim){
+     if(inicio < fim){
+        tuple <int*, int*> ponteiros = Particao_Tripla(inicio, fim, pivo);
+
+        if(get<0>(ponteiros) > inicio){
+            QuickSort_Tripla(inicio, get<0>(ponteiros), get<0>(ponteiros));
+        }
+
+        if(get<1>(ponteiros) < fim){
+            QuickSort_Tripla(get<1>(ponteiros), fim, fim);
+        }
     }
 }
 
@@ -120,6 +123,57 @@ void QuickSort_Hoare(int *inicio, int *pivo, int *fim){
         
     }
 }
+
+void QuickSort_Cauda(int *inicio, int *pivo, int *fim){
+    for(;;){
+        if(inicio >= fim)
+            break;
+        int *pivo = Particao_Lomuto(inicio, fim, fim);
+        if(pivo > inicio)
+            QuickSort_Cauda(inicio, pivo-1, pivo-1);
+        inicio = pivo + 1;
+        pivo = fim;
+    }
+}
+
+int* BFPRT(int* inicio, int* fim, int *pivo){
+    int tamanho_vetor_ponteiros = abs((fim - inicio)/5) + 1;
+ 
+    // if(tamanho_vetor_ponteiros <= 5){
+    if((fim - inicio) <= 5){
+        Selecao_Hoare(inicio, fim, inicio + abs((fim - inicio)/2));
+        return (inicio + abs((fim - inicio)/2));
+    } 
+    
+    int *init, *meio, *finish;
+
+    for(int i = 0; i < tamanho_vetor_ponteiros; ++i){
+        init = inicio + i*5;
+        if(i == tamanho_vetor_ponteiros-1){
+            finish = init + ((fim-1) - init);
+            meio = init + abs((finish - init)/2);
+        } else {
+            meio = inicio + 2 + i*5;
+            finish = inicio + 4 + i*5;
+        }
+
+        Selecao_Hoare(init, finish, meio);
+        trocar(meio, inicio+i);
+    }
+    
+    // 3o passo: Selecionar o elemento do meio (na sua posicao correta se tivesse ordenado) e retornar ele pro QuickSort
+    init = inicio;
+    finish = inicio + tamanho_vetor_ponteiros - 1;
+    meio = init + abs((finish - init)/2);
+    meio = BFPRT(init, finish, meio); 
+    
+    // falta terminar esta bosta
+    // item e)
+    tuple<int*, int*> ponteiros = Particao_Tripla(init, meio, finish);
+    cout << "\nR\t" << *get<0>(ponteiros) << "\t|\tS:\t" << *get<1>(ponteiros) << "\n";
+    return meio;
+}
+
 int main(){
     int tamanho = 9;
     int vetor[] = {7, 0, 12, 5, 5, 3, 1, 2, 8};
