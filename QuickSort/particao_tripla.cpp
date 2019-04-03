@@ -1,7 +1,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
-#include <tuple> // for tuple 
+#include <tuple>
 using namespace std;
 
 void print_vector(int *inicio, int *fim){
@@ -32,13 +32,6 @@ tuple<int*, int*> Particao_Tripla(int *inicio, int *pivo, int *fim){
 
     for(;j != fim+1; ++j){
        if (*j < *inicio){
-            // m++;
-            // aux = *m;
-            // *m = *j;
-
-            // i++;
-            // *j = *i;
-            // *i = aux;
             i++;
             trocar(i, j); 
             m++;
@@ -46,14 +39,13 @@ tuple<int*, int*> Particao_Tripla(int *inicio, int *pivo, int *fim){
        } else if(*j == *inicio ){
             i++;
             trocar(i, j); 
-       }
+       } 
     }
     
     trocar(m, inicio);
     return make_tuple(m-1, i+1);   
 }
 
-// BUGADO
 void QuickSort_Tripla(int *inicio, int *pivo, int *fim){
      if(inicio < fim){
         tuple <int*, int*> ponteiros = Particao_Tripla(inicio, fim, pivo);
