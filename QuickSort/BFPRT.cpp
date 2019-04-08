@@ -1,7 +1,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
-#include <tuple> // for tuple 
+#include<tuple> // for tuple 
 using namespace std;
 
 void print_vector(int *inicio, int *fim){
@@ -81,16 +81,16 @@ void Selecao_Hoare(int *inicio, int *fim, int *i){
       //e chame o algoritmo recursivamente na matriz apropriada, exatamente como no algoritmo quickselect .
 */
 // TODO: Ajeitar isso, finalizar o que tem escrito no PDF que eu não tinha visto
-int* BFPRT(int* inicio, int* fim, int *pivo){
-    int tamanho_vetor_ponteiros = abs((fim - inicio)/5) + 1;
- 
-    // if(tamanho_vetor_ponteiros <= 5){
-    if((fim - inicio) <= 5){
-        Selecao_Hoare(inicio, fim, inicio + abs((fim - inicio)/2));
-        return (inicio + abs((fim - inicio)/2));
+void BFPRT(int* inicio, int* fim, int *pivo){
+    int tamanho = abs(fim - inicio);
+
+    if(tamanho <= 5){
+        Selecao_Hoare(inicio, fim, pivo);
+        return;
     } 
     
     int *init, *meio, *finish;
+    int tamanho_vetor_ponteiros = abs((fim - inicio)/5) + 1;
 
     for(int i = 0; i < tamanho_vetor_ponteiros; ++i){
         init = inicio + i*5;
@@ -110,18 +110,20 @@ int* BFPRT(int* inicio, int* fim, int *pivo){
     init = inicio;
     finish = inicio + tamanho_vetor_ponteiros - 1;
     meio = init + abs((finish - init)/2);
-    meio = BFPRT(init, finish, meio); 
+    BFPRT(init, finish, meio); 
     
-    // falta terminar esta bosta
-    // item e)
+    // 4o passo: Partição tripla e testes
     tuple<int*, int*> ponteiros = Particao_Tripla(init, meio, finish);
-    cout << "\nR\t" << *get<0>(ponteiros) << "\t|\tS:\t" << *get<1>(ponteiros) << "\n";
-    return meio;
+    if (meio < get<0>(ponteiros)){
+        BFPRT(init, get<0>(ponteiros)-1, pivo);
+    } else if (meio > get<1>(ponteiros)) {
+        BFPRT(get<1>(ponteiros)+1, finish, pivo);
+    }
 }
  
 void QuickSort_BFPRT(int *inicio, int *pivo, int *fim){
    if(inicio < fim) {
-        int *pivo = BFPRT(inicio, fim, pivo);
+        BFPRT(inicio, fim, pivo);
         if(pivo > inicio)
            QuickSort_BFPRT(inicio, pivo-1, pivo-1); // chamada a esquerda
         
