@@ -1,3 +1,5 @@
+// By Andreza Fernandes de Oliveira, april/2019
+// FALTA TERMINAR
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
@@ -80,7 +82,7 @@ void Selecao_Hoare(int *inicio, int *fim, int *i){
       4.  Use a mediana das M medianas como um pivô da seleção de hoare 
       //e chame o algoritmo recursivamente na matriz apropriada, exatamente como no algoritmo quickselect .
 */
-// TODO: Ajeitar isso, finalizar o que tem escrito no PDF que eu não tinha visto
+// DOING
 void BFPRT(int* inicio, int* fim, int *pivo){
     int tamanho = abs(fim - inicio);
 
@@ -120,7 +122,8 @@ void BFPRT(int* inicio, int* fim, int *pivo){
         BFPRT(get<1>(ponteiros)+1, finish, pivo);
     }
 }
- 
+
+// DOING
 void QuickSort_BFPRT(int *inicio, int *pivo, int *fim){
    if(inicio < fim) {
         BFPRT(inicio, fim, pivo);

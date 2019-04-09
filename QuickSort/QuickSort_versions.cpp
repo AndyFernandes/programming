@@ -1,8 +1,10 @@
+// By Andreza Fernandes de Oliveira, april/2019
+
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
 #include<tuple>
-#include "QuickSort_versions.h"
+#include "QuickSort_Versions.h"
 using namespace std;
 
 void print_vector(int *inicio, int *fim){

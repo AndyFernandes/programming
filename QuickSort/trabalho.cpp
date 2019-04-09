@@ -1,6 +1,9 @@
-// #include "QuickSort_versions.h"
+// By Andreza Fernandes de Oliveira, april/2019
+// FALTA TERMINAR
+#include "QuickSort_Versions.h"
 #include "instancias_ruins_QuickSort.hpp"
 #include <iostream>
+#include <random>
 using namespace std;
 // Chamar "escrever_instancia(v,n)" sobre o vetor "v" de "n" elementos no qual a instância deve ser escrita.
 // Testar se a função retornou "true" (indica erro, falta de memória). Se o retorno for "false", a instância foi construída com sucesso.
@@ -13,11 +16,23 @@ void print_vector(int *inicio, int *fim){
     cout << "\n---------------------------------------------------------------------------------------------\n";
 }
 
-int main(){
-    int tamanho = 15;
-    int vetor[] = {1, 2, 5, 2, 4, 20, 1, 3, 6, 5, 5, 4, 1, 2, 1};
-    int *pivo = vetor + 4; 
+int* vetor_aleatorio(){
+    random_device rd;
+    mt19937 ger(rd());
+    uniform_int_distribution<int> dis(1, 6);
+    
+    int meu_num = dis(ger);
+    cout << meu_num;
+    return;
+}
 
-    // print_vector(vetor, vetor + tamanho);
+void menu(){
+  int tamanho;
+  cout << "Digite o tamanho do vetor: ";
+  cin >> tamanho;
+}
+
+int main(){
+  menu();
   return 0;
 }

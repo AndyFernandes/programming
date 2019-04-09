@@ -47,16 +47,19 @@
 // -----------------------------------------------------------------------------
 
 #include <new>
-
-using std::nothrow;
-
+#include <math.h>
 #include <utility>
-
+using std::nothrow;
 using std::swap;
 
 // -----------------------------------------------------------------------------
+int escolher_pivo (int primeiro, int ultimo){
+  return primeiro + abs((ultimo - primeiro)/2);
+}
 
-int escolher_pivo (int primeiro, int ultimo);
+int* escolher_pivo (int* primeiro, int* ultimo){
+  return primeiro + abs((ultimo - primeiro)/2);
+}
 
 
 // VALOR DE RETORNO: * true:  indica erro (falta de memÃ³ria);

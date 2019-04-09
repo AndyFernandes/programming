@@ -1,5 +1,7 @@
-#if !defined(QuickSort_versions)
-#define QuickSort_versions
+// By Andreza Fernandes de Oliveira, april/2019
+
+#if !defined(QuickSort_Versions)
+#define QuickSort_Versions
 #include <tuple>
 using namespace std;
 
