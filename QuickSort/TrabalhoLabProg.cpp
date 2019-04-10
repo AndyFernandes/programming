@@ -27,9 +27,12 @@ int* vetor_aleatorio(){
 }
 
 void menu(){
-  int tamanho;
-  cout << "Digite o tamanho do vetor: ";
-  cin >> tamanho;
+    int tamanho;
+    
+    cout << "Digite o tamanho do vetor: ";
+    cin >> tamanho;
+
+    int* vetor = veto
 }
 
 int main(){
