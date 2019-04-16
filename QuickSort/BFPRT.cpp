@@ -92,7 +92,7 @@ void BFPRT(int* inicio, int* fim, int *pivo){
     } 
     
     int *init, *meio, *finish;
-    int tamanho_vetor_ponteiros = abs((fim - inicio)/5) + 1;
+    int tamanho_vetor_ponteiros = abs(tamanho/5);
 
     for(int i = 0; i < tamanho_vetor_ponteiros; ++i){
         init = inicio + i*5;
@@ -116,7 +116,7 @@ void BFPRT(int* inicio, int* fim, int *pivo){
     
     // 4o passo: Partição tripla e testes
     tuple<int*, int*> ponteiros = Particao_Tripla(init, meio, finish);
-    if (meio < get<0>(ponteiros)){
+    if (pivo < get<0>(ponteiros)){
         BFPRT(init, get<0>(ponteiros)-1, pivo);
     } else if (meio > get<1>(ponteiros)) {
         BFPRT(get<1>(ponteiros)+1, finish, pivo);
