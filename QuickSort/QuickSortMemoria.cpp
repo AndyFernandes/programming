@@ -34,24 +34,23 @@ int* Particao_Lomuto(int *inicio, int *pivo, int *fim){
     return m;
 }
 
-// DOING
-void QuickSort_logn(int *inicio, int *pivo, int *fim){
-    for(;;){
-        if(inicio >= fim)
-            break;
+// TA BUGADO
+void QuickSort_logn(int *inicio, int *fim){
+    while(inicio < fim){
+        // func escolher pivo
         int *pivo = Particao_Lomuto(inicio, fim, fim);
-        
-        if((pivo - inicio) > (fim - pivo)){
-            // Lado esquerdo vai pro laço
-            // Lado direito recursivo
-            QuickSort_logn(pivo+1, fim, fim);
-            fim = pivo + 1;
-            pivo = pivo + 1;
+        int tamEsquerda = pivo - inicio;
+        int tamDireita = fim - pivo;
+        if(tamEsquerda > tamDireita){
+            // recursivo para direita e interativo para esquerda
+            if(pivo < fim)
+                QuickSort_logn(pivo+1, fim);
+            fim = pivo - 1;
         } else {
+            // recursivo para esquerda e interativo para direita
             if(pivo > inicio)
-                QuickSort_logn(inicio, pivo-1, pivo-1);
+                QuickSort_logn(inicio, pivo-1);
             inicio = pivo + 1;
-            pivo = fim;
         }
         
         
@@ -59,11 +58,10 @@ void QuickSort_logn(int *inicio, int *pivo, int *fim){
 }
 
 int main(){
-    int tamanho = 9;
-     int vetor[] = {7, 0, 12, 5, 5, 3, 1, 2, 8};
-    int *pivo = vetor + 4; 
+    int tamanho = 14;
+     int vetor[] = {7, 0, 12, 5, 5, 3, 1, 2, 8, 4, 4, 20, 19, 18};
     
-    QuickSort_logn(vetor, vetor + 4, vetor + tamanho - 1);
+    QuickSort_logn(vetor, vetor + tamanho-1);
     print_vector(vetor, vetor+tamanho);
 
     return 0;

@@ -18,8 +18,13 @@ void print_vector(int *inicio, int *fim){
     cout << "\n---------------------------------------------------------------------------------------------\n";
 }
 
-//TODO: função pra checar se o vetor tá ordenado
-bool check(int* inicio, int tamanho){
+bool check(int* inicio, int* fim){
+    for(int *i = inicio; i != fim; ++i){
+        if(*i > *(i+1)){
+            return false;
+        }
+    }
+    return true;
 }
 
 int* copy_vector(int* inicio, int* fim){
@@ -33,6 +38,60 @@ int* vetor_aleatorio(int tamanho, int valor_inicial, int valor_final){
         *i = valor_inicial + (rand() % valor_final);
     }
     return vetor;
+}
+
+void runQuickSortVersions(int *vetor, int tamanho){
+    int* fim = vetor + tamanho;
+    clock_t inicio;
+    clock_t total;
+
+    inicio = clock();
+    // Chamada ao QuickSort via Índice
+    total = clock() - inicio;
+    cout << "\n========================================================================";
+    cout << "\nQuickSort via Índice: " << ((float)total/CLOCKS_PER_SEC);
+    cout << check(vetor, fim);
+    cout << "\n========================================================================\n";
+
+    inicio = clock();
+    // Chamada ao QuickSort via Particionamento Duplo
+    total = clock() - inicio;
+    cout << "\n========================================================================";
+    cout << "\nQuickSort via Particionamento Duplo: " << ((float)total/CLOCKS_PER_SEC);
+    cout << check(vetor, fim);
+    cout << "\n========================================================================\n";
+
+    inicio = clock();
+    // Chamada ao QuickSort via Particionamento Triplo
+    total = clock() - inicio;
+    cout << "\n========================================================================";
+    cout << "\nQuickSort via Particionamento Triplo: " << ((float)total/CLOCKS_PER_SEC);
+    cout << check(vetor, fim);
+    cout << "\n========================================================================\n";
+
+    inicio = clock();
+    // Chamada ao QuickSort Memória Log(n)
+    total = clock() - inicio;
+    cout << "\n========================================================================";
+    cout << "\nQuickSort Memória Log(n): " << ((float)total/CLOCKS_PER_SEC);
+    cout << check(vetor, fim);
+    cout << "\n========================================================================\n";
+
+    inicio = clock();
+    // Chamada ao QuickSort via Mediana das Medianas
+    total = clock() - inicio;
+    cout << "\n========================================================================";
+    cout << "\nQuickSort via Mediana das Medianas: " << ((float)total/CLOCKS_PER_SEC);
+    cout << check(vetor, fim);
+    cout << "\n========================================================================\n";
+
+    inicio = clock();
+    // Chamada ao QuickSort Pivô Aleatório
+    total = clock() - inicio;
+    cout << "\n========================================================================";
+    cout << "\nQuickSort via Pivô Aleatório: " << ((float)total/CLOCKS_PER_SEC);
+    cout << check(vetor, fim);
+    cout << "\n========================================================================\n";
 }
 
 void menu(){
@@ -68,68 +127,14 @@ void menu(){
     runQuickSortVersions(vetor, tamanho);
 }
 
-void runQuickSortVersions(int *vetor, int tamanho){
-    clock_t inicio;
-    clock_t total;
-
-    inicio = clock();
-    // Chamada ao QuickSort via Índice
-    total = clock() - inicio;
-    cout << "\n========================================================================";
-    cout << "\nQuickSort via Índice: " << ((float)total/CLOCKS_PER_SEC);
-    cout << check(vetor, tamanho);
-    cout << "\n========================================================================\n";
-
-    inicio = clock();
-    // Chamada ao QuickSort via Particionamento Duplo
-    total = clock() - inicio;
-    cout << "\n========================================================================";
-    cout << "\nQuickSort via Particionamento Duplo: " << ((float)total/CLOCKS_PER_SEC);
-    cout << check(vetor, tamanho);
-    cout << "\n========================================================================\n";
-
-    inicio = clock();
-    // Chamada ao QuickSort via Particionamento Triplo
-    total = clock() - inicio;
-    cout << "\n========================================================================";
-    cout << "\nQuickSort via Particionamento Triplo: " << ((float)total/CLOCKS_PER_SEC);
-    cout << check(vetor, tamanho);
-    cout << "\n========================================================================\n";
-
-    inicio = clock();
-    // Chamada ao QuickSort Memória Log(n)
-    total = clock() - inicio;
-    cout << "\n========================================================================";
-    cout << "\nQuickSort Memória Log(n): " << ((float)total/CLOCKS_PER_SEC);
-    cout << check(vetor, tamanho);
-    cout << "\n========================================================================\n";
-
-    inicio = clock();
-    // Chamada ao QuickSort via Mediana das Medianas
-    total = clock() - inicio;
-    cout << "\n========================================================================";
-    cout << "\nQuickSort via Mediana das Medianas: " << ((float)total/CLOCKS_PER_SEC);
-    cout << check(vetor, tamanho);
-    cout << "\n========================================================================\n";
-
-    inicio = clock();
-    // Chamada ao QuickSort Pivô Aleatório
-    total = clock() - inicio;
-    cout << "\n========================================================================";
-    cout << "\nQuickSort via Pivô Aleatório: " << ((float)total/CLOCKS_PER_SEC);
-    cout << check(vetor, tamanho);
-    cout << "\n========================================================================\n";
-}
-
 int main(){
     int continuar = 1;
-
-
-  do {
+    do {
         menu();
         cout << "\n--------------------------------------------------------------------\n";
         cout << "Você deseja continuar? \n1. SIM \n2.NÃO \n:";
         cin >> continuar;
     } while(continuar == 1);
-  return 0;
+    
+    return 0;
 }
