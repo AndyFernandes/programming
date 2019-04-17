@@ -83,8 +83,8 @@ void Selecao_Hoare(int *inicio, int *fim, int *i){
       //e chame o algoritmo recursivamente na matriz apropriada, exatamente como no algoritmo quickselect .
 */
 // DOING
-void BFPRT(int* inicio, int* fim, int *pivo){
-    int tamanho = abs(fim - inicio);
+void BFPRT(int* inicio, int* fim, int* pivo){
+    int tamanho = abs(fim - inicio) + 1;
 
     if(tamanho <= 5){
         Selecao_Hoare(inicio, fim, pivo);
@@ -92,35 +92,54 @@ void BFPRT(int* inicio, int* fim, int *pivo){
     } 
     
     int *init, *meio, *finish;
-    int tamanho_vetor_ponteiros = abs(tamanho/5);
+    int tamanho_vetor_ponteiros = abs(tamanho/5) + 1;
 
     for(int i = 0; i < tamanho_vetor_ponteiros; ++i){
         init = inicio + i*5;
-        if(i == tamanho_vetor_ponteiros-1){
-            finish = init + ((fim-1) - init);
+        if(i == tamanho_vetor_ponteiros - 1){
+            // cout << "if" << endl;
+            finish = init + ((fim-1) - init); //obs
             meio = init + abs((finish - init)/2);
+            
         } else {
-            meio = inicio + 2 + i*5;
-            finish = inicio + 4 + i*5;
+            // cout << "else" << endl;
+            meio = init + 2;
+            finish = init + 4;
         }
-
+        // cout << *init << ", " << *meio << ", " << *finish << "\n\n"; 
         Selecao_Hoare(init, finish, meio);
         trocar(meio, inicio+i);
     }
+
+    // cout << tamanho_vetor_ponteiros << endl; 
+    for(int *i = inicio; i != inicio + tamanho_vetor_ponteiros; ++i){
+        cout << " " << *i;
+    }
+    cout << endl;
+
+    // cout << "\n";
+    // for(int *i = inicio; i != fim ; ++i){
+    //     cout << " - " << *i; 
+    // }
+    // cout << "\n";
     
-    // 3o passo: Selecionar o elemento do meio (na sua posicao correta se tivesse ordenado) e retornar ele pro QuickSort
+    // // 3o passo: Selecionar o elemento do meio (na sua posicao correta se tivesse ordenado) e retornar ele pro QuickSort
     init = inicio;
     finish = inicio + tamanho_vetor_ponteiros - 1;
     meio = init + abs((finish - init)/2);
+    cout << *init << ", " << *meio << ", " << *finish << "\n\n"; 
     BFPRT(init, finish, meio); 
+    // cout << *init << ", " << *meio << ", " << *finish << "\n\n"; 
     
-    // 4o passo: Partição tripla e testes
-    tuple<int*, int*> ponteiros = Particao_Tripla(init, meio, finish);
-    if (pivo < get<0>(ponteiros)){
-        BFPRT(init, get<0>(ponteiros)-1, pivo);
-    } else if (meio > get<1>(ponteiros)) {
-        BFPRT(get<1>(ponteiros)+1, finish, pivo);
-    }
+    // // 4o passo: Partição tripla e testes
+    // tuple<int*, int*> ponteiros = Particao_Tripla(init, meio, finish);
+    // if (pivo < get<0>(ponteiros)){
+    //     BFPRT(init, get<0>(ponteiros)-1, pivo);
+    // } else if (meio > get<1>(ponteiros)) {
+    //     BFPRT(get<1>(ponteiros)+1, finish, pivo);
+    // } else {
+    //     pivo = get<0>(ponteiros);
+    // }
 }
 
 // DOING
@@ -140,8 +159,9 @@ int main(){
     int vetor[] = {20, 1, 1, 4, 100, 12, 4, 3, 3, 8, 7, 6, 5, 4, 3, 2, 1, 0};
     int *fim = vetor + tamanho; 
     print_vector(vetor, vetor + tamanho);
-    // /int * a = BFPRT(vetor, fim, vetor + 6);
-    QuickSort_BFPRT(vetor, vetor + 6, fim);
+    // cout << abs((fim - vetor)/5) + 1;
+    BFPRT(vetor, fim, vetor + 8);
+    // QuickSort_BFPRT(vetor, vetor + 8, fim);
     print_vector(vetor, vetor + tamanho);
     return 0;
 }
