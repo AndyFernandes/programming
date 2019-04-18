@@ -1,0 +1,15 @@
+//Arquivo 1 ponto.h, definicao para a classe ponto.
+#include <tuple>
+#include <iostream>
+using namespace std;
+
+class Funcoes {
+    public:
+        void print_vector(int *inicio, int *fim);
+        void trocar(int* posicao1, int *posicao2);
+        int* copy_vector(int vetor[], int tamanho);
+        int Particao_Lomuto(int vetor[], int inicio, int pivo, int fim);
+        int* Particao_Lomuto(int *inicio, int *pivo, int *fim);
+        tuple<int*, int*> Particao_Tripla(int *inicio, int *pivo, int *fim);
+        void Selecao_Hoare(int *inicio, int *fim, int *i);
+};

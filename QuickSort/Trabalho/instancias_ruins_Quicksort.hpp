@@ -65,7 +65,6 @@ int* escolher_pivo_aleatorio(int* primeiro, int* ultimo){
   return primeiro + (rand()%(ultimo-primeiro));
 }
 
-
 // VALOR DE RETORNO: * true:  indica erro (falta de memÃ³ria);
 //                   * false: indica sucesso.
 //

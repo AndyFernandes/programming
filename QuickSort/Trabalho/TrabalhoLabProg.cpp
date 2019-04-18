@@ -1,44 +1,13 @@
 // By Andreza Fernandes de Oliveira, april/2019
-// FALTA TERMINAR
-// #include "QuickSort_Versions.h"
-// #include "instancias_ruins_QuickSort.hpp"
+
 #include <iostream>
 #include <random>
 #include <new>
 #include <time.h>
+#include "Funcoes.cpp"
+#include "QuickSortVersions.cpp"
+#include "instancias_ruins_Quicksort.hpp"
 using namespace std;
-// Chamar "escrever_instancia(v,n)" sobre o vetor "v" de "n" elementos no qual a instância deve ser escrita.
-// Testar se a função retornou "true" (indica erro, falta de memória). Se o retorno for "false", a instância foi construída com sucesso.
-// DOING
-void print_vector(int *inicio, int *fim){
-    cout << "-----------------------------------------------------------------------------------------------\n\t\t";
-    for(; inicio != fim; inicio++){
-        cout << *inicio << "  ";
-    }
-    cout << "\n---------------------------------------------------------------------------------------------\n";
-}
-
-bool check(int* inicio, int* fim){
-    for(int *i = inicio; i != fim; ++i){
-        if(*i > *(i+1)){
-            return false;
-        }
-    }
-    return true;
-}
-
-int* copy_vector(int* inicio, int* fim){
-    return inicio;
-}
-
-int* vetor_aleatorio(int tamanho, int valor_inicial, int valor_final){
-    int *vetor = new int[tamanho];
-    srand(time(nullptr));
-    for(int *i = vetor; i != vetor + tamanho; ++i){
-        *i = valor_inicial + (rand() % valor_final);
-    }
-    return vetor;
-}
 
 void runQuickSortVersions(int *vetor, int tamanho){
     int* fim = vetor + tamanho;

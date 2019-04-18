@@ -25,9 +25,7 @@ void QuickSortMemoria(int *inicio, int *fim){
             if(pivo > inicio)
                 QuickSortMemoria(inicio, pivo-1);
             inicio = pivo + 1;
-        }
-        
-        
+        }  
     }
 }
 

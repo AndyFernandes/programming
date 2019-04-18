@@ -6,26 +6,24 @@
 using namespace std;
 
 Funcoes func;
-
-void QuickSort_Hoare(int *inicio, int *fim){
+void QuickSort_Lomuto(int *inicio, int *fim){
     if(inicio < fim) {
         int *pivo = escolher_pivo2(inicio, fim);
-        func.Selecao_Hoare(inicio, fim, pivo);
+        pivo = func.Particao_Lomuto(inicio, pivo, fim);
         if(pivo > inicio)
-            QuickSort_Hoare(inicio, pivo-1);
+            QuickSort_Lomuto(inicio, pivo-1); // chamada a esquerda
         
-        if (pivo < fim)
-            QuickSort_Hoare(pivo+1, fim);
+        if(pivo < fim)
+            QuickSort_Lomuto(pivo+1, fim); // chamada a direita
     }
 }
 
 int main(){
     int tamanho = 10;
-    int vetor[] = {1, -1, 4, 3, 0, 2, 5, 50, 6, 7};
-    int posicao = 5;
-    int *i_esimo = vetor + posicao;
-   
-    QuickSort_Hoare(vetor, vetor + tamanho-1);
+     int vetor[] =  {1, 20, 51, 3, 5, 100, -1, 30, 2, 4};
+     
+    
+    QuickSort_Lomuto(vetor, vetor + tamanho-1);
     func.print_vector(vetor, vetor+tamanho);
 
     return 0;

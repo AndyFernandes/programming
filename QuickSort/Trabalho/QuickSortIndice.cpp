@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Funcoes.cpp"
 #include "instancias_ruins_QuickSort.hpp"
+#include "QuickSort_Versions.h"
 using namespace std;
 
 Funcoes func;

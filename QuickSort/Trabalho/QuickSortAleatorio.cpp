@@ -8,7 +8,6 @@
 using namespace std;
 
 Funcoes func;
-
 void QuickSort_Aleatorio(int *inicio, int *fim){
     if(inicio < fim) {
         srand(time(nullptr));

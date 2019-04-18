@@ -4,7 +4,6 @@
 #include "Funcoes.cpp"
 #include "instancias_ruins_Quicksort.hpp"
 using namespace std;
-
 Funcoes func;
 
 void QuickSort_Hoare(int *inicio, int *fim){
