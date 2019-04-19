@@ -4,62 +4,74 @@
 #include <random>
 #include <new>
 #include <time.h>
-#include "Funcoes.cpp"
 #include "QuickSortVersions.cpp"
 #include "instancias_ruins_Quicksort.hpp"
 using namespace std;
 
+QuickSortVersions quick;
 void runQuickSortVersions(int *vetor, int tamanho){
     int* fim = vetor + tamanho;
     clock_t inicio;
     clock_t total;
 
     inicio = clock();
-    // Chamada ao QuickSort via Índice
+    int* copia = func.copy_vector(vetor, tamanho);
+    quick.QuickSortIndice(copia, 0, tamanho -1);
     total = clock() - inicio;
     cout << "\n========================================================================";
-    cout << "\nQuickSort via Índice: " << ((float)total/CLOCKS_PER_SEC);
-    cout << check(vetor, fim);
+    cout << "\nQUICKSORT VIA INDICE: " << ((float)total/CLOCKS_PER_SEC);
+    func.check(copia, copia + tamanho);
+    func.print_vector(copia, copia + tamanho);
     cout << "\n========================================================================\n";
 
     inicio = clock();
-    // Chamada ao QuickSort via Particionamento Duplo
+    copia = func.copy_vector(vetor, tamanho);
+    quick.QuickSortLomuto(copia, copia + tamanho -1);
     total = clock() - inicio;
     cout << "\n========================================================================";
-    cout << "\nQuickSort via Particionamento Duplo: " << ((float)total/CLOCKS_PER_SEC);
-    cout << check(vetor, fim);
+    cout << "\nQUICKSORT VIA PARTICIONAMENTO DUPLO: " << ((float)total/CLOCKS_PER_SEC);
+    func.check(copia, copia + tamanho);
+    func.print_vector(copia, copia + tamanho);
     cout << "\n========================================================================\n";
 
     inicio = clock();
-    // Chamada ao QuickSort via Particionamento Triplo
+    copia = func.copy_vector(vetor, tamanho);
+    quick.QuickSortTriplo(copia, copia + tamanho -1);
     total = clock() - inicio;
     cout << "\n========================================================================";
-    cout << "\nQuickSort via Particionamento Triplo: " << ((float)total/CLOCKS_PER_SEC);
-    cout << check(vetor, fim);
+    cout << "\nQUICKSORT VIA PARTICIONAMENTO TRIPLO: " << ((float)total/CLOCKS_PER_SEC);
+    func.check(copia, copia + tamanho);
+    func.print_vector(copia, copia + tamanho);
     cout << "\n========================================================================\n";
 
     inicio = clock();
-    // Chamada ao QuickSort Memória Log(n)
+    copia = func.copy_vector(vetor, tamanho);
+    quick.QuickSortMemoria(copia, copia + tamanho -1);
     total = clock() - inicio;
     cout << "\n========================================================================";
-    cout << "\nQuickSort Memória Log(n): " << ((float)total/CLOCKS_PER_SEC);
-    cout << check(vetor, fim);
+    cout << "\nQUICKSORT MEMORIA LOG(N): " << ((float)total/CLOCKS_PER_SEC);
+    func.check(copia, copia + tamanho);
+    func.print_vector(copia, copia + tamanho);
     cout << "\n========================================================================\n";
 
     inicio = clock();
-    // Chamada ao QuickSort via Mediana das Medianas
+    copia = func.copy_vector(vetor, tamanho);
+    quick.QuickSortBFPRT(copia, copia + tamanho -1);
     total = clock() - inicio;
     cout << "\n========================================================================";
-    cout << "\nQuickSort via Mediana das Medianas: " << ((float)total/CLOCKS_PER_SEC);
-    cout << check(vetor, fim);
+    cout << "\nQUICKSORT VIA MEDIANA DAS MEDIANAS: " << ((float)total/CLOCKS_PER_SEC);
+    func.check(copia, copia + tamanho);
+    func.print_vector(copia, copia + tamanho);
     cout << "\n========================================================================\n";
 
     inicio = clock();
-    // Chamada ao QuickSort Pivô Aleatório
+    copia = func.copy_vector(vetor, tamanho);
+    quick.QuickSortAleatorio(copia, copia + tamanho -1);
     total = clock() - inicio;
     cout << "\n========================================================================";
-    cout << "\nQuickSort via Pivô Aleatório: " << ((float)total/CLOCKS_PER_SEC);
-    cout << check(vetor, fim);
+    cout << "\nQUICKSORT PIVO ALEATORIO: " << ((float)total/CLOCKS_PER_SEC);
+    func.check(copia, copia + tamanho);
+    func.print_vector(copia, copia + tamanho);
     cout << "\n========================================================================\n";
 }
 
@@ -69,27 +81,33 @@ void menu(){
     int continuar;
     int* vetor;
 
-    cout << "Digite o tamanho do vetor: ";
+    cout << "DIGITE O TAMANHO DO VETOR: ";
     cin >> tamanho;
 
-    cout << "\n1. Gerador de instâncias ruins \n2. Gerador de vetor aleatório \nEscolha a opção para geração do vetor: ";
+    cout << "\n1. GERADOR DE INSTANCIAS RUINS \n2. GERADOR DE VETOR ALEATORIO \nINFORME A OPCAO DESEJADA: ";
     cin >> opcao;
 
     switch (opcao){
         case 1:
+            if(escrever_instancia(vetor, tamanho)){
+                cout << "a";
+            } else {
+                func.print_vector(vetor, vetor + tamanho);
+            }
+            
             break;
         case 2:
             int valor_inicial, valor_final;
-            cout << "\nDigite o valor inicial do intervalo: ";
+            cout << "\nVALOR INICIAL DO INTERVALO: ";
             cin >> valor_inicial;
 
-            cout << "Digite o valor final do intervalo: ";
+            cout << "VALOR FINAL DO INTERVALO: ";
             cin >> valor_final;
-            vetor = vetor_aleatorio(tamanho, valor_inicial, valor_final);
-            print_vector(vetor, vetor + tamanho);
+            vetor = func.vetor_aleatorio(tamanho, valor_inicial, valor_final);
+            func.print_vector(vetor, vetor + tamanho);
             break;
         default:
-            cout << "\nOPÇÃO INVÁLIDA!\nPor favor, tente novamente\n";
+            cout << "\nOPCAO INVALIDA!\nPor favor, tente novamente\n";
             break;
     }
 
@@ -101,7 +119,7 @@ int main(){
     do {
         menu();
         cout << "\n--------------------------------------------------------------------\n";
-        cout << "Você deseja continuar? \n1. SIM \n2.NÃO \n:";
+        cout << "VOCE DESEJA CONTINUAR? \n1. SIM \n2. NAO \n:";
         cin >> continuar;
     } while(continuar == 1);
     

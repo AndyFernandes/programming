@@ -1,12 +1,9 @@
-// By Andreza Fernandes de Oliveira, april/2019
-
 #include <iostream>
 #include <tuple>
-#include <time.h>
-#include <random>
 #include "Funcoes.h"
 #include "instancias_ruins_Quicksort.hpp"
 using namespace std;
+
 
 void Funcoes::print_vector(int *inicio, int *fim){
     cout << "\n";
@@ -30,22 +27,26 @@ int* Funcoes::copy_vector(int vetor[], int tamanho){
     return copia;
 }
 
-bool check(int* inicio, int* fim){
-    for(int *i = inicio; i != fim; ++i){
-        if(*i > *(i+1)){
-            return false;
-        }
-    }
-    return true;
-}
-
-int* vetor_aleatorio(int tamanho, int valor_inicial, int valor_final){
+int* Funcoes::vetor_aleatorio(int tamanho, int valor_inicial, int valor_final){
     int *vetor = new int[tamanho];
-    srand(time(nullptr));
+    
     for(int *i = vetor; i != vetor + tamanho; ++i){
         *i = valor_inicial + (rand() % valor_final);
     }
     return vetor;
+}
+
+void Funcoes::check(int* inicio, int* fim){
+    int achou = 0;
+    for(int *i = inicio; i != fim; ++i){
+        if(*i > *(i+1)){
+            ++achou;
+        }
+    }
+    if(achou == 0)
+        cout << "\nVETOR ORDENADO!\n";
+    else
+        cout << "\nVETOR DESORDENADO!\n";
 }
 
 int Funcoes::Particao_Lomuto(int vetor[], int inicio, int pivo, int fim){
@@ -118,4 +119,44 @@ void Funcoes::Selecao_Hoare(int *inicio, int *fim, int *i){
         if(i > pivo)
             Selecao_Hoare(pivo+1, fim, i);
     }
+}
+
+void Funcoes::BFPRT(int* inicio, int* fim, int* pivo){
+    int tamanho = fim - inicio;
+
+    if(tamanho <= 5){
+        Selecao_Hoare(inicio, fim, pivo);
+        return;
+    }
+
+    int *init, *meio, *finish;
+    int tamanho_vetor_ponteiros = (tamanho/5) + 1;
+
+    for(int i = 0; i < tamanho_vetor_ponteiros; ++i){
+        init = inicio + i*5;
+        if(i == tamanho_vetor_ponteiros - 1){
+            finish = init + ((fim-1) - init);
+            meio = init + ((finish - init)/2);
+        } else {
+            meio = init + 2;
+            finish = init + 4;
+        }
+
+        Selecao_Hoare(init, finish, meio);
+        trocar(meio, inicio+i);
+    }
+
+    init = inicio;
+    finish = inicio + tamanho_vetor_ponteiros - 1;
+    meio = init + ((finish - init)/2);
+    BFPRT(init, finish, meio);
+
+     tuple<int*, int*> ponteiros = Particao_Tripla(inicio, pivo, fim);
+     if (pivo < get<0>(ponteiros)){
+         BFPRT(inicio, get<0>(ponteiros)-1, pivo);
+     } else if (pivo > get<1>(ponteiros)) {
+         BFPRT(get<1>(ponteiros)+1, fim, pivo);
+     } else {
+         pivo = get<0>(ponteiros);
+     }
 }

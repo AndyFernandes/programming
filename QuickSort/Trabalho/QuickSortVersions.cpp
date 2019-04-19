@@ -5,10 +5,11 @@
 #include <tuple>
 #include <time.h>
 #include <random>
-#include <tuple>
+#include <iostream>
 using namespace std;
 
 Funcoes func;
+
 void QuickSortVersions::QuickSortMemoria(int *inicio, int *fim){
     while(inicio < fim){
         int *pivo = escolher_pivo2(inicio, fim);
@@ -36,10 +37,10 @@ void QuickSortVersions::QuickSortIndice(int vetor[], int inicio, int fim){
         int pivo = escolher_pivo(inicio, fim);
         pivo = func.Particao_Lomuto(vetor, inicio, pivo, fim);
         if(pivo > inicio)
-            QuickSort_Indice(vetor, inicio, pivo-1); // chamada a esquerda
+            QuickSortIndice(vetor, inicio, pivo-1); // chamada a esquerda
         
         if(pivo < fim)
-            QuickSort_Indice(vetor, pivo+1, fim); // chamada a direita
+            QuickSortIndice(vetor, pivo+1, fim); // chamada a direita
     }
 }
 
@@ -49,10 +50,10 @@ void QuickSortVersions::QuickSortAleatorio(int *inicio, int *fim){
         int* pivo = escolher_pivo_aleatorio(inicio, fim);
         pivo = func.Particao_Lomuto(inicio, pivo, fim);
         if(pivo > inicio)
-            QuickSort_Aleatorio(inicio, pivo-1);
+            QuickSortAleatorio(inicio, pivo-1);
         
         if(pivo < fim)
-            QuickSort_Aleatorio(pivo+1, fim); 
+            QuickSortAleatorio(pivo+1, fim); 
     }
 }
 
@@ -61,10 +62,10 @@ void QuickSortVersions::QuickSortLomuto(int *inicio, int *fim){
         int *pivo = escolher_pivo2(inicio, fim);
         pivo = func.Particao_Lomuto(inicio, pivo, fim);
         if(pivo > inicio)
-            QuickSort_Lomuto(inicio, pivo-1); // chamada a esquerda
+            QuickSortLomuto(inicio, pivo-1); // chamada a esquerda
         
         if(pivo < fim)
-            QuickSort_Lomuto(pivo+1, fim); // chamada a direita
+            QuickSortLomuto(pivo+1, fim); // chamada a direita
     }
 }
 
@@ -74,10 +75,10 @@ void QuickSortVersions::QuickSortTriplo(int *inicio, int *fim){
         tuple <int*, int*> ponteiros = func.Particao_Tripla(inicio, fim, pivo);
 
         if(get<0>(ponteiros)-1 > inicio)
-            QuickSort_Tripla(inicio, get<0>(ponteiros)-1);
+            QuickSortTriplo(inicio, get<0>(ponteiros)-1);
 
         if(get<1>(ponteiros)+1 < fim)
-            QuickSort_Tripla(get<1>(ponteiros)+1, fim);
+            QuickSortTriplo(get<1>(ponteiros)+1, fim);
     }
 }
 
@@ -86,9 +87,21 @@ void QuickSortVersions::QuickSortHoare(int *inicio, int *fim){
         int *pivo = escolher_pivo2(inicio, fim);
         func.Selecao_Hoare(inicio, fim, pivo);
         if(pivo > inicio)
-            QuickSort_Hoare(inicio, pivo-1);
+            QuickSortHoare(inicio, pivo-1);
         
         if (pivo < fim)
-            QuickSort_Hoare(pivo+1, fim);
+            QuickSortHoare(pivo+1, fim);
+    }
+}
+
+void QuickSortVersions::QuickSortBFPRT(int *inicio, int *fim){
+    if(inicio < fim) {
+        int *pivo = escolher_pivo2(inicio, fim);
+        func.BFPRT(inicio, fim, pivo);
+        if(pivo > inicio)
+            QuickSortBFPRT(inicio, pivo-1); 
+
+        if(pivo < fim)
+            QuickSortBFPRT(pivo+1, fim);
     }
 }
