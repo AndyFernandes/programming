@@ -12,7 +12,7 @@ Funcoes func;
 
 void QuickSortVersions::QuickSortMemoria(int *inicio, int *fim){
     while(inicio < fim){
-        int *pivo = escolher_pivo2(inicio, fim);
+        int *pivo = func.escolher_pivo2(inicio, fim);
         pivo = func.Particao_Lomuto(inicio, pivo, fim);
         
         int tamEsquerda = pivo - inicio;
@@ -46,8 +46,7 @@ void QuickSortVersions::QuickSortIndice(int vetor[], int inicio, int fim){
 
 void QuickSortVersions::QuickSortAleatorio(int *inicio, int *fim){
     if(inicio < fim) {
-        srand(time(nullptr));
-        int* pivo = escolher_pivo_aleatorio(inicio, fim);
+        int* pivo = func.escolher_pivo_aleatorio(inicio, fim);
         pivo = func.Particao_Lomuto(inicio, pivo, fim);
         if(pivo > inicio)
             QuickSortAleatorio(inicio, pivo-1);
@@ -59,7 +58,7 @@ void QuickSortVersions::QuickSortAleatorio(int *inicio, int *fim){
 
 void QuickSortVersions::QuickSortLomuto(int *inicio, int *fim){
     if(inicio < fim) {
-        int *pivo = escolher_pivo2(inicio, fim);
+        int *pivo = func.escolher_pivo2(inicio, fim);
         pivo = func.Particao_Lomuto(inicio, pivo, fim);
         if(pivo > inicio)
             QuickSortLomuto(inicio, pivo-1); // chamada a esquerda
@@ -71,7 +70,7 @@ void QuickSortVersions::QuickSortLomuto(int *inicio, int *fim){
 
 void QuickSortVersions::QuickSortTriplo(int *inicio, int *fim){
      if(inicio < fim){
-        int *pivo = escolher_pivo2(inicio, fim);
+        int *pivo = func.escolher_pivo2(inicio, fim);
         tuple <int*, int*> ponteiros = func.Particao_Tripla(inicio, fim, pivo);
 
         if(get<0>(ponteiros)-1 > inicio)
@@ -84,7 +83,7 @@ void QuickSortVersions::QuickSortTriplo(int *inicio, int *fim){
 
 void QuickSortVersions::QuickSortHoare(int *inicio, int *fim){
     if(inicio < fim) {
-        int *pivo = escolher_pivo2(inicio, fim);
+        int *pivo = func.escolher_pivo2(inicio, fim);
         func.Selecao_Hoare(inicio, fim, pivo);
         if(pivo > inicio)
             QuickSortHoare(inicio, pivo-1);
@@ -96,7 +95,7 @@ void QuickSortVersions::QuickSortHoare(int *inicio, int *fim){
 
 void QuickSortVersions::QuickSortBFPRT(int *inicio, int *fim){
     if(inicio < fim) {
-        int *pivo = escolher_pivo2(inicio, fim);
+        int *pivo = func.escolher_pivo2(inicio, fim);
         func.BFPRT(inicio, fim, pivo);
         if(pivo > inicio)
             QuickSortBFPRT(inicio, pivo-1); 

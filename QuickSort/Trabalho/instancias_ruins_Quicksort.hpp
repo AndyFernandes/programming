@@ -47,22 +47,17 @@
 // -----------------------------------------------------------------------------
 
 #include <new>
+#include <random>
 #include <utility>
 using std::nothrow;
 using std::swap;
 
 // -----------------------------------------------------------------------------
-int escolher_pivo(int primeiro, int ultimo){
-  return primeiro + ((ultimo - primeiro)/2);
-}
+int escolher_pivo(int primeiro, int ultimo);
 
-int* escolher_pivo2(int* primeiro, int* ultimo){
-  return ultimo;
-}
+// int* escolher_pivo2(int* primeiro, int* ultimo);
 
-int* escolher_pivo_aleatorio(int* primeiro, int* ultimo){
-  return primeiro + (rand()%(ultimo-primeiro));
-}
+// int* escolher_pivo_aleatorio(int* primeiro, int* ultimo);
 
 // VALOR DE RETORNO: * true:  indica erro (falta de memÃ³ria);
 //                   * false: indica sucesso.

@@ -9,6 +9,11 @@
 using namespace std;
 
 QuickSortVersions quick;
+
+int escolher_pivo(int primeiro, int ultimo){
+  return primeiro + ((ultimo - primeiro)/2);
+}
+
 void runQuickSortVersions(int *vetor, int tamanho){
     int* fim = vetor + tamanho;
     clock_t inicio;
@@ -20,8 +25,8 @@ void runQuickSortVersions(int *vetor, int tamanho){
     total = clock() - inicio;
     cout << "\n========================================================================";
     cout << "\nQUICKSORT VIA INDICE: " << ((float)total/CLOCKS_PER_SEC);
-    func.check(copia, copia + tamanho);
-    func.print_vector(copia, copia + tamanho);
+    func.check(copia, copia + tamanho - 1);
+    //func.print_vector(copia, copia + tamanho);
     cout << "\n========================================================================\n";
 
     inicio = clock();
@@ -30,8 +35,8 @@ void runQuickSortVersions(int *vetor, int tamanho){
     total = clock() - inicio;
     cout << "\n========================================================================";
     cout << "\nQUICKSORT VIA PARTICIONAMENTO DUPLO: " << ((float)total/CLOCKS_PER_SEC);
-    func.check(copia, copia + tamanho);
-    func.print_vector(copia, copia + tamanho);
+    func.check(copia, copia + tamanho - 1);
+    //func.print_vector(copia, copia + tamanho);
     cout << "\n========================================================================\n";
 
     inicio = clock();
@@ -40,8 +45,8 @@ void runQuickSortVersions(int *vetor, int tamanho){
     total = clock() - inicio;
     cout << "\n========================================================================";
     cout << "\nQUICKSORT VIA PARTICIONAMENTO TRIPLO: " << ((float)total/CLOCKS_PER_SEC);
-    func.check(copia, copia + tamanho);
-    func.print_vector(copia, copia + tamanho);
+    func.check(copia, copia + tamanho - 1);
+    //func.print_vector(copia, copia + tamanho);
     cout << "\n========================================================================\n";
 
     inicio = clock();
@@ -50,8 +55,8 @@ void runQuickSortVersions(int *vetor, int tamanho){
     total = clock() - inicio;
     cout << "\n========================================================================";
     cout << "\nQUICKSORT MEMORIA LOG(N): " << ((float)total/CLOCKS_PER_SEC);
-    func.check(copia, copia + tamanho);
-    func.print_vector(copia, copia + tamanho);
+    func.check(copia, copia + tamanho - 1);
+    //func.print_vector(copia, copia + tamanho);
     cout << "\n========================================================================\n";
 
     inicio = clock();
@@ -60,8 +65,8 @@ void runQuickSortVersions(int *vetor, int tamanho){
     total = clock() - inicio;
     cout << "\n========================================================================";
     cout << "\nQUICKSORT VIA MEDIANA DAS MEDIANAS: " << ((float)total/CLOCKS_PER_SEC);
-    func.check(copia, copia + tamanho);
-    func.print_vector(copia, copia + tamanho);
+    func.check(copia, copia + tamanho - 1);
+    //func.print_vector(copia, copia + tamanho);
     cout << "\n========================================================================\n";
 
     inicio = clock();
@@ -70,7 +75,7 @@ void runQuickSortVersions(int *vetor, int tamanho){
     total = clock() - inicio;
     cout << "\n========================================================================";
     cout << "\nQUICKSORT PIVO ALEATORIO: " << ((float)total/CLOCKS_PER_SEC);
-    func.check(copia, copia + tamanho);
+    func.check(copia, copia + tamanho - 1);
     func.print_vector(copia, copia + tamanho);
     cout << "\n========================================================================\n";
 }
@@ -79,7 +84,7 @@ void menu(){
     int tamanho;
     int opcao;
     int continuar;
-    int* vetor;
+    int* vetor = new int[tamanho];
 
     cout << "DIGITE O TAMANHO DO VETOR: ";
     cin >> tamanho;

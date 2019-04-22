@@ -1,4 +1,5 @@
-//Arquivo 1 ponto.h, definicao para a classe ponto.
+// By Andreza Fernandes de Oliveira, april/2019
+
 #include <tuple>
 #include <iostream>
 using namespace std;
@@ -15,4 +16,6 @@ class Funcoes {
         tuple<int*, int*> Particao_Tripla(int *inicio, int *pivo, int *fim);
         void Selecao_Hoare(int *inicio, int *fim, int *i);
         void BFPRT(int* inicio, int* fim, int* pivo);
+        int* escolher_pivo2(int* primeiro, int* ultimo);
+        int* escolher_pivo_aleatorio(int* primeiro, int* ultimo);
 };
