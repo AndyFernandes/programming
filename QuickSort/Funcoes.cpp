@@ -19,6 +19,18 @@ void Funcoes::trocar(int* posicao1, int *posicao2){
   *posicao2 = aux;
 }
 
+int* Funcoes::escolher_pivo2(int* primeiro, int* ultimo){
+  return ultimo;
+}
+
+int* Funcoes::escolher_pivo_aleatorio(int* primeiro, int* ultimo){
+  return primeiro + (rand()%((ultimo-primeiro) + 1));
+}
+
+int Funcoes::escolher_pivo(int primeiro, int ultimo){
+    return primeiro + ((ultimo - primeiro)/2);
+}
+
 int* Funcoes::copy_vector(int vetor[], int tamanho){
     int* copia = new int[tamanho];
     for(int i = 0; i < tamanho; ++i){
@@ -29,9 +41,9 @@ int* Funcoes::copy_vector(int vetor[], int tamanho){
 
 int* Funcoes::vetor_aleatorio(int tamanho, int valor_inicial, int valor_final){
     int *vetor = new int[tamanho];
-    srand(time(nullptr));
+    
     for(int *i = vetor; i != vetor + tamanho; ++i){
-        *i = valor_inicial + (rand() % valor_final);
+        *i = valor_inicial + (rand() % ((valor_final - valor_inicial)+1));
     }
     return vetor;
 }
@@ -40,13 +52,15 @@ void Funcoes::check(int* inicio, int* fim){
     int achou = 0;
     for(int *i = inicio; i != fim; ++i){
         if(*i > *(i+1)){
+            cout << "\n" << *i << " | " << *(i+1);
             ++achou;
         }
     }
+    
     if(achou == 0)
-        cout << "VETOR ORDENADO!\n";
+        cout << "\nVETOR ORDENADO!\n";
     else
-        cout << "VETOR DESORDENADO!\n";
+        cout << "\nVETOR DESORDENADO!\n";
 }
 
 int Funcoes::Particao_Lomuto(int vetor[], int inicio, int pivo, int fim){

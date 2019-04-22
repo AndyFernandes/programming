@@ -9,7 +9,7 @@ Funcoes func;
 
 void QuickSort_Indice(int vetor[], int inicio, int fim){
     if(inicio < fim) {
-        int pivo = escolher_pivo(inicio, fim);
+        int pivo = func.escolher_pivo(inicio, fim);
         pivo = func.Particao_Lomuto(vetor, inicio, pivo, fim);
         if(pivo > inicio)
             QuickSort_Indice(vetor, inicio, pivo-1); // chamada a esquerda

@@ -9,7 +9,7 @@ Funcoes func;
 
 void QuickSort_BFPRT(int *inicio, int *fim){
     if(inicio < fim) {
-        int *pivo = escolher_pivo2(inicio, fim);
+        int *pivo = func.escolher_pivo2(inicio, fim);
         func.BFPRT(inicio, fim, pivo);
         if(pivo > inicio)
             QuickSort_BFPRT(inicio, pivo-1); // chamada a esquerda

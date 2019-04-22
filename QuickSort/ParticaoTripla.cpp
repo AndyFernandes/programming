@@ -10,7 +10,7 @@ Funcoes func;
 
 void QuickSort_Tripla(int *inicio, int *fim){
      if(inicio < fim){
-        int *pivo = escolher_pivo2(inicio, fim);
+        int *pivo = func.escolher_pivo2(inicio, fim);
         tuple <int*, int*> ponteiros = func.Particao_Tripla(inicio, fim, pivo);
 
         if(get<0>(ponteiros)-1 > inicio)
@@ -24,7 +24,7 @@ void QuickSort_Tripla(int *inicio, int *fim){
 int main(){
     int tamanho = 15;
     int vetor[] = {1, 2, 5, 2, 4, 20, 1, 3, 6, 5, 5, 4, 1, 2, 1};
-    int *pivo = escolher_pivo2(vetor, vetor+4);
+    int *pivo = func.escolher_pivo2(vetor, vetor+4);
 
     //cout << "\nPIVO: " << *pivo  << "\n";
     //tuple <int*, int*> ponteiros = func.Particao_Tripla(vetor, pivo, vetor + tamanho);

@@ -9,7 +9,7 @@ Funcoes func;
 
 void QuickSortMemoria(int *inicio, int *fim){
     while(inicio < fim){
-        int *pivo = escolher_pivo2(inicio, fim);
+        int *pivo = func.escolher_pivo2(inicio, fim);
         pivo = func.Particao_Lomuto(inicio, pivo, fim);
         
         int tamEsquerda = pivo - inicio;

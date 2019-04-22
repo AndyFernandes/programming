@@ -45,7 +45,7 @@ int* Particao_Lomuto(int *inicio, int *pivo, int *fim){
 */
 void QuickSort_Lomuto(int *inicio, int *fim){
     if(inicio < fim) {
-        int *pivo = escolher_pivo2(inicio, fim);
+        int *pivo = func.escolher_pivo2(inicio, fim);
         pivo = func.Particao_Lomuto(inicio, pivo, fim);
         if(pivo > inicio)
             QuickSort_Lomuto(inicio, pivo-1); // chamada a esquerda

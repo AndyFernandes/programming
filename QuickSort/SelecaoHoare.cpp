@@ -9,7 +9,7 @@ Funcoes func;
 
 void QuickSort_Hoare(int *inicio, int *fim){
     if(inicio < fim) {
-        int *pivo = escolher_pivo2(inicio, fim);
+        int *pivo = func.escolher_pivo2(inicio, fim);
         func.Selecao_Hoare(inicio, fim, pivo);
         if(pivo > inicio)
             QuickSort_Hoare(inicio, pivo-1);

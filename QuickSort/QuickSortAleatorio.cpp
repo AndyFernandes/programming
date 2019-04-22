@@ -12,7 +12,7 @@ Funcoes func;
 void QuickSort_Aleatorio(int *inicio, int *fim){
     if(inicio < fim) {
         srand(time(nullptr));
-        int* pivo = escolher_pivo_aleatorio(inicio, fim);
+        int* pivo = func.escolher_pivo_aleatorio(inicio, fim);
         pivo = func.Particao_Lomuto(inicio, pivo, fim);
         if(pivo > inicio)
             QuickSort_Aleatorio(inicio, pivo-1);
