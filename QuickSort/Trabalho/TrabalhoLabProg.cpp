@@ -78,6 +78,9 @@ void runQuickSortVersions(int *vetor, int tamanho){
     func.check(copia, copia + tamanho - 1);
     //func.print_vector(copia, copia + tamanho);
     cout << "\n========================================================================\n";
+
+    delete[] vetor;
+    delete[] copia;
 }
 
 void menu(){
