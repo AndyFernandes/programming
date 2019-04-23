@@ -34,7 +34,7 @@ void QuickSortVersions::QuickSortMemoria(int *inicio, int *fim){
 
 void QuickSortVersions::QuickSortIndice(int vetor[], int inicio, int fim){
     if(inicio < fim) {
-        int pivo = escolher_pivo(inicio, fim);
+        int pivo = func.escolher_pivo_indice(inicio, fim);
         pivo = func.Particao_Lomuto(vetor, inicio, pivo, fim);
         if(pivo > inicio)
             QuickSortIndice(vetor, inicio, pivo-1); // chamada a esquerda
@@ -73,10 +73,10 @@ void QuickSortVersions::QuickSortTriplo(int *inicio, int *fim){
         int *pivo = func.escolher_pivo2(inicio, fim);
         tuple <int*, int*> ponteiros = func.Particao_Tripla(inicio, fim, pivo);
 
-        if(get<0>(ponteiros)-1 > inicio)
+        if(get<0>(ponteiros) > inicio)
             QuickSortTriplo(inicio, get<0>(ponteiros)-1);
 
-        if(get<1>(ponteiros)+1 < fim)
+        if(get<1>(ponteiros) < fim)
             QuickSortTriplo(get<1>(ponteiros)+1, fim);
     }
 }
