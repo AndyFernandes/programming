@@ -12,10 +12,10 @@ void QuickSort_BFPRT(int *inicio, int *fim){
         int *pivo = func.escolher_pivo2(inicio, fim);
         func.BFPRT(inicio, fim, pivo);
         if(pivo > inicio)
-            QuickSort_BFPRT(inicio, pivo-1); // chamada a esquerda
+            QuickSort_BFPRT(inicio, pivo-1); 
 
         if(pivo < fim)
-            QuickSort_BFPRT(pivo+1, fim); // chamada a direita
+            QuickSort_BFPRT(pivo+1, fim);
     }
 }
 

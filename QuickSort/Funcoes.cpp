@@ -1,3 +1,5 @@
+// By Andreza Fernandes de Oliveira, april/2019
+
 #include <iostream>
 #include <tuple>
 #include "Funcoes.h"
@@ -20,15 +22,15 @@ void Funcoes::trocar(int* posicao1, int *posicao2){
 }
 
 int* Funcoes::escolher_pivo2(int* primeiro, int* ultimo){
-  return ultimo;
+  return primeiro + (ultimo-primeiro)/2;
 }
 
 int* Funcoes::escolher_pivo_aleatorio(int* primeiro, int* ultimo){
   return primeiro + (rand()%((ultimo-primeiro) + 1));
 }
 
-int Funcoes::escolher_pivo(int primeiro, int ultimo){
-    return primeiro + ((ultimo - primeiro)/2);
+int Funcoes::escolher_pivo_indice(int primeiro, int ultimo){
+  return (ultimo + primeiro)/2;
 }
 
 int* Funcoes::copy_vector(int vetor[], int tamanho){
@@ -105,8 +107,8 @@ int* Funcoes::Particao_Lomuto(int *inicio, int *pivo, int *fim){
 }
 
 tuple<int*, int*> Funcoes::Particao_Tripla(int *inicio, int *pivo, int *fim){
-    int *m = inicio, *i = inicio, *j = inicio + 1, aux;
     trocar(inicio, pivo);
+    int *m = inicio, *i = inicio, *j = inicio + 1, aux;
 
     for(;j != fim+1; ++j){
        if (*j < *inicio){
@@ -172,5 +174,6 @@ void Funcoes::BFPRT(int* inicio, int* fim, int* pivo){
          BFPRT(get<1>(ponteiros)+1, fim, pivo);
      } else {
          pivo = get<0>(ponteiros);
+         return;
      }
 }
