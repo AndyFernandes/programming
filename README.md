@@ -24,7 +24,7 @@ Disciplina do curso de Ciência da Computação, Universidade Federal do Ceará.
 # Trabalho 2
 * [Trabalho 2](SearchPadroesInString/Trabalho2.cpp).
 ## Busca de Padrões em Strings
-* [Algoritmo Ingênuo](SearchPadroesInString/Ingenuo.cpp).
+* [Algoritmo Ingênuo](SearchPadroesInString/ForcaBruta.cpp).
 * [Algoritmo Knuth-Morris-Pratt](SearchPadroesInString/KnuthMorrisPratt.cpp).
 
 
