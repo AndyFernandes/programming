@@ -6,6 +6,7 @@ using namespace std;
 class Funcoes {
     public:
         void print_vector(int *inicio, int *fim);
+        void check(int* saida1, int* saida2, int tamanho);
         void CalculatePi();
         void KnuthMorrisPratt(const char *texto, const char *padrao, int *saida);
         void ForcaBruta(const char *texto, const char *padrao, int *saida);
