@@ -1,8 +1,9 @@
+// By Andreza Fernandes de Oliveira, may/2019
+
 #include <iostream>
 #include <string.h>
 using namespace std;
 
-//DOING
 // TODO: Deixar tudo em ponteiro
 void buscar(const char *texto, const char *padrao, int *saida){
     int posicao_ocorrencia = 0; // guarda a posicao do texto em que comecou a ocorrencia do padrao
