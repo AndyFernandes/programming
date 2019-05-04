@@ -2,10 +2,11 @@
 
 #include <iostream>
 #include <string.h>
+#include "instancias_Reais_Trabalho_2.hpp"
 using namespace std;
 
 // TODO: Deixar tudo em ponteiro
-void buscar(const char *texto, const char *padrao, int *saida){
+void ForcaBruta(const char *texto, const char *padrao, int *saida){
     int posicao_ocorrencia = 0; // guarda a posicao do texto em que comecou a ocorrencia do padrao
     int posicao_corrente = 0; // posicao corrente do texto
     int posicao_padrao = 0;
@@ -39,11 +40,21 @@ void print_vector(int *inicio, int *fim){
     cout << "\n";
 }
 
+void completeZeros(int* vetor, int tamanho){
+    for(int *i = vetor; i != vetor+tamanho;++i)
+        *i =0;
+}
 int main(){
-    char texto[] = "vi um passaro vivido";
-    char padrao[]= "vi";
-    int* saida = new int[strlen(texto) + 1];
-    buscar(texto, padrao, saida);
+    const char* texto = Texto_Livros;
+    char padrao[]= "a";
+    cout << strlen(texto);
+
+    int tamanho = strlen(texto) + 1;
+    int* saida = new int[tamanho];
+    completeZeros(saida, tamanho);
+    ForcaBruta(texto, padrao, saida);
     print_vector(saida, saida + strlen(texto) + 1);
+ 
+    delete[] saida;
     return 0;
 }
