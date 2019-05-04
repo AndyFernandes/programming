@@ -7,10 +7,12 @@ class Funcoes {
     public:
         void print_vector(int *inicio, int *fim);
         void check(int* saida1, int* saida2, int tamanho);
-        void CalculatePi();
+        void CalculatePi(const char *padrao, int *pi);
         void KnuthMorrisPratt(const char *texto, const char *padrao, int *saida);
         void ForcaBruta(const char *texto, const char *padrao, int *saida);
-        void InstanciaAleatoria(int n, int m, const char *texto, const char *padrao);
-        void PiorCaso1(int n, int m, const char *texto, const char *padrao);
-        void PiorCaso2(int n, int m, const char *texto, const char *padrao);
+        char* InstanciaAleatoria(int n);
+        char* PiorCaso1(int n);
+        char* PiorCaso1Padrao(int n);
+        char* PiorCaso2(int n);
+        void completeZeros(int* vetor, int tamanho);
 };

@@ -4,11 +4,11 @@
 #include <string.h>
 using namespace std;
 
-void calculatePi(const char *padrao, int *pi, int m){
-    *pi = 0;
-    ++pi;
+void calculatePi(const char *padrao, int *pi){
+    pi[0] = 0;
     int k, l;
-    for(int i = 1; i < m-1; ++i){
+
+    for(int i = 1; padrao[i] != '\0'; ++i){
         k = i - 1;
         while(true){
             l = pi[k];
@@ -35,10 +35,10 @@ void calculatePi(const char *padrao, int *pi, int m){
 void KnuthMorrisPratt(const char* texto, const char* padrao, int* saida){
     int m = strlen(padrao), n = strlen(texto);
     int *pi = new int[m];
-    calculatePi(padrao, pi, m);
+    calculatePi(padrao, pi);
     int i = 0, j = 0;
 
-    while(i < n){
+    while(texto[i] != '\0'){
         if(texto[i] != padrao[j]){
             if(j == 0) ++i;
             else j = pi[j-1];
@@ -54,6 +54,7 @@ void KnuthMorrisPratt(const char* texto, const char* padrao, int* saida){
             }
         }
     }
+    *saida = -1;
 }
 
 void print_vector(int *inicio, int *fim){
@@ -65,12 +66,10 @@ void print_vector(int *inicio, int *fim){
 }
 
 int main(){
-    char texto[] = "vi um passaro vivido";
-    char padrao[]= "vi";
+    const char texto[] = "AAAAAAAAAAAAAAAA";
+    const char padrao[]= "C";
     int* saida = new int[strlen(texto) + 1];
-    cout << texto;
     KnuthMorrisPratt(texto, padrao, saida);
-    cout << texto;
     print_vector(saida, saida + strlen(texto) + 1);
     return 0;
 }

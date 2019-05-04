@@ -13,6 +13,9 @@ Funcoes func;
 void run(const char *texto, const char *padrao){
     int* saidaFB = new int[strlen(texto) + 1];
     int* saidaKMP = new int[strlen(texto) + 1];
+    func.completeZeros(saidaFB, strlen(texto) + 1);
+    func.completeZeros(saidaKMP, strlen(texto) + 1);
+
     clock_t inicio;
     clock_t total;
 
@@ -30,8 +33,8 @@ void run(const char *texto, const char *padrao){
     cout << "\nKNUTH MORRIS PRATT: " << ((float)total/CLOCKS_PER_SEC) << " seconds.";
     cout << "\n========================================================================\n";
 
-    delete[] texto;
-    delete[] padrao;
+    delete[] saidaFB;
+    delete[] saidaKMP;
 }
 
 void menu(){
