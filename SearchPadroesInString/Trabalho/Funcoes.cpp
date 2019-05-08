@@ -1,6 +1,7 @@
 // By Andreza Fernandes de Oliveira, may/2019
 
 #include <iostream>
+#include <string.h>
 #include "Funcoes.h"
 using namespace std;
 

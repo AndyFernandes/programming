@@ -5,7 +5,6 @@
 #include "instancias_Reais_Trabalho_2.hpp"
 using namespace std;
 
-// TODO: Deixar tudo em ponteiro
 void ForcaBruta(const char *texto, const char *padrao, int *saida){
     int posicao_ocorrencia = 0; // guarda a posicao do texto em que comecou a ocorrencia do padrao
     int posicao_corrente = 0; // posicao corrente do texto
@@ -44,16 +43,19 @@ void completeZeros(int* vetor, int tamanho){
     for(int *i = vetor; i != vetor+tamanho;++i)
         *i =0;
 }
+
+// fazer o pior casos do jeito que eu tinha feito
+
 int main(){
     const char* texto = Texto_Livros;
     char padrao[]= "a";
     cout << strlen(texto);
 
-    int tamanho = strlen(texto) + 1;
+    int tamanho = strlen(texto) + 30;
     int* saida = new int[tamanho];
     completeZeros(saida, tamanho);
-    ForcaBruta(texto, padrao, saida);
-    print_vector(saida, saida + strlen(texto) + 1);
+    //ForcaBruta(texto, padrao, saida);
+    print_vector(saida, saida + strlen(texto) + 30);
  
     delete[] saida;
     return 0;

@@ -27,6 +27,11 @@ Disciplina do curso de Ciência da Computação, Universidade Federal do Ceará.
 * [Algoritmo Ingênuo](SearchPadroesInString/ForcaBruta.cpp).
 * [Algoritmo Knuth-Morris-Pratt](SearchPadroesInString/KnuthMorrisPratt.cpp).
 
+---
+
+# Trabalho 3
+* [Codificação Huffman](CodificacaoHuffman/Trabalho.cpp).
+
 
 
 
