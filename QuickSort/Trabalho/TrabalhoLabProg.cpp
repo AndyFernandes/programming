@@ -98,7 +98,7 @@ void menu(){
     switch (opcao){
         case 1:
             if(escrever_instancia(vetor, tamanho)){
-                cout << "a";
+                cout << "\nOcorreu algum problema na criacao do vetor";
             } else {
                 func.print_vector(vetor, vetor + tamanho);
             }
