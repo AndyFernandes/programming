@@ -44,14 +44,33 @@ void completeZeros(int* vetor, int tamanho){
         *i =0;
 }
 
-// fazer o pior casos do jeito que eu tinha feito
+//TODO ajeitar isso aqui
+void InstanciaAleatoria(int n, int m, char* texto, char* padrao){
+    static char c = 'a' + rand()%26;
+}
+
+void PiorCaso1(int n, int m, char* texto, char* padrao){
+    for(int i = 0; i < n; i++){
+        t[i] = 'a';
+    }
+    t[n] = '\0';
+    return t;
+}
+
+void PiorCaso2(int n, int m, char* texto, char* padrao){
+    for(int i = 0; i < n; i++){
+        t[i] = 'a';
+    }
+    t[n] = '\0';
+    return t;
+}
 
 int main(){
-    const char* texto = Texto_Livros;
-    char padrao[]= "a";
-    cout << strlen(texto);
+    char* texto;
+    char* padrao;
+    // cout << strlen(texto);
 
-    int tamanho = strlen(texto) + 30;
+    int tamanho = 30;
     int* saida = new int[tamanho];
     completeZeros(saida, tamanho);
     //ForcaBruta(texto, padrao, saida);
