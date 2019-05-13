@@ -167,7 +167,7 @@ void Funcoes::BFPRT(int* inicio, int* fim, int* pivo){
     meio = init + ((finish - init)/2);
     BFPRT(init, finish, meio);
 
-     tuple<int*, int*> ponteiros = Particao_Tripla(inicio, pivo, fim);
+     tuple<int*, int*> ponteiros = Particao_Tripla(inicio, meio, fim);
      if (pivo < get<0>(ponteiros)){
          BFPRT(inicio, get<0>(ponteiros)-1, pivo);
      } else if (pivo > get<1>(ponteiros)) {

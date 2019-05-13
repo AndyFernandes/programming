@@ -100,7 +100,7 @@ void menu(){
             if(escrever_instancia(vetor, tamanho)){
                 cout << "\nOcorreu algum problema na criacao do vetor";
             } else {
-                func.print_vector(vetor, vetor + tamanho);
+                //func.print_vector(vetor, vetor + tamanho);
             }
             
             break;
@@ -112,7 +112,7 @@ void menu(){
             cout << "VALOR FINAL DO INTERVALO: ";
             cin >> valor_final;
             vetor = func.vetor_aleatorio(tamanho, valor_inicial, valor_final);
-            func.print_vector(vetor, vetor + tamanho);
+            //func.print_vector(vetor, vetor + tamanho);
             break;
         default:
             cout << "\nOPCAO INVALIDA!\nPor favor, tente novamente\n";
