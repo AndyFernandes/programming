@@ -10,7 +10,7 @@
 using namespace std;
 
 Funcoes func;
-void run(const char *texto, const char *padrao){
+void run(char *texto, char *padrao){
     int* saidaFB = new int[strlen(texto) + 1];
     int* saidaKMP = new int[strlen(texto) + 1];
     func.completeZeros(saidaFB, strlen(texto) + 1);
@@ -42,8 +42,8 @@ void menu(){
     int opcao;
     int continuar;
     int n, m;
-    const char* texto; //= new char[tamanho];
-    const char* padrao;
+    char* texto;
+    char* padrao;
 
     cout << "\n1. INSTANCIA ALEATORIA \n2. INSTANCIA PIOR CASO 1 \n3. INSTANCIA PIOR CASO 2 \n4. INSTANCIA TEXTO REAIS \nINFORME A OPCAO DESEJADA: ";
     cin >> opcao;
@@ -54,9 +54,9 @@ void menu(){
             cin >> n;
         }
 
-        texto = Texto_Livros;
-        padrao = Padroes_Palavras[n];
-    } else {
+        const char* texto = Texto_Livros;
+        const char* padrao = Padroes_Palavras[n];
+    } else { 
         while(m <= n){
             cout << "\nATENÇÃO: TAMANHO DO PADRAO DEVE SER <= TAMANHO DO TEXTO.";
             cout << "\nDIGITE O TAMANHO DO TEXTO: ";
@@ -65,10 +65,16 @@ void menu(){
             cout << "\nDIGITE O TAMANHO DO PADRÃO: ";
             cin >> m;
         }
+
+        texto = new char[n];
+        padrao = new char[m];
         
         switch (opcao){
             case 1:
-                func.InstanciaAleatoria(n, m, texto, padrao);
+                int l;
+                cout << "\nDIGITE O L: ";
+                cin >> n;
+                func.InstanciaAleatoria(n, m, l, texto, padrao);
                 break;
             case 2:
                 func.PiorCaso1(n, m, texto, padrao);
@@ -81,7 +87,6 @@ void menu(){
                 break;
         }
     }
-
     run(texto, padrao);
 }
 
