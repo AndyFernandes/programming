@@ -49,22 +49,22 @@ void menu(){
     cin >> opcao;
 
     if(opcao == 4){
-        while(n >= 0 && n < 35129){
+        do{
             cout << "\nESCOLHA UM NUMERO VALIDO DE 0 A 35129: ";
             cin >> n;
-        }
+        } while(n < 0 || n >= 35129);
 
         const char* texto = Texto_Livros;
         const char* padrao = Padroes_Palavras[n];
     } else { 
-        while(m <= n){
+        do{
             cout << "\nATENÇÃO: TAMANHO DO PADRAO DEVE SER <= TAMANHO DO TEXTO.";
             cout << "\nDIGITE O TAMANHO DO TEXTO: ";
             cin >> n;
 
             cout << "\nDIGITE O TAMANHO DO PADRÃO: ";
             cin >> m;
-        }
+        } while(m > n);
 
         texto = new char[n];
         padrao = new char[m];
