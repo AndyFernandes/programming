@@ -11,11 +11,11 @@ void print_vector(int *inicio, int *fim){
 }
 
 int main(){
-    int vetor[] =  {1, 20, 51, 3, 5, 100, -1, 30, 2, 4, 25, 24, 30, 19, 14};
+    int vetor[] =  {28,58,49,69,52,69,40,75,71,82};
     Heap heap;
-    heap.construir(vetor, 15);
+    heap.construir(vetor, 10);
     // print_vector(vetor, vetor+15);
-    print_vector(heap.heap, heap.heap+15);
+    print_vector(heap.heap, heap.heap+10);
 
     return 0;
-}
+}    

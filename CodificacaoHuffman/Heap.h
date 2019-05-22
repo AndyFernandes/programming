@@ -3,18 +3,20 @@ using namespace std;
 
 class Heap {
     public:
-    int *heap;
-    int tamanho;  
-    
-    void construir(int *vetor, int ptamanho);
 
-    void heapify(int* vetor, int index);
+    int heapSize ;
+    int* heap;
 
-    int* getParent(int index);
+    void construir(int *pVector, int pSize);
+    void heapify(int* pVector, int pIndex);
 
-    int* getLeft(int index);
+    int getParent(int pIndex);
 
-    int* getRight(int index);
+    int getLeft(int pIndex);
 
-    void swap(int *p, int *p_);
+    int getRight(int pIndex);
+
+    void Swap(int *p, int pIndex, int largest);
 };
+
+

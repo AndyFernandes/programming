@@ -1,56 +1,53 @@
 #include <stdio.h>
 #include "Heap.h"
 
-void Heap::construir(int *vetor, int ptamanho){
-    tamanho = ptamanho;
+void Heap::construir(int *pVector, int pSize){
+    heapSize = pSize;
+    heap = new int[pSize];
+
     //TODO check if the index is correct
-    for(int *i = vetor; i != vetor + ptamanho; ++i){
-        *heap = *i;
-        ++heap;
-        cout << *heap << endl;
+    for(int index = (pSize-1) / 2; index >=0; index--){
+        heapify(pVector, index);
     }
-
-    // for(int index = (ptamanho)/2; index >= 0; --index){
-    //     heapify(heap, index);
-    //     cout << *(heap + index) << endl;
-    // }
+    heap = pVector;
 }
 
-void Heap::heapify(int* vetor, int index){
-    int *left = getLeft(index);
-    int *right = getRight(index);
+void Heap::heapify(int* pVector, int pIndex){
+    int left = getLeft(pIndex );
+    int right = getRight(pIndex);
     int largest;
-        
-    if(*left <= tamanho && *left > *(vetor + index))
-        largest = *left;
-    else
-        largest = index;
-
-    if(*right <= tamanho && *right > *(vetor + largest))
-        largest = *right;
     
-    if(largest != index){
-        swap(vetor+index, vetor+largest);
-        heapify(vetor, largest);
+    if(left <= heapSize && pVector[left] < pVector[pIndex])
+        largest = left;
+
+    else
+        largest = pIndex;
+    
+
+    if(right <= heapSize && pVector[right] < pVector[largest])
+        largest = right;
+
+    if(largest != pIndex){
+        Swap(pVector, pIndex, largest);
+        heapify(pVector, largest);
     }
-    // cout << *(vetor+largest) << endl;
 }
 
-int* Heap::getParent(int index){
-    return heap + index/2;
+int Heap::getParent(int pIndex){
+    return pIndex / 2;
 }
 
-int* Heap::getLeft(int index){
-    return heap + (2*index);
+int Heap::getLeft(int pIndex){
+    return 2 * pIndex;
 }
 
-int* Heap::getRight(int index){
-    return heap + ((2*index) + 1);
+int Heap::getRight(int pIndex){
+    return 2*pIndex + 1;
 }
 
-void Heap::swap(int *p, int *p_){
+void Heap::Swap(int *p, int pIndex, int largest){
     int aux;
-    aux = *p;
-    *p = *p_;
-    *p_ = aux;
-}    
+    aux = p[pIndex];
+    p[pIndex] = p[largest];
+    p[largest] = aux;
+}   
