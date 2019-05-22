@@ -4,7 +4,7 @@ using namespace std;
 class Heap {
     public:
 
-    int heapSize ;
+    int heapSize;
     int* heap;
 
     void construir(int *pVector, int pSize);
@@ -15,6 +15,12 @@ class Heap {
     int getLeft(int pIndex);
 
     int getRight(int pIndex);
+
+    void insert(int x);
+
+    int minimum();
+
+    int extractMinimum();
 
     void Swap(int *p, int pIndex, int largest);
 };

@@ -32,7 +32,8 @@ void run(const char *texto, const char *padrao){
     cout << "\n========================================================================";
     cout << "\nKNUTH MORRIS PRATT: " << ((float)total/CLOCKS_PER_SEC) << " seconds.";
     cout << "\n========================================================================\n";
-
+    func.check(saidaFB, saidaKMP, strlen(texto)+1);
+    
     delete[] saidaFB;
     delete[] saidaKMP;
 }

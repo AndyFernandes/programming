@@ -18,6 +18,7 @@ void Funcoes::check(int* saida1, int* saida2, int tamanho){
     for(int* i = saida1; i != saida1 + tamanho; ++i){
         if (*i != *saida2){
             deuRuim = true;
+            cout << *i;
             break;
         }
         ++saida2;

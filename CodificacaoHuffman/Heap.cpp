@@ -51,3 +51,30 @@ void Heap::Swap(int *p, int pIndex, int largest){
     p[pIndex] = p[largest];
     p[largest] = aux;
 }   
+
+void Heap::insert(int x){
+    heapSize = heapSize + 1;
+    int k = heapSize;
+    while(k > 1 && heap[getParent(k)] < x){
+        heap[k] = heap[getParent(k)];
+        k = getParent(k);
+    }
+    heap[k] = x;
+}
+
+int Heap::minimum(){
+    return heap[0];
+}
+
+int Heap::extractMinimum(){
+    if (heapSize < 1){
+        cout << "Heap underflow";
+        return 0;
+    }
+
+    int max = heap[0];
+    heap[0] = heap[heapSize-1];
+    heapSize = heapSize -1;
+    heapify(heap, 0);
+    return max;
+}
