@@ -105,37 +105,39 @@ void Funcoes::ForcaBruta(const char *texto, const char *padrao, int *saida){
     *saida = -1;
 }
 
-//TODO ajeitar isso aqui
-char* Funcoes::InstanciaAleatoria(int n){
+void Funcoes::InstanciaAleatoria(int n, int m, char l, char* texto, char* padrao){
+    srand(time(NULL));
     static char c = 'a' + rand()%26;
+
+    for(int i = 0; i < n; i++)
+        texto[i] = 'a' + (rand()%l);;   
+    texto[n] = '\0';
+
+    for(int i = 0; i < m - 1; ++i)
+        padrao[i] = 'a';
+    padrao[m-1] = 'b';
+    padrao[m] = '\0';
 }
 
-char* Funcoes::PiorCaso1(int n){
-    char *t = new char[n];
-    for(int i = 0; i < n; i++){
-        t[i] = 'a';
-    }
-    t[n] = '\0';
-    return t;
+void Funcoes::PiorCaso1(int n, int m, char* texto, char* padrao){
+    for(int i = 0; i < n; i++)
+        texto[i] = 'a';   
+    texto[n] = '\0';
+
+    for(int i = 0; i < m - 1; ++i)
+        padrao[i] = 'a';
+    padrao[m-1] = 'b';
+    padrao[m] = '\0';
 }
 
-char* Funcoes::PiorCaso2(int n){
-    char *t = new char[n];
-    for(int i = 0; i < n; i++){
-        t[i] = 'a';
-    }
-    t[n] = '\0';
-    return t;
-}
+void Funcoes::PiorCaso2(int n, int m, char* texto, char* padrao){
+    for(int i = 0; i < n; i++)
+        texto[i] = 'a';   
+    texto[n] = '\0';
 
-char* Funcoes::PiorCaso1Padrao(int n){
-    char *t = new char[n];
-    for(int i = 0; i < n-1; i++){
-        t[i] = 'a';
-    }
-    t[n-1] = 'b';
-    t[n] = '\0';
-    return t;
+    for(int i = 0; i < m; ++i)
+        padrao[i] = 'a';
+    padrao[m] = '\0';
 }
 
 void Funcoes::completeZeros(int* vetor, int tamanho){
