@@ -10,7 +10,7 @@
 using namespace std;
 
 Funcoes func;
-void run(char *texto, char *padrao){
+void run(const char *texto, const char *padrao){
     int* saidaFB = new int[strlen(texto) + 1];
     int* saidaKMP = new int[strlen(texto) + 1];
     func.completeZeros(saidaFB, strlen(texto) + 1);
@@ -42,8 +42,6 @@ void menu(){
     int opcao;
     int continuar;
     int n, m;
-    char* texto;
-    char* padrao;
 
     cout << "\n1. INSTANCIA ALEATORIA \n2. INSTANCIA PIOR CASO 1 \n3. INSTANCIA PIOR CASO 2 \n4. INSTANCIA TEXTO REAIS \nINFORME A OPCAO DESEJADA: ";
     cin >> opcao;
@@ -56,7 +54,11 @@ void menu(){
 
         const char* texto = Texto_Livros;
         const char* padrao = Padroes_Palavras[n];
-    } else { 
+    
+        cout << *texto << endl;
+        cout << *padrao;
+        run(texto, padrao);
+    } else if(opcao <= 4 && opcao >= 0){ 
         do{
             cout << "\nATENÇÃO: TAMANHO DO PADRAO DEVE SER <= TAMANHO DO TEXTO.";
             cout << "\nDIGITE O TAMANHO DO TEXTO: ";
@@ -66,8 +68,8 @@ void menu(){
             cin >> m;
         } while(m > n);
 
-        texto = new char[n];
-        padrao = new char[m];
+        char* texto = new char[n];
+        char* padrao = new char[m];
         
         switch (opcao){
             case 1:
@@ -86,11 +88,14 @@ void menu(){
                 cout << "\nOPCAO INVALIDA!\nPor favor, tente novamente\n";
                 break;
         }
-    }
-    printf(texto);
-    printf(padrao);
 
-    run(texto, padrao);
+        run(texto, padrao);
+    } else {
+        cout << "\nOPCAO INVALIDA!\nPor favor, tente novamente\n";
+        return;
+    }
+    // printf(texto);
+    // printf(padrao);
 }
 
 int main(){
