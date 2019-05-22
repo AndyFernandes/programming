@@ -107,15 +107,13 @@ void Funcoes::ForcaBruta(const char *texto, const char *padrao, int *saida){
 
 void Funcoes::InstanciaAleatoria(int n, int m, char l, char* texto, char* padrao){
     srand(time(NULL));
-    static char c = 'a' + rand()%26;
 
     for(int i = 0; i < n; i++)
-        texto[i] = 'a' + (rand()%l);;   
+        texto[i] = 'a' + (rand()%l);   
     texto[n] = '\0';
 
-    for(int i = 0; i < m - 1; ++i)
-        padrao[i] = 'a';
-    padrao[m-1] = 'b';
+    for(int i = 0; i < m; ++i)
+        padrao[i] = 'a' + (rand()%l);
     padrao[m] = '\0';
 }
 

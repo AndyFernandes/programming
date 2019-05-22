@@ -73,7 +73,7 @@ void menu(){
             case 1:
                 int l;
                 cout << "\nDIGITE O L: ";
-                cin >> n;
+                cin >> l;
                 func.InstanciaAleatoria(n, m, l, texto, padrao);
                 break;
             case 2:
@@ -87,12 +87,17 @@ void menu(){
                 break;
         }
     }
+    printf(texto);
+    printf(padrao);
+
     run(texto, padrao);
 }
 
 int main(){
     int continuar = 1;
     do {
+        system("clear");
+        //system("cls");
         menu();
         cout << "\n--------------------------------------------------------------------\n";
         cout << "VOCE DESEJA CONTINUAR? \n1. SIM \n2. NAO \n:";
