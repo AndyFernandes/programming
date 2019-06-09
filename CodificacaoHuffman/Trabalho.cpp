@@ -6,6 +6,9 @@
 #include <functional>
 #include <fstream>
 #include <cstring>
+#include <bits/stdc++.h>
+#include <sstream>
+#include <vector>
 using namespace std;
 
 void printNo(No* no, int size){
@@ -61,6 +64,7 @@ No* codificaoHuffman(Heap heap){
     return heap.extractMinimum();
 }
 
+// TODO: Resolver Bug
 // nao ta printandooooooo
 // https://www.ime.usp.br/~pf/estruturas-de-dados/aulas/huffman.html
 tabelaSimbolos gerarTabelaCodificacao(No* no, string codigo, tabelaSimbolos tabela){
@@ -81,6 +85,75 @@ tabelaSimbolos gerarTabelaCodificacao(No* no, string codigo, tabelaSimbolos tabe
     return tabela;
 }
 
+//TODO: falta testar
+/* tabelaSimbolos gerarTabelaDescodificacao(string arvore){
+    tabelaSimbolos tabela;
+    vector<string> pares; 
+    vector<string> tupla;
+    boost::split(pares, arvore, boost::is_any_of(",")); 
+  
+    for (int i = 0; i < pares.size(); i++){
+        boost:split(tupla, pares[i], boost::is_any_of(":"));
+        tabela[tupla[0]] = tupla[1];
+    }
+    return tabela;
+}*/
+
+//TODO: Falta testar
+string escreverArvore(tabelaSimbolos tabela){
+    string saida;
+    for(parTabela elemento: tabela){
+        saida += elemento.first + ":" + elemento.second + ",";
+    }
+    saida += "%#%";
+    return saida;
+}
+
+//TODO
+/* string codificando(string arvore, char* texto){
+    return "";
+}
+
+//TODO: falta testar o todo
+void compress(string inputFile, string outputFile){
+    Heap heap;
+    string texto = lerArquivo(inputFile);
+    char c[texto.size() + 1];
+    strcpy(c, &texto[0]);
+    dict countSymbols = countChar(c);
+    
+    heap.construir(countSymbols);
+    No* no = codificaoHuffman(heap);
+    tabelaSimbolos tabela;
+    tabela = gerarTabelaCodificacao(no, "", tabela);
+    //string arvore = escreverArvore(tabela);   
+    string textoCodificado = codificando(escreverArvore(tabela), texto);
+    outputFile.open(outputFile);
+    outputFile << textoCodificado;
+    outputFile.close();
+    cout << "Done!\n";
+}
+
+//TODO: Falta terminar
+void descompress(string inputFile, string outputFile){
+    string texto = lerArquivo(inputFile);
+    vector<string> splitTexto;
+    boost::split(splitTexto, texto, boost::is_any_of("%#%")); 
+    tabelaSimbolos tabela = gerarTabelaDescodificacao(splitTexto[0]);
+    
+}
+
+vector<string> split (const string &s, char delim) {
+    vector<string> result;
+    stringstream ss (s);
+    string item;
+
+    while (getline (ss, item, delim)) {
+        result.push_back (item);
+    }
+
+    return result;
+}*/
 /* 
 LÓGICA:
     # PARTE 1: Codificar
@@ -91,14 +164,20 @@ LÓGICA:
     3. Algoritmo de Huffman -> retorno um nó (o único restante)
     4. A partir desse nó iremos gerar a tabelinha de símbolos
     5. Ai agora seria codificar o arquivo/string
-
+    6. Gravar a arvore no inicio do arquivo: -> separar por ',' as tuplas, e char:code 
+        a:qnt,b:qnt
     ------------------------------
 
     # PARTE 2: Decodificar
+    1. Ler arquivo em uma string
+    2. Splitar string por '%#%' 
+    3. Reconstruir tabela de simbolos
+    4. Decodificar
+    5. Gravar o arquivo
     
 
 */
-int main(){
+int main(int argc,char* argv[]){
     // int vetor[] =  {28,58,49,69,52,69,40,75,71,82};
     // int vetor[] =  {4,1,3,2,16,9,10,14,8,7};
     Heap heap;
@@ -155,7 +234,7 @@ int main(){
 
     /////////////// testes dia 09
 
-    string texto = lerArquivo("teste.txt");
+   /* string texto = lerArquivo("teste.txt");
     cout << texto << endl;
     char c[texto.size() + 1];
     strcpy(c, &texto[0]);
@@ -171,5 +250,21 @@ int main(){
     //}
     //cout << "MINIMO:" << min->chave << " : " << min->qnt << endl;
     //cout << "a: " << heap.heap->chave  << " : " << heap.heap->qnt << endl;
+    */
+
+    int counter; 
+    if(argc>=2) {
+       string modo = argv[1];
+       string inputFile = argv[2];
+       string outputFile = argv[3]; 
+
+       cout << "MODO: " << modo << endl;
+       cout << "InputFile: " << inputFile << endl;
+       cout << "OutputFile: " << outputFile << endl;
+
+       if(modo == "--compress"){
+
+       } else if (modo == "--decompress"){}
+    } 
     return 0;
 }
