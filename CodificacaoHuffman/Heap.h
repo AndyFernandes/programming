@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>  
+#include<string>
 using namespace std;
 typedef map<char, int> dict;
 typedef pair<char, int> par;
+typedef map<char, string> tabelaSimbolos;
+typedef pair<char, string> parTabela;
 
 struct No {
     char chave;
