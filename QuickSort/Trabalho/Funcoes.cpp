@@ -110,16 +110,17 @@ tuple<int*, int*> Funcoes::Particao_Tripla(int *inicio, int *pivo, int *fim){
     trocar(inicio, pivo);
     int *m = inicio, *i = inicio, *j = inicio + 1, aux;
 
-    for(;j != fim+1; ++j){
-       if (*j < *inicio){
-            i++;
+    while(j != (fim+1)){
+       if(*j == *inicio ){
+            i = i + 1;
             trocar(i, j); 
-            m++;
+       } else if (*j < *inicio){
+            i = i + 1;
+            trocar(i, j); 
+            m = m + 1;
             trocar(m, i);
-       } else if(*j == *inicio ){
-            i++;
-            trocar(i, j); 
        }
+       j = j + 1;
     }
     
     trocar(m, inicio);
@@ -138,7 +139,7 @@ void Funcoes::Selecao_Hoare(int *inicio, int *fim, int *i){
 }
 
 void Funcoes::BFPRT(int* inicio, int* fim, int* pivo){
-    int tamanho = fim - inicio;
+    int tamanho = (fim - inicio) + 1;
 
     if(tamanho <= 5){
         Selecao_Hoare(inicio, fim, pivo);
@@ -146,7 +147,10 @@ void Funcoes::BFPRT(int* inicio, int* fim, int* pivo){
     }
 
     int *init, *meio, *finish;
-    int tamanho_vetor_ponteiros = (tamanho/5) + 1;
+    int tamanho_vetor_ponteiros;
+    if(tamanho % 5 == 0) tamanho_vetor_ponteiros = (tamanho/5);
+    else tamanho_vetor_ponteiros = (tamanho/5) + 1;
+    // pq é a as partições de tamanho 5 + o restante
 
     for(int i = 0; i < tamanho_vetor_ponteiros; ++i){
         init = inicio + i*5;
