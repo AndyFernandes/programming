@@ -1,14 +1,25 @@
 #include <stdio.h>
+#include <stdlib.h>  
 using namespace std;
+typedef map<char, int> dict;
+typedef pair<char, int> par;
+
+struct No {
+    char chave;
+    int qnt;
+    No *filhoEsquerdo;
+    No *filhoDireito;
+};
+
 
 class Heap {
     public:
 
     int heapSize;
-    int* heap;
+    No* heap;
 
-    void construir(int *pVector, int pSize);
-    void heapify(int* pVector, int pIndex);
+    void construir(dict tabela);
+    void heapify(No* pVector, int pIndex);
 
     int getParent(int pIndex);
 
@@ -16,13 +27,13 @@ class Heap {
 
     int getRight(int pIndex);
 
-    void insert(int x);
+    void insert(No x);
 
-    int minimum();
+    No minimum();
 
-    int extractMinimum();
+    No* extractMinimum();
 
-    void Swap(int *p, int pIndex, int largest);
+    void Swap(No* p, int pIndex, int largest);
 };
 
 
