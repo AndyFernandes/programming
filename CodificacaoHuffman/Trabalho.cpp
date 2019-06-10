@@ -6,7 +6,6 @@
 #include <functional>
 #include <fstream>
 #include <cstring>
-#include <bits/stdc++.h>
 #include <sstream>
 #include <vector>
 using namespace std;
@@ -64,42 +63,21 @@ No* codificaoHuffman(Heap heap){
     return heap.extractMinimum();
 }
 
-// TODO: Resolver Bug
-// nao ta printandooooooo
 // https://www.ime.usp.br/~pf/estruturas-de-dados/aulas/huffman.html
 tabelaSimbolos gerarTabelaCodificacao(No* no, string codigo, tabelaSimbolos tabela){
-    if(no->filhoEsquerdo != nullptr){
-        cout << no->filhoEsquerdo->chave <<endl;
-        gerarTabelaCodificacao(no->filhoEsquerdo, codigo+"0", tabela);
-    }
-    cout << "NULO";
-    cout << no->filhoEsquerdo->chave <<endl;
-    
-    /*if(!no->filhoDireito && !no->filhoEsquerdo){
-        //tabela[no->chave] = codigo;
-        cout << no->chave << " : " << codigo << endl; 
+    if(no->filhoDireito == nullptr && no->filhoEsquerdo == nullptr){
+        tabela[no->chave] = codigo;
+        //cout << no->chave << " : " << codigo << endl; 
     } else{
         tabela = gerarTabelaCodificacao(no->filhoEsquerdo, codigo + "0", tabela);
         tabela = gerarTabelaCodificacao(no->filhoDireito, codigo + "1", tabela);
-    }*/
+    }
     return tabela;
 }
 
-//TODO: falta testar
-/* tabelaSimbolos gerarTabelaDescodificacao(string arvore){
-    tabelaSimbolos tabela;
-    vector<string> pares; 
-    vector<string> tupla;
-    boost::split(pares, arvore, boost::is_any_of(",")); 
-  
-    for (int i = 0; i < pares.size(); i++){
-        boost:split(tupla, pares[i], boost::is_any_of(":"));
-        tabela[tupla[0]] = tupla[1];
-    }
-    return tabela;
-}*/
-
-//TODO: Falta testar
+//TODO
+// [num de nós | arvore | numero de bytes]
+// arvore -> vector[NoArvore]
 string escreverArvore(tabelaSimbolos tabela){
     string saida;
     for(parTabela elemento: tabela){
@@ -110,11 +88,6 @@ string escreverArvore(tabelaSimbolos tabela){
 }
 
 //TODO
-/* string codificando(string arvore, char* texto){
-    return "";
-}
-
-//TODO: falta testar o todo
 void compress(string inputFile, string outputFile){
     Heap heap;
     string texto = lerArquivo(inputFile);
@@ -127,20 +100,11 @@ void compress(string inputFile, string outputFile){
     tabelaSimbolos tabela;
     tabela = gerarTabelaCodificacao(no, "", tabela);
     //string arvore = escreverArvore(tabela);   
-    string textoCodificado = codificando(escreverArvore(tabela), texto);
+    //string textoCodificado = codificando(escreverArvore(tabela), texto);
     outputFile.open(outputFile);
     outputFile << textoCodificado;
     outputFile.close();
     cout << "Done!\n";
-}
-
-//TODO: Falta terminar
-void descompress(string inputFile, string outputFile){
-    string texto = lerArquivo(inputFile);
-    vector<string> splitTexto;
-    boost::split(splitTexto, texto, boost::is_any_of("%#%")); 
-    tabelaSimbolos tabela = gerarTabelaDescodificacao(splitTexto[0]);
-    
 }
 
 vector<string> split (const string &s, char delim) {
@@ -153,7 +117,7 @@ vector<string> split (const string &s, char delim) {
     }
 
     return result;
-}*/
+}
 /* 
 LÓGICA:
     # PARTE 1: Codificar
@@ -174,86 +138,10 @@ LÓGICA:
     3. Reconstruir tabela de simbolos
     4. Decodificar
     5. Gravar o arquivo
-    
-
 */
+
 int main(int argc,char* argv[]){
-    // int vetor[] =  {28,58,49,69,52,69,40,75,71,82};
-    // int vetor[] =  {4,1,3,2,16,9,10,14,8,7};
-    Heap heap;
-    // heap.construir(vetor, 10);
-    // // print_vector(vetor, vetor+15);
-    // print_vector(heap.heap, heap.heap + heap.heapSize);
-    // cout << "Minimo " << heap.minimum() << endl;
-    // int min = heap.extractMinimum();
-    // cout << "Minimo " << min << endl;
-    // print_vector(heap.heap, heap.heap + heap.heapSize);
-
-    // heap.insert(3);
-    // heap.insert(50);
-    // heap.insert(7);
-    // heap.insert(6);    
-    // dict countSymbols;
-    // m['A'] = 2;
-    ///// teste do dia 08/06 
-    /*char c[] = "batatinha quando nasce esparrama pelo chao";
-    dict countSymbols = countChar(c);
-    
-    heap.construir(countSymbols);
-
-    No min = heap.minimum();
-    cout << "MINIMO:" << min.chave << " : " << min.qnt << endl;
-
-
-    No* no = (No*)malloc(sizeof(No)*countSymbols.size());
-    No* i = no;
-    for(par element: countSymbols){
-        //cout << element.first << " : " << element.second << endl;
-        i->chave = element.first;
-        i->qnt =  element.second;
-        i++;
-    //    heap.insert(element.second);
-    }
-    printNo(no, countSymbols.size());
-    cout << "\n\n" << no[1].qnt;*/
-
-    
-    /*no->chave = 'a';
-    //cout << no->chave << endl;
-    no++;
-    no->chave = 'b';
-    no++;
-    no->chave = 'c';
-    no--;
-    no--;
-    printNo(no);*/
-
-    //cout << no->chave;
-
-    //cout << "HEAP MINIMUM: " << min->qnt << " | " << min->chave;
-
-    /////////////// testes dia 09
-
-   /* string texto = lerArquivo("teste.txt");
-    cout << texto << endl;
-    char c[texto.size() + 1];
-    strcpy(c, &texto[0]);
-    dict countSymbols = countChar(c);
-    
-    heap.construir(countSymbols);
-    cout << "a: " << heap.heap->chave  << " : " << heap.heap->qnt << endl;
-    No* min = codificaoHuffman(heap);
-    tabelaSimbolos tabela;
-    //tabela = gerarTabelaCodificacao(min, "", tabela);
-    //for(parTabela elemento: tabela){
-    //    cout << elemento.first << " : " << elemento.second << endl;
-    //}
-    //cout << "MINIMO:" << min->chave << " : " << min->qnt << endl;
-    //cout << "a: " << heap.heap->chave  << " : " << heap.heap->qnt << endl;
-    */
-
-    int counter; 
-    if(argc>=2) {
+    /*if(argc>=2) {
        string modo = argv[1];
        string inputFile = argv[2];
        string outputFile = argv[3]; 
@@ -265,6 +153,22 @@ int main(int argc,char* argv[]){
        if(modo == "--compress"){
 
        } else if (modo == "--decompress"){}
-    } 
+    } */
+
+    Heap heap;
+    string texto = lerArquivo("teste.txt");
+    cout << texto << endl;
+    char c[texto.size() + 1];
+    strcpy(c, &texto[0]);
+    dict countSymbols = countChar(c);
+    
+    heap.construir(countSymbols);
+    No* min = codificaoHuffman(heap);
+    tabelaSimbolos tabela;
+    tabela = gerarTabelaCodificacao(min, "", tabela);
+    for(parTabela elemento: tabela){
+        cout << elemento.first << " : " << elemento.second << endl;
+    }
+
     return 0;
 }

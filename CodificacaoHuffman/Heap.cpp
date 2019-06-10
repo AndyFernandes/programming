@@ -30,12 +30,12 @@ void Heap::heapify(No* pVector, int pIndex){
     int right = getRight(pIndex);
     int largest;
     
-    if(left <= heapSize && pVector[left].qnt < pVector[pIndex].qnt)
+    if(left < heapSize && pVector[left].qnt < pVector[pIndex].qnt)
         largest = left;
     else
         largest = pIndex;
     
-    if(right <= heapSize && pVector[right].qnt < pVector[largest].qnt)
+    if(right < heapSize && pVector[right].qnt < pVector[largest].qnt)
         largest = right;
 
     if(largest != pIndex){
@@ -65,10 +65,10 @@ void Heap::Swap(No* p, int pIndex, int largest){
 // ver questão do decremento
 void Heap::insert(No x){
     heapSize = heapSize + 1;
-    int k = heapSize;
-    while(k > 1 && heap[getParent(k)].qnt < x.qnt){
-        heap[k] = heap[getParent(k)];
-        k = getParent(k);
+    int k = heapSize - 1;
+    while(k > 1 && heap[getParent(k-1)].qnt < x.qnt){
+        heap[k] = heap[getParent(k-1)];
+        k = getParent(k-1);
     }
     heap[k] = x;
 }
