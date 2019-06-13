@@ -16,6 +16,31 @@ void printNo(No* no, int size){
     }
 }
 
+void printArr(int arr[], int n) { 
+    int i; 
+    for (i = 0; i < n; ++i) 
+        printf("%d", arr[i]); 
+  
+    printf("\n"); 
+}
+
+bool isLeaf(No* no){
+    if(no->filhoDireito == nullptr && no->filhoEsquerdo == nullptr)
+        return true;
+    return false;
+}
+
+vector<string> split (const string &s, char delim) {
+    vector<string> result;
+    stringstream ss (s);
+    string item;
+
+    while (getline (ss, item, delim))
+        result.push_back (item);
+
+    return result;
+}
+
 dict countChar(char* pText){
     dict m;
     while(*pText != '\0'){
@@ -31,11 +56,11 @@ dict countChar(char* pText){
 string lerArquivo(string path){
     string text;
     string line;
-    ifstream myfile (path); // ifstream = padrão ios:in
+    ifstream myfile (path); 
     if (myfile.is_open()){
-        while (! myfile.eof()){ //enquanto end of file for false continua
-            getline (myfile, line); // como foi aberto em modo texto(padrão)
-            text += line; //e não binário(ios::bin) pega cada linha
+        while (! myfile.eof()){ 
+            getline (myfile, line); 
+            text += line; 
         }
         myfile.close();
         return text;
@@ -50,25 +75,19 @@ No* codificaoHuffman(Heap heap){
     No sum;
     while(heap.heapSize != 1){
         left = heap.extractMinimum();
-        cout << "Extractleft: " << left->chave  << " : " << left->qnt << endl;
         right = heap.extractMinimum();
-        cout << "Extractright: " << right->chave  << " : " << right->qnt << endl;
         sum.chave = '%';
         sum.qnt = left->qnt + right->qnt;
         sum.filhoEsquerdo = left;
         sum.filhoDireito = right;
         heap.insert(sum);
-        cout << "sum: " << sum.chave  << " : " << sum.qnt << endl;
-        cout << "----------------" << endl;
     }
     return heap.extractMinimum();
 }
 
-// https://www.ime.usp.br/~pf/estruturas-de-dados/aulas/huffman.html
 tabelaSimbolos gerarTabelaCodificacao(No* no, string codigo, tabelaSimbolos tabela){
     if(no->filhoDireito == nullptr && no->filhoEsquerdo == nullptr){
         tabela[no->chave] = codigo;
-        //cout << no->chave << " : " << codigo << endl; 
     } else{
         tabela = gerarTabelaCodificacao(no->filhoEsquerdo, codigo + "0", tabela);
         tabela = gerarTabelaCodificacao(no->filhoDireito, codigo + "1", tabela);
@@ -76,49 +95,73 @@ tabelaSimbolos gerarTabelaCodificacao(No* no, string codigo, tabelaSimbolos tabe
     return tabela;
 }
 
-//TODO
-// [num de nós | arvore | numero de bytes]
-// arvore -> vector[NoArvore]
-// string escreverArvore(tabelaSimbolos tabela){
-//     string saida;
-//     for(parTabela elemento: tabela){
-//         saida += elemento.first + ":" + elemento.second + ",";
-//     }
-//     saida += "%#%";
-//     return saida;
-// }
+string codify(char* text, tabelaSimbolos tabelaCodigos){
+    string textCodify = "";
+    while(*text != '\0'){
+        textCodify += tabelaCodigos[*text];
+        text++;
+    }
+    return textCodify;
+}
 
-//TODO
+// arquivo de saida: [num de nos | arvore | qnt de bits | # | output]
 void compress(string inputFile, string outputFile){
     Heap heap;
     string texto = lerArquivo(inputFile);
     char c[texto.size() + 1];
     strcpy(c, &texto[0]);
     dict countSymbols = countChar(c);
-    
     heap.construir(countSymbols);
     No* no = codificaoHuffman(heap);
     tabelaSimbolos tabela;
     tabela = gerarTabelaCodificacao(no, "", tabela);
-    //string arvore = escreverArvore(tabela);   
-    //string textoCodificado = codificando(escreverArvore(tabela), texto);
-    //outputFile.open(outputFile);
-    //outputFile << textoCodificado;
-    //outputFile.close();
+    // for(parTabela elemento: tabela){
+    //      cout << elemento.first << " : " << elemento.second << endl;
+    // }
+    ofstream outfile;
+    outfile.open(outputFile);
+    string arvore; //= escreverArvore(tabela);  
+    string textCodify = codify(c, tabela);
+
+    outfile << heap.heapSize << ",";
+    outfile << arvore << ",";
+    //outfile << qntbits;
+    outfile << "#";
+    outfile << textCodify;
+
+    outfile.close();
     cout << "Done!\n";
 }
 
-vector<string> split (const string &s, char delim) {
-    vector<string> result;
-    stringstream ss (s);
-    string item;
+void descompress(string inputFile, string outputFile){
+    cout << "QQQ";
+    string texto = lerArquivo(inputFile);
+    vector<string> splites = split(texto, '#');
+    for (int i = 0; i < splites.size(); i++){
+        cout << splites[i] << "-";
+    }
+}
 
-    while (getline (ss, item, delim)) {
-        result.push_back (item);
+int main(int argc,char* argv[]){
+    if(argc>=2) {
+       string modo = argv[1];
+       string inputFile = argv[2];
+       string outputFile = argv[3]; 
+
+       cout << "MODO: " << modo << endl;
+       cout << "InputFile: " << inputFile << endl;
+       cout << "OutputFile: " << outputFile << endl;
+
+       if(modo == "--compress")
+           compress(inputFile, outputFile);
+       else if (modo == "--descompress")
+            descompress(inputFile, outputFile);
     }
 
-    return result;
+    
+    return 0;
 }
+
 /* 
 LÓGICA:
     # PARTE 1: Codificar
@@ -140,39 +183,16 @@ LÓGICA:
     4. Decodificar
     5. Gravar o arquivo
 */
-
-int main(int argc,char* argv[]){
-    /*if(argc>=2) {
-       string modo = argv[1];
-       string inputFile = argv[2];
-       string outputFile = argv[3]; 
-
-       cout << "MODO: " << modo << endl;
-       cout << "InputFile: " << inputFile << endl;
-       cout << "OutputFile: " << outputFile << endl;
-
-       if(modo == "--compress"){
-
-       } else if (modo == "--decompress"){}
-    } */
-
-    Heap heap;
-    string texto = lerArquivo("teste.txt");
-    cout << texto << endl;
-    char c[texto.size() + 1];
-    strcpy(c, &texto[0]);
-    dict countSymbols = countChar(c);
-    for(par elemento: countSymbols){
-        cout << elemento.first << " : " << elemento.second << endl;
-    }
-    heap.construir(countSymbols);
-    No* min = codificaoHuffman(heap);
-    cout << "MIN: " << min->chave  << " : " << min->qnt << endl;
-    tabelaSimbolos tabela;
-    tabela = gerarTabelaCodificacao(min, "", tabela);
-    for(parTabela elemento: tabela){
-        cout << elemento.first << " : " << elemento.second << endl;
-    }
-
-    return 0;
-}
+/* 
+//TODO
+// [num de nós | arvore | numero de bytes]
+// arvore -> vector[NoArvore]
+// string escreverArvore(tabelaSimbolos tabela){
+//     string saida;
+//     for(parTabela elemento: tabela){
+//         saida += elemento.first + ":" + elemento.second + ",";
+//     }
+//     saida += "%#%";
+//     return saida;
+// }
+*/
