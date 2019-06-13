@@ -111,13 +111,16 @@ void compress(string inputFile, string outputFile){
     char c[texto.size() + 1];
     strcpy(c, &texto[0]);
     dict countSymbols = countChar(c);
+    for(par elemento: countSymbols){
+         cout << elemento.first << " : " << elemento.second << endl;
+    }
     heap.construir(countSymbols);
     No* no = codificaoHuffman(heap);
     tabelaSimbolos tabela;
     tabela = gerarTabelaCodificacao(no, "", tabela);
-    // for(parTabela elemento: tabela){
-    //      cout << elemento.first << " : " << elemento.second << endl;
-    // }
+    for(parTabela elemento: tabela){
+         cout << elemento.first << " : " << elemento.second << endl;
+    }
     ofstream outfile;
     outfile.open(outputFile);
     string arvore; //= escreverArvore(tabela);  
@@ -134,7 +137,6 @@ void compress(string inputFile, string outputFile){
 }
 
 void descompress(string inputFile, string outputFile){
-    cout << "QQQ";
     string texto = lerArquivo(inputFile);
     vector<string> splites = split(texto, '#');
     for (int i = 0; i < splites.size(); i++){
@@ -157,8 +159,6 @@ int main(int argc,char* argv[]){
        else if (modo == "--descompress")
             descompress(inputFile, outputFile);
     }
-
-    
     return 0;
 }
 
@@ -178,7 +178,7 @@ LÓGICA:
 
     # PARTE 2: Decodificar
     1. Ler arquivo em uma string
-    2. Splitar string por '%#%' 
+    2. Splitar string por '#' 
     3. Reconstruir tabela de simbolos
     4. Decodificar
     5. Gravar o arquivo
