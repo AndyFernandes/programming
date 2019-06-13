@@ -49,16 +49,17 @@ No* codificaoHuffman(Heap heap){
     No* right;
     No sum;
     while(heap.heapSize != 1){
-        //cout << "left: " << heap.heap->chave  << " : " << heap.heap->qnt << endl;
         left = heap.extractMinimum();
-        //cout << "right: " << heap.heap->chave  << " : " << heap.heap->qnt << endl;
+        cout << "Extractleft: " << left->chave  << " : " << left->qnt << endl;
         right = heap.extractMinimum();
-        //cout << "----------------" << endl;
+        cout << "Extractright: " << right->chave  << " : " << right->qnt << endl;
         sum.chave = '%';
         sum.qnt = left->qnt + right->qnt;
         sum.filhoEsquerdo = left;
         sum.filhoDireito = right;
         heap.insert(sum);
+        cout << "sum: " << sum.chave  << " : " << sum.qnt << endl;
+        cout << "----------------" << endl;
     }
     return heap.extractMinimum();
 }
@@ -78,14 +79,14 @@ tabelaSimbolos gerarTabelaCodificacao(No* no, string codigo, tabelaSimbolos tabe
 //TODO
 // [num de nós | arvore | numero de bytes]
 // arvore -> vector[NoArvore]
-string escreverArvore(tabelaSimbolos tabela){
-    string saida;
-    for(parTabela elemento: tabela){
-        saida += elemento.first + ":" + elemento.second + ",";
-    }
-    saida += "%#%";
-    return saida;
-}
+// string escreverArvore(tabelaSimbolos tabela){
+//     string saida;
+//     for(parTabela elemento: tabela){
+//         saida += elemento.first + ":" + elemento.second + ",";
+//     }
+//     saida += "%#%";
+//     return saida;
+// }
 
 //TODO
 void compress(string inputFile, string outputFile){
@@ -101,9 +102,9 @@ void compress(string inputFile, string outputFile){
     tabela = gerarTabelaCodificacao(no, "", tabela);
     //string arvore = escreverArvore(tabela);   
     //string textoCodificado = codificando(escreverArvore(tabela), texto);
-    outputFile.open(outputFile);
-    outputFile << textoCodificado;
-    outputFile.close();
+    //outputFile.open(outputFile);
+    //outputFile << textoCodificado;
+    //outputFile.close();
     cout << "Done!\n";
 }
 
@@ -161,9 +162,12 @@ int main(int argc,char* argv[]){
     char c[texto.size() + 1];
     strcpy(c, &texto[0]);
     dict countSymbols = countChar(c);
-    
+    for(par elemento: countSymbols){
+        cout << elemento.first << " : " << elemento.second << endl;
+    }
     heap.construir(countSymbols);
     No* min = codificaoHuffman(heap);
+    cout << "MIN: " << min->chave  << " : " << min->qnt << endl;
     tabelaSimbolos tabela;
     tabela = gerarTabelaCodificacao(min, "", tabela);
     for(parTabela elemento: tabela){

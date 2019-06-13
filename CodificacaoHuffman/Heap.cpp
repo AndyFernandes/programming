@@ -82,8 +82,12 @@ No* Heap::extractMinimum(){
         cout << "Heap underflow";
         return nullptr;
     }
-
-    No* max = &heap[0];
+    No* max = (No*) malloc(sizeof(No));
+    max->chave = heap[0].chave;
+    max->qnt = heap[0].qnt;
+    max->filhoEsquerdo = heap[0].filhoEsquerdo;
+    max->filhoDireito = heap[0].filhoDireito;
+    
     heap[0] = heap[heapSize-1];
     heapSize = heapSize - 1;
     heapify(heap, 0);
