@@ -10,6 +10,10 @@
 #include <vector>
 using namespace std;
 
+#define bytes 8
+#define internNode '%' // is the special character used for internal nodes as character field
+#define indicator '$' // indicador que o caracter ocorrido é o % ou proprio simbolo que usei pra indicar a ocorrencia desses operadores que to usando internamente
+
 void printNo(No* no, int size){
     for(No* i = no; i != no+size; i ++){
         cout << i->chave << " : " << i->qnt << endl;
@@ -53,7 +57,7 @@ dict countChar(char* pText){
     return m;
 }
 
-string lerArquivo(string path){
+string readFile(string path){
     string text;
     string line;
     ifstream myfile (path); 
@@ -76,7 +80,7 @@ No* codificaoHuffman(Heap heap){
     while(heap.heapSize != 1){
         left = heap.extractMinimum();
         right = heap.extractMinimum();
-        sum.chave = '%';
+        sum.chave = internNode;
         sum.qnt = left->qnt + right->qnt;
         sum.filhoEsquerdo = left;
         sum.filhoDireito = right;
@@ -95,6 +99,7 @@ tabelaSimbolos gerarTabelaCodificacao(No* no, string codigo, tabelaSimbolos tabe
     return tabela;
 }
 
+//TODO: Botar pra ser em bytes 
 string codify(char* text, tabelaSimbolos tabelaCodigos){
     string textCodify = "";
     while(*text != '\0'){
@@ -104,16 +109,32 @@ string codify(char* text, tabelaSimbolos tabelaCodigos){
     return textCodify;
 }
 
+// Percorrer via pré-ordem: Primeiro a esquerda e depois a direita
+void writeTree(No* no, vector<char> &tree){
+    if(isLeaf(no)){
+        //if(no->chave == internNode || no->chave == indicator) tree.push_back(indicator);
+        tree.push_back(no->chave);
+    } else{
+        tree.push_back(no->chave);
+        writeTree(no->filhoEsquerdo, tree);
+        writeTree(no->filhoDireito, tree);
+    }
+}
+
+No* readTree(No* no, string file, int size){
+    return nullptr;
+}
+
 // arquivo de saida: [num de nos | arvore | qnt de bits | # | output]
 void compress(string inputFile, string outputFile){
     Heap heap;
-    string texto = lerArquivo(inputFile);
+    string texto = readFile(inputFile);
     char c[texto.size() + 1];
     strcpy(c, &texto[0]);
     dict countSymbols = countChar(c);
-    for(par elemento: countSymbols){
-         cout << elemento.first << " : " << elemento.second << endl;
-    }
+    //for(par elemento: countSymbols){
+    //     cout << elemento.first << " : " << elemento.second << endl;
+    //}
     heap.construir(countSymbols);
     No* no = codificaoHuffman(heap);
     tabelaSimbolos tabela;
@@ -121,15 +142,17 @@ void compress(string inputFile, string outputFile){
     for(parTabela elemento: tabela){
          cout << elemento.first << " : " << elemento.second << endl;
     }
-    ofstream outfile;
-    outfile.open(outputFile);
-    string arvore; //= escreverArvore(tabela);  
+
+    ofstream outfile(outputFile, std::ios::binary); 
+    vector<char> tree;
+    writeTree(no, tree);
     string textCodify = codify(c, tabela);
 
-    outfile << heap.heapSize << ",";
-    outfile << arvore << ",";
-    //outfile << qntbits;
+    outfile << tree.size();
     outfile << "#";
+    outfile.write(&tree[0], tree.size());
+    outfile <<  "#";
+    //outfile << qntbitsextra;
     outfile << textCodify;
 
     outfile.close();
@@ -137,15 +160,17 @@ void compress(string inputFile, string outputFile){
 }
 
 void descompress(string inputFile, string outputFile){
-    string texto = lerArquivo(inputFile);
+    string texto = readFile(inputFile);
     vector<string> splites = split(texto, '#');
-    for (int i = 0; i < splites.size(); i++){
-        cout << splites[i] << "-";
-    }
+    int numNodes = stoi(splites.at(0));
+    cout << "Number of nodes: " << numNodes << endl;
+    No* no;
+    no = readTree(no, splites.at(1), numNodes);
+
 }
 
 int main(int argc,char* argv[]){
-    if(argc>=2) {
+    /* if(argc>=2) {
        string modo = argv[1];
        string inputFile = argv[2];
        string outputFile = argv[3]; 
@@ -158,7 +183,10 @@ int main(int argc,char* argv[]){
            compress(inputFile, outputFile);
        else if (modo == "--descompress")
             descompress(inputFile, outputFile);
-    }
+    }*/
+    string inputFile = "files/teste.txt";
+    string outputFile = "files/teste.huf";
+    compress(inputFile, outputFile);
     return 0;
 }
 
