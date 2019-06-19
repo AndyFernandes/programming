@@ -231,6 +231,14 @@ void descompress(string inputFile, string outputFile){
     char extrabits;
     myfile.read((char*)&extrabits, sizeof(char));
 
+    ofstream outfile (outputFile, std::ios::binary);
+    char byteToWrite = 0;
+    myfile.read((char*)&byteToWrite, sizeof(char));
+
+    while(!myfile.eof()){
+
+    }
+
 }
 
 int main(int argc,char* argv[]){
