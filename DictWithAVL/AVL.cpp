@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "Heap.h"
+#include "AVL.h"
 
 No* AVL::rotationLeft(No *x){
     No* y = x->filhoDireito;
@@ -34,8 +34,11 @@ No* AVL::rotationRight(No *y){
     return x;
 }
 
-bool AVL::inserir(int chave, int value){
+bool AVL::inserir(int chave, int value, No *no){
     // escrever casos
+
+    // 1. lado 
+    return true;
 }
 
 No* AVL::search(int chave, No *no){
@@ -50,8 +53,9 @@ No* AVL::search(int chave, No *no){
         return search(chave, no->filhoDireito);
 }
 
-bool AVL::remove(int chave){
+bool AVL::remove(int chave, No *no){
     // escrever casos
+    return true;
 }
 
 void preOrder(No *no){

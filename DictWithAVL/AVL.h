@@ -19,8 +19,8 @@ class AVL {
 
         No* rotationLeft(No *no);
         No* rotationRight(No *no);
-        bool inserir(int chave, int value);
+        bool inserir(int chave, int value, No* no);
         No* search(int chave, No* no);
-        bool remove(int chave);
+        bool remove(int chave, No *no);
         void preOrder(No* no);
 };
