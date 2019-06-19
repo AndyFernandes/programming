@@ -1,42 +1,62 @@
 #include <stdio.h>
 #include "Heap.h"
 
-bool No::isEmpty(){
-    if(root == nullptr) return true;
-    else return false;
+No* AVL::rotationLeft(No *x){
+    No* y = x->filhoDireito;
+    No* filhoEsqY = y->filhoEsquerdo;
+
+    x->filhoEsquerdo = filhoEsqY;
+    y->filhoEsquerdo = x;
+
+    //Atualizando alturas
+    if(y->filhoEsquerdo->h > (y->filhoDireito->h + 1)) y->h = y->filhoEsquerdo->h;
+    else y->h = y->filhoDireito->h + 1;
+
+    if(x->filhoEsquerdo->h > (x->filhoDireito->h + 1)) x->h = x->filhoEsquerdo->h;
+    else x->h = x->filhoDireito->h + 1;
+
+    return y; 
 }
 
-void AVL::rotationLeft(No no){
+No* AVL::rotationRight(No *y){
+    No* x = y->filhoEsquerdo;
+    No* filhoDirX = x->filhoDireito;
 
-}
+    x->filhoDireito = y;
+    y->filhoDireito = filhoDirX;
 
-void AVL::rotationRight(No no){
+    //Atualizando alturas
+    if(y->filhoEsquerdo->h > (y->filhoDireito->h + 1)) y->h = y->filhoEsquerdo->h;
+    else y->h = y->filhoDireito->h + 1;
 
+    if(x->filhoEsquerdo->h > (x->filhoDireito->h + 1)) x->h = x->filhoEsquerdo->h;
+    else x->h = x->filhoDireito->h + 1;
+    return x;
 }
 
 bool AVL::inserir(int chave, int value){
-
+    // escrever casos
 }
 
-int AVL::search(int chave, No no){
-    if(chave == null && no.isEmpty())
+No* AVL::search(int chave, No *no){
+    if(chave == null && no == nullptr)
         return -1;
 
-    if(no.chave == chave && no.isEmpty())
+    if(no->chave == chave && no == nullptr)
         return no;
-    else if(no.chave > chave)
-        return search(chave, no.filhoEsquerdo);
+    else if(no->chave > chave)
+        return search(chave, no->filhoEsquerdo);
     else
-        return search(chave, no.filhoDireito);
+        return search(chave, no->filhoDireito);
 }
 
 bool AVL::remove(int chave){
-
+    // escrever casos
 }
 
-void preOrder(No no){
-    if(no.isEmpty()) return;
+void preOrder(No *no){
+    if(no == nullptr) return;
     cout << no.chave << " ";
-    preOrder(no.filhoEsquerdo);
-    preOrder(no.filhoDireito);
+    preOrder(no->filhoEsquerdo);
+    preOrder(no->filhoDireito);
 }

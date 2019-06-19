@@ -10,8 +10,6 @@ class No {
         int h;
         No *filhoEsquerdo;
         No *filhoDireito;
-
-        bool isEmpty();
 };
 
 class AVL {
@@ -19,10 +17,10 @@ class AVL {
         int size;
         No* root;
 
-        void rotationLeft(No no);
-        void rotationRight(No no);
+        No* rotationLeft(No *no);
+        No* rotationRight(No *no);
         bool inserir(int chave, int value);
-        int search(int chave);
+        No* search(int chave, No* no);
         bool remove(int chave);
-        void preOrder(No no);
+        void preOrder(No* no);
 };
