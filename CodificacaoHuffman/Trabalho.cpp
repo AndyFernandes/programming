@@ -99,14 +99,41 @@ tabelaSimbolos gerarTabelaCodificacao(No* no, string codigo, tabelaSimbolos tabe
     return tabela;
 }
 
-//TODO: Botar pra ser em bytes 
-string codify(char* text, tabelaSimbolos tabelaCodigos){
-    string textCodify = "";
-    while(*text != '\0'){
-        textCodify += tabelaCodigos[*text];
-        text++;
+void codify(string inputFile, tabelaSimbolos tabelaCodigos, ofstream &outfile){
+    char caracter;
+    string code;
+    int countByte = 0; // um contador para indicar se já foi lido 8 bits, aí se sim eu gravo o byte localizado na var abaixo
+    char byteToWrite = 0;
+    char extrabits = 0;
+    streamoff extraBitsAddress = outfile.tellp();
+    outfile.write(&extrabits, sizeof(char));
+
+    ifstream myfile (inputFile); 
+
+    if (myfile.is_open()){
+        while (myfile >> noskipws >> caracter){ 
+            code = tabelaCodigos[caracter];
+            for(int i = 0; i < code.length(); i++){
+                if(countByte == 8){
+                    outfile.write((char*)&byteToWrite, sizeof(char));
+                    countByte = 0;
+                    byteToWrite = 0;
+                } else {
+                    byteToWrite = byteToWrite << 1;
+                    if(code[i] == '1') byteToWrite = byteToWrite | (char) 1;
+                    countByte++;
+                }
+            }
+        }
+
+        if(countByte != 0){
+            extrabits = (char) bytes - countByte; // simboliza o tanto de bits que falta escrever pra completar 1 byte
+            byteToWrite = byteToWrite << extrabits; // da um shiftada do tanto de extrabits
+            outfile.write((char*)&byteToWrite, sizeof(char));
+            outfile.seekp(extraBitsAddress); //atualizando o valor corredo do extrabits no arquivo
+        }
+        myfile.close();
     }
-    return textCodify;
 }
 
 // Percorrer via pré-ordem: Primeiro a esquerda e depois a direita
@@ -139,21 +166,20 @@ void compress(string inputFile, string outputFile){
     No* no = codificaoHuffman(heap);
     tabelaSimbolos tabela;
     tabela = gerarTabelaCodificacao(no, "", tabela);
-    for(parTabela elemento: tabela){
-         cout << elemento.first << " : " << elemento.second << endl;
-    }
+    //for(parTabela elemento: tabela){
+    //     cout << elemento.first << " : " << elemento.second << endl;
+    //}
 
     ofstream outfile(outputFile, std::ios::binary); 
     vector<char> tree;
     writeTree(no, tree);
-    string textCodify = codify(c, tabela);
 
-    outfile << tree.size();
-    outfile << "#";
+    char size = tree.size();
+    outfile.write(&size, sizeof(char));
+    //outfile << "#";
     outfile.write(&tree[0], tree.size());
-    outfile <<  "#";
-    //outfile << qntbitsextra;
-    outfile << textCodify;
+    //outfile <<  "#";
+    codify(inputFile, tabela, outfile);
 
     outfile.close();
     cout << "Done!\n";
