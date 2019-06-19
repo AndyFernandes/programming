@@ -11,8 +11,10 @@
 using namespace std;
 
 #define bytes 8
-#define internNode '%' // is the special character used for internal nodes as character field
-#define indicator '$' // indicador que o caracter ocorrido é o % ou proprio simbolo que usei pra indicar a ocorrencia desses operadores que to usando internamente
+#define internNode '%' // indica nó interno
+#define indicadorNulo '#' // indica nó nulo
+#define indicadorFolha '$' // indica nó folha
+#define indicatorCaracterEspecial '$' // indicador que o caracter ocorrido é o % ou proprio simbolo que usei pra indicar a ocorrencia desses operadores que to usando internamente
 
 void printNo(No* no, int size){
     for(No* i = no; i != no+size; i ++){
@@ -32,6 +34,15 @@ bool isLeaf(No* no){
     if(no->filhoDireito == nullptr && no->filhoEsquerdo == nullptr)
         return true;
     return false;
+}
+
+No* newNo(char chave, int qnt, No* filhoEsquerdo, No* filhoDireito){
+    No* no = (No*) malloc(sizeof(No));
+    no->chave = chave;
+    no->qnt = qnt;
+    no->filhoEsquerdo = filhoEsquerdo;
+    no->filhoDireito = filhoDireito;
+    return no;
 }
 
 vector<string> split (const string &s, char delim) {
@@ -138,18 +149,32 @@ void codify(string inputFile, tabelaSimbolos tabelaCodigos, ofstream &outfile){
 
 // Percorrer via pré-ordem: Primeiro a esquerda e depois a direita
 void writeTree(No* no, vector<char> &tree){
-    if(isLeaf(no)){
-        //if(no->chave == internNode || no->chave == indicator) tree.push_back(indicator);
+    if(no == nullptr) // nó nulo
+        tree.push_back(indicadorNulo);
+    else if(isLeaf(no)){ // nó folha
+        // if(no->chave == internNode || no->chave == indicadorNulo ||  no->chave == indicadorFolha || no->chave == indicatorCaracterEspecial) tree.push_back(indicatorCaracterEspecial);
+        tree.push_back(indicadorFolha);
         tree.push_back(no->chave);
     } else{
-        tree.push_back(no->chave);
+        tree.push_back(no->chave); // que [e o indicadorNulo
         writeTree(no->filhoEsquerdo, tree);
         writeTree(no->filhoDireito, tree);
     }
 }
 
-No* readTree(No* no, string file, int size){
-    return nullptr;
+void readTree(ifstream &inputfile, No* no){
+    char caracter = 0;
+    inputfile.read(&caracter, sizeof(char));
+
+    if(caracter == indicadorNulo) return;
+    else if(caracter == indicadorFolha){
+        inputfile.read(&caracter, sizeof(char));
+        no = newNo(caracter, 0, nullptr, nullptr);
+    } else if(caracter == internNode){
+        no = newNo(internNode, 0, nullptr, nullptr);
+        readTree(inputfile, no->filhoEsquerdo);
+        readTree(inputfile, no->filhoDireito);
+    }
 }
 
 // arquivo de saida: [num de nos | arvore | qnt de bits | # | output]
@@ -186,12 +211,25 @@ void compress(string inputFile, string outputFile){
 }
 
 void descompress(string inputFile, string outputFile){
-    string texto = readFile(inputFile);
-    vector<string> splites = split(texto, '#');
-    int numNodes = stoi(splites.at(0));
-    cout << "Number of nodes: " << numNodes << endl;
-    No* no;
-    no = readTree(no, splites.at(1), numNodes);
+    // string texto = readFile(inputFile);
+    // vector<string> splites = split(texto, '#');
+    // int numNodes = stoi(splites.at(0));
+    // cout << "Number of nodes: " << numNodes << endl;
+    // No* no;
+    // no = readTree(no, splites.at(1), numNodes);
+
+    ifstream myfile (inputFile, std::ios::binary); 
+    if (!myfile.is_open()){
+        cout << "Error to open file" << endl;
+        return;
+    }
+
+    char numberNodes;
+    myfile.read((char*)&numberNodes, sizeof(char));
+    cout << (int) numberNodes;
+
+    char extrabits;
+    myfile.read((char*)&extrabits, sizeof(char));
 
 }
 
@@ -212,7 +250,8 @@ int main(int argc,char* argv[]){
     }*/
     string inputFile = "files/teste.txt";
     string outputFile = "files/teste.huf";
-    compress(inputFile, outputFile);
+    // compress(inputFile, outputFile);
+    descompress(outputFile, inputFile);
     return 0;
 }
 
