@@ -1,9 +1,6 @@
 #include <iostream>
-#include <map>
 #include "Heap.cpp"
-#include <set>
-#include <algorithm>
-#include <functional>
+#include <map>
 #include <fstream>
 #include <cstring>
 #include <sstream>
@@ -14,25 +11,21 @@ using namespace std;
 #define internNode '%' // indica nó interno
 #define indicadorNulo '#' // indica nó nulo
 #define indicadorFolha '$' // indica nó folha
-#define indicatorCaracterEspecial '$' // indicador que o caracter ocorrido é o % ou proprio simbolo que usei pra indicar a ocorrencia desses operadores que to usando internamente
 
 void printNo(No* no, int size){
-    for(No* i = no; i != no+size; i ++){
+    for(No* i = no; i != no+size; i ++)
         cout << i->chave << " : " << i->qnt << endl;
-    }
 }
 
 void printArr(int arr[], int n) { 
     int i; 
     for (i = 0; i < n; ++i) 
         printf("%d", arr[i]); 
-  
     printf("\n"); 
 }
 
 bool isLeaf(No* no){
-    if(no->filhoDireito == nullptr && no->filhoEsquerdo == nullptr)
-        return true;
+    if(no->filhoDireito == nullptr && no->filhoEsquerdo == nullptr) return true;
     return false;
 }
 
@@ -52,17 +45,14 @@ vector<string> split (const string &s, char delim) {
 
     while (getline (ss, item, delim))
         result.push_back (item);
-
     return result;
 }
 
 dict countChar(char* pText){
     dict m;
     while(*pText != '\0'){
-        if (m[*pText])
-            m[*pText] += 1;
-        else
-            m[*pText] = 1;
+        if (m[*pText]) m[*pText] += 1;
+        else m[*pText] = 1;
         pText++;
     }
     return m;
@@ -88,6 +78,7 @@ No* codificaoHuffman(Heap heap){
     No* left;
     No* right;
     No sum;
+
     while(heap.heapSize != 1){
         left = heap.extractMinimum();
         right = heap.extractMinimum();
@@ -101,9 +92,8 @@ No* codificaoHuffman(Heap heap){
 }
 
 tabelaSimbolos gerarTabelaCodificacao(No* no, string codigo, tabelaSimbolos tabela){
-    if(no->filhoDireito == nullptr && no->filhoEsquerdo == nullptr){
-        tabela[no->chave] = codigo;
-    } else{
+    if(no->filhoDireito == nullptr && no->filhoEsquerdo == nullptr) tabela[no->chave] = codigo;
+    else {
         tabela = gerarTabelaCodificacao(no->filhoEsquerdo, codigo + "0", tabela);
         tabela = gerarTabelaCodificacao(no->filhoDireito, codigo + "1", tabela);
     }
@@ -111,15 +101,15 @@ tabelaSimbolos gerarTabelaCodificacao(No* no, string codigo, tabelaSimbolos tabe
 }
 
 void codify(string inputFile, tabelaSimbolos tabelaCodigos, ofstream &outfile){
-    char caracter;
-    string code;
+    char caracter; // é o que irá iterar no arquivo (ler o arquivo de caracter em caracter)
+    string code; // serve para pegar o código correspondente ao caracter
     int countByte = 0; // um contador para indicar se já foi lido 8 bits, aí se sim eu gravo o byte localizado na var abaixo
-    char byteToWrite = 0;
-    char extrabits = 0;
-    streamoff extraBitsAddress = outfile.tellp();
+    char byteToWrite = 0; // responsável por guardar o byte a ser armazenado no arquivo -> passará por um processo de "apendação" dos codigos relacionados aos caracteres até completar 8 bits
+    char extrabits = 0; // serve para informar a quantidade de bits que precisou para preencher o ultimo byte do arquivo
+    
+    streamoff extraBitsAddress = outfile.tellp(); // pega a "posicao" da var extrabits no arquivo, pois será necessário modifica-la no final
     outfile.write(&extrabits, sizeof(char));
-
-    ifstream myfile (inputFile); 
+    ifstream myfile (inputFile); // abertura do arquivo
 
     if (myfile.is_open()){
         while (myfile >> noskipws >> caracter){ 
@@ -129,15 +119,15 @@ void codify(string inputFile, tabelaSimbolos tabelaCodigos, ofstream &outfile){
                     outfile.write((char*)&byteToWrite, sizeof(char));
                     countByte = 0;
                     byteToWrite = 0;
-                } else {
-                    byteToWrite = byteToWrite << 1;
+                } else { // processo de apendação de bits no byteToWrite
+                    byteToWrite = byteToWrite << 1; 
                     if(code[i] == '1') byteToWrite = byteToWrite | (char) 1;
                     countByte++;
                 }
             }
         }
 
-        if(countByte != 0){
+        if(countByte != 0){ // processo de ver a qnt de bits extras e armazenas na posicao pegada la em cima
             extrabits = (char) bytes - countByte; // simboliza o tanto de bits que falta escrever pra completar 1 byte
             byteToWrite = byteToWrite << extrabits; // da um shiftada do tanto de extrabits
             outfile.write((char*)&byteToWrite, sizeof(char));
@@ -228,6 +218,8 @@ void descompress(string inputFile, string outputFile){
     myfile.read((char*)&numberNodes, sizeof(char));
     cout << (int) numberNodes;
 
+    No no;
+    readTree();
     char extrabits;
     myfile.read((char*)&extrabits, sizeof(char));
 
