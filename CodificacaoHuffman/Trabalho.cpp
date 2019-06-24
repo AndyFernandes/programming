@@ -12,6 +12,7 @@ using namespace std;
 #define indicadorNulo '#' // indica nó nulo
 #define indicadorFolha '$' // indica nó folha
 
+// char -> unsignedchar
 void printNo(No* no, int size){
     for(No* i = no; i != no+size; i ++)
         cout << i->chave << " : " << i->qnt << endl;
@@ -218,17 +219,28 @@ void descompress(string inputFile, string outputFile){
     myfile.read((char*)&numberNodes, sizeof(char));
     cout << (int) numberNodes;
 
-    No no;
+    No *root;
     readTree();
+    No *no = root;
     char extrabits;
     myfile.read((char*)&extrabits, sizeof(char));
 
     ofstream outfile (outputFile, std::ios::binary);
     char byteToWrite = 0;
     myfile.read((char*)&byteToWrite, sizeof(char));
+    int countBit = 0; // um contador para indicar se já foi lido 8 bits, aí se sim eu gravo o byte localizado na var abaixo
 
     while(!myfile.eof()){
+        int bit = byteToWrite >> (7 - countBit) & (char) 1;
 
+        if(bit == 1) no = no->filhoDireito;
+        else no = no->filhoEsquerdo;
+        countBit++;
+        if(isLeaf(no)){
+            outfile.write(&no->chave, (char*));
+            if(countBit == bytes) break;
+            no = root;
+        }
     }
 
 }
