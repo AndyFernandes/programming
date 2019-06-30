@@ -1,6 +1,5 @@
 #include <iostream>
 #include "Heap.cpp"
-#include <map>
 #include <fstream>
 #include <cstring>
 #include <sstream>
@@ -142,28 +141,34 @@ void writeTree(No* no, vector<char> &tree){
     if(no == nullptr) // nó nulo
         tree.push_back(indicadorNulo);
     else if(isLeaf(no)){ // nó folha
-        // if(no->chave == internNode || no->chave == indicadorNulo ||  no->chave == indicadorFolha || no->chave == indicatorCaracterEspecial) tree.push_back(indicatorCaracterEspecial);
         tree.push_back(indicadorFolha);
         tree.push_back(no->chave);
     } else{
-        tree.push_back(no->chave); // que [e o indicadorNulo
+        tree.push_back(internNode); // nó interno
         writeTree(no->filhoEsquerdo, tree);
         writeTree(no->filhoDireito, tree);
     }
 }
 
-void readTree(ifstream &inputfile, No* no){
-    char caracter = 0;
-    inputfile.read(&caracter, sizeof(char));
+No* readTree(string tree, int &posicao, No* no){
+    char caracter = tree[posicao];
+    cout << caracter << " - ";
 
-    if(caracter == indicadorNulo) return;
+    if(caracter == indicadorNulo) return no;
     else if(caracter == indicadorFolha){
-        inputfile.read(&caracter, sizeof(char));
+        posicao++;
+        caracter = tree[posicao];
+        posicao++;
+        cout << caracter << " - ";
         no = newNo(caracter, 0, nullptr, nullptr);
+        return no;
     } else if(caracter == internNode){
         no = newNo(internNode, 0, nullptr, nullptr);
-        readTree(inputfile, no->filhoEsquerdo);
-        readTree(inputfile, no->filhoDireito);
+        posicao++;
+        no->filhoEsquerdo = readTree(tree, posicao, no);
+        no->filhoDireito = readTree(tree, posicao, no);
+        cout << no->filhoEsquerdo->chave;
+        return no;
     }
 }
 
@@ -189,18 +194,16 @@ void compress(string inputFile, string outputFile){
     vector<char> tree;
     writeTree(no, tree);
 
-    char size = tree.size();
-    outfile.write(&size, sizeof(char));
-    //outfile << "#";
+    int size = tree.size();
+    outfile.write((char*)&size, sizeof(int));
     outfile.write(&tree[0], tree.size());
-    //outfile <<  "#";
     codify(inputFile, tabela, outfile);
 
     outfile.close();
     cout << "Done!\n";
 }
 
-void descompress(string inputFile, string outputFile){
+/*void descompress(string inputFile, string outputFile){
     // string texto = readFile(inputFile);
     // vector<string> splites = split(texto, '#');
     // int numNodes = stoi(splites.at(0));
@@ -231,7 +234,7 @@ void descompress(string inputFile, string outputFile){
 
     }
 
-}
+}*/
 
 int main(int argc,char* argv[]){
     /* if(argc>=2) {
@@ -250,8 +253,26 @@ int main(int argc,char* argv[]){
     }*/
     string inputFile = "files/teste.txt";
     string outputFile = "files/teste.huf";
-    // compress(inputFile, outputFile);
-    descompress(outputFile, inputFile);
+    compress(inputFile, outputFile);
+    //descompress(outputFile, inputFile);
+
+    ifstream myfile (outputFile, std::ios::binary); 
+   
+    int numberNodes = 0;
+    myfile.read((char*)&numberNodes, sizeof(int));
+    cout << numberNodes;
+
+    No* no;
+    string out;
+    for(int i = 0; i < numberNodes; ++i){
+        char byte;
+        myfile.read(&byte, sizeof(char));
+        out += byte;
+    }
+    
+    int pos = 0;
+    readTree(out, pos, no);
+    cout << no << " POUUU" << endl;
     return 0;
 }
 
