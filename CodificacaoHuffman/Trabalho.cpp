@@ -11,17 +11,9 @@ using namespace std;
 #define indicadorNulo '#' // indica nó nulo
 #define indicadorFolha '$' // indica nó folha
 
-// char -> unsignedchar
 void printNo(No* no, int size){
     for(No* i = no; i != no+size; i ++)
         cout << i->chave << " : " << i->qnt << endl;
-}
-
-void printArr(int arr[], int n) { 
-    int i; 
-    for (i = 0; i < n; ++i) 
-        printf("%d", arr[i]); 
-    printf("\n"); 
 }
 
 bool isLeaf(No* no){
@@ -212,10 +204,10 @@ void descompress(string inputFile, string outputFile){
 
     int numberNodes;
     myfile.read((char*)&numberNodes, sizeof(int));
-    cout << numberNodes;
+    cout << "Numero de nos: " << numberNodes << endl;
 
     No* no;
-    No* root = no;
+    
     string out;
     for(int i = 0; i < numberNodes; ++i){
         char byte;
@@ -225,7 +217,7 @@ void descompress(string inputFile, string outputFile){
 
     int pos = 0;
     no = readTree(out, pos, no);
-    
+    No* root = no;
     char extrabits;
     myfile.read(&extrabits, sizeof(char));
     cout << "Quantidade de EXTRABITS: " << (int) extrabits << endl;
@@ -235,7 +227,6 @@ void descompress(string inputFile, string outputFile){
     char byteToWrite = 0;
     myfile.read((char*)&byteToWrite, sizeof(char));
     int countBit = 0; // um contador para indicar se já foi lido 8 bits, aí se sim eu gravo o byte localizado na var abaixo
-
     while(!myfile.eof()){
         int bit = byteToWrite >> (7 - countBit) & (char) 1;
 
@@ -243,12 +234,17 @@ void descompress(string inputFile, string outputFile){
         else no = no->filhoEsquerdo;
         countBit++;
         if(isLeaf(no)){
-            cout << no->chave << " - ";
+            // cout << no->chave << " - ";
             outfile.write(&no->chave, sizeof(char));
-            if(countBit == bytes) break;
             no = root;
+        } 
+
+        if(countBit == bytes){
+            myfile.read((char*)&byteToWrite, sizeof(char));
+            countBit = 0;
         }
     }
+
     cout << "Done!";
     myfile.close();
     outfile.close();
@@ -269,9 +265,9 @@ int main(int argc,char* argv[]){
        else if (modo == "--descompress")
             descompress(inputFile, outputFile);
     }*/
-    string inputFile = "files/teste.txt";
+    string inputFile = "files/books.huf";
     string outputFile = "files/teste.huf";
-    string outputFile2 = "files/testeDescompress.txt";
+    string outputFile2 = "files/teste.txt";
     compress(inputFile, outputFile);
     descompress(outputFile, outputFile2);
     return 0;
