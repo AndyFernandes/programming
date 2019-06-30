@@ -216,6 +216,7 @@ void descompress(string inputFile, string outputFile){
     cout << numberNodes;
 
     No* no;
+    No* root = no;
     string out;
     for(int i = 0; i < numberNodes; ++i){
         char byte;
@@ -225,16 +226,31 @@ void descompress(string inputFile, string outputFile){
     cout << out;
     int pos = 0;
     no = readTree(out, pos, no);
+    
     char extrabits;
     myfile.read(&extrabits, sizeof(char));
     cout << (int) extrabits;
+    
     ofstream outfile (outputFile, std::ios::binary);
+    
     char byteToWrite = 0;
     myfile.read((char*)&byteToWrite, sizeof(char));
+    int countBit = 0; // um contador para indicar se já foi lido 8 bits, aí se sim eu gravo o byte localizado na var abaixo
 
     while(!myfile.eof()){
-        
+        int bit = byteToWrite >> (7 - countBit) & (char) 1;
+
+        if(bit == 1) no = no->filhoDireito;
+        else no = no->filhoEsquerdo;
+        countBit++;
+        if(isLeaf(no)){
+            cout << no->chave << " - ";
+            outfile.write(&no->chave, sizeof(char));
+            if(countBit == bytes) break;
+            no = root;
+        }
     }
+    cout << "Done!";
     myfile.close();
     outfile.close();
 }
@@ -256,7 +272,8 @@ int main(int argc,char* argv[]){
     }*/
     string inputFile = "files/teste.txt";
     string outputFile = "files/teste.huf";
+    string outputFile2 = "files/testeDescompress.txt";
     compress(inputFile, outputFile);
-    descompress(outputFile, inputFile);
+    descompress(outputFile, outputFile2);
     return 0;
 }
