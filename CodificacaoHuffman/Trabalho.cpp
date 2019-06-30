@@ -30,43 +30,21 @@ No* newNo(char chave, int qnt, No* filhoEsquerdo, No* filhoDireito){
     return no;
 }
 
-vector<string> split (const string &s, char delim) {
-    vector<string> result;
-    stringstream ss (s);
-    string item;
-
-    while (getline (ss, item, delim))
-        result.push_back (item);
-    return result;
-}
-
 void countChar(dict &dic, char caracter){
-    // dict m;
-    // while(*pText != '\0'){
-        if (dic[caracter]) dic[caracter] += 1;
-        else dic[caracter] = 1;
-        // pText++;
-    // }
-    // return m;
+    if (dic[caracter]) dic[caracter] += 1;
+    else dic[caracter] = 1;
 }
 
 dict readFile(string path){
-    string text;
     char caracter;
     dict dic;
-    ifstream myfile (path); 
-    // if (myfile.is_open()){
-        while (myfile >> noskipws >> caracter){ 
-            // text += caracter;
-            countChar(dic, caracter);
-        }
-        myfile.close();
-        // cout << text;
-        // return text;
-        return dic;
-    // } else cout << "Unable to open file";
-    // myfile.close();
-    // return nullptr;
+    ifstream myfile(path, std::ios::binary);
+    while (myfile >> noskipws >> caracter){ 
+        countChar(dic, caracter);
+        // cout << caracter;
+    }
+    myfile.close();
+    return dic;
 }
 
 No* codificaoHuffman(Heap heap){
@@ -107,46 +85,6 @@ void exibirTree(No* root){
     }
 }
 
-void codify(string inputFile, tabelaSimbolos tabelaCodigos, ofstream &outfile){
-    char caracter; // é o que irá iterar no arquivo (ler o arquivo de caracter em caracter)
-    string code; // serve para pegar o código correspondente ao caracter
-    int countByte = 0; // um contador para indicar se já foi lido 8 bits, aí se sim eu gravo o byte localizado na var abaixo
-    char byteToWrite = 0; // responsável por guardar o byte a ser armazenado no arquivo -> passará por um processo de "apendação" dos codigos relacionados aos caracteres até completar 8 bits
-    char extrabits = 0; // serve para informar a quantidade de bits que precisou para preencher o ultimo byte do arquivo
-
-    streamoff extraBitsAddress = outfile.tellp(); // pega a "posicao" da var extrabits no arquivo, pois será necessário modifica-la no final
-    outfile.write(&extrabits, sizeof(char));
-    ifstream myfile (inputFile); // abertura do arquivo
-
-    if (myfile.is_open()){
-        while (myfile >> noskipws >> caracter){ 
-            code = tabelaCodigos[caracter];
-            for(int i = 0; i < code.length(); i++){
-                if(countByte == 8){
-                    if(myfile.eof()) break;
-                    outfile.write((char*)&byteToWrite, sizeof(char));
-                    countByte = 0;
-                    byteToWrite = 0;
-                }  
-                // processo de apendação de bits no byteToWrite
-                byteToWrite = byteToWrite << 1; 
-                if(code[i] == '1') byteToWrite = byteToWrite | (char) 1;
-                countByte++;
-            }
-        }
-
-        if(countByte != 0){ // processo de ver a qnt de bits extras e armazenas na posicao pegada la em cima
-            extrabits = (char) bytes - countByte; // simboliza o tanto de bits que falta escrever pra completar 1 byte
-            cout << "EXTRABITS:" << (int) extrabits << endl;
-            byteToWrite = byteToWrite << extrabits; // da um shiftada do tanto de extrabits
-            outfile.write((char*)&byteToWrite, sizeof(char));
-            outfile.seekp(extraBitsAddress); //atualizando o valor corredo do extrabits no arquivo
-            outfile.write(&extrabits, sizeof(char));
-        }
-        myfile.close();
-    }
-}
-
 // Percorrer via pré-ordem: Primeiro a esquerda e depois a direita
 void writeTree(No* no, vector<char> &tree){
     if(no == nullptr) // nó nulo
@@ -182,6 +120,46 @@ No* readTree(string tree, int &posicao, No* no){
         return no;
 }
 
+void codify(string inputFile, tabelaSimbolos tabelaCodigos, ofstream &outfile){
+    char caracter; // é o que irá iterar no arquivo (ler o arquivo de caracter em caracter)
+    string code; // serve para pegar o código correspondente ao caracter
+    int countByte = 0; // um contador para indicar se já foi lido 8 bits, aí se sim eu gravo o byte localizado na var abaixo
+    char byteToWrite = 0; // responsável por guardar o byte a ser armazenado no arquivo -> passará por um processo de "apendação" dos codigos relacionados aos caracteres até completar 8 bits
+    char extrabits = 0; // serve para informar a quantidade de bits que precisou para preencher o ultimo byte do arquivo
+
+    streamoff extraBitsAddress = outfile.tellp(); // pega a "posicao" da var extrabits no arquivo, pois será necessário modifica-la no final
+    outfile.write(&extrabits, sizeof(char));
+    ifstream myfile (inputFile, std::ios::binary); // abertura do arquivo
+
+    if (myfile.is_open()){
+        while (myfile >> noskipws >> caracter){ 
+            code = tabelaCodigos[caracter];
+            for(int i = 0; i < code.length(); i++){
+                if(countByte == 8){
+                    if(myfile.eof()) break;
+                    outfile.write((char*)&byteToWrite, sizeof(char));
+                    countByte = 0;
+                    byteToWrite = 0;
+                }  
+                // processo de apendação de bits no byteToWrite
+                byteToWrite = byteToWrite << 1; 
+                if(code[i] == '1') byteToWrite = byteToWrite | (char) 1;
+                countByte++;
+            }
+        }
+
+        if(countByte != 8){ // processo de ver a qnt de bits extras e armazenas na posicao pegada la em cima
+            extrabits = (char) bytes - countByte; // simboliza o tanto de bits que falta escrever pra completar 1 byte
+            cout << "EXTRABITS:" << (int) extrabits << endl;
+            byteToWrite = byteToWrite << extrabits; // da um shiftada do tanto de extrabits
+            outfile.write((char*)&byteToWrite, sizeof(char));
+            outfile.seekp(extraBitsAddress); //atualizando o valor corredo do extrabits no arquivo
+            outfile.write(&extrabits, sizeof(char));
+        }
+        myfile.close();
+    }
+}
+
 // arquivo de saida: [num de nos | arvore | qnt de bits | output]
 void compress(string inputFile, string outputFile){
     Heap heap;
@@ -199,14 +177,14 @@ void compress(string inputFile, string outputFile){
     else {
         heap.construir(countSymbols);
         no = codificaoHuffman(heap);
-        exibirTree(no);
+        // exibirTree(no);
     }
     
     tabelaSimbolos tabela;
     tabela = gerarTabelaCodificacao(no, "", tabela);
-    for(parTabela elem: tabela){
-        cout << elem.first << " : " << elem.second << endl;
-    }
+    // for(parTabela elem: tabela){
+    //     cout << elem.first << " : " << elem.second << endl;
+    // }
 
     cout << "Escrevendo Arvore de Huffman..." << endl;
     ofstream outfile(outputFile, std::ios::binary); 
@@ -245,7 +223,7 @@ void descompress(string inputFile, string outputFile){
 
     int pos = 0;
     no = readTree(out, pos, no);
-    exibirTree(no);
+    // exibirTree(no);
     No* root = no;
     char extrabits;
     myfile.read(&extrabits, sizeof(char));
@@ -292,17 +270,17 @@ int main(int argc,char* argv[]){
        else if (modo == "--descompress")
             descompress(inputFile, outputFile);
     }*/
-    // string inputFile = "files/Stavechurch-heddal.bmp";
-    string inputFile = "files/ch05-patterns.pdf";
+    string inputFile = "files/Stavechurch-heddal.bmp";
+    // string inputFile = "files/ch05-patterns.pdf";
     // string inputFile = "files/teste.txt";
     // string inputFile = "files/books.txt";
     // string inputFile = "files/Stavechurch-heddal.bmp";
     string outputFile = "files/teste.huf";
     // string outputFile2 = "files/img.bmp";
-    string outputFile2 = "files/pdfDescompress.pdf";
+    // string outputFile2 = "files/pdfDescompress.pdf";
     // string outputFile2 = "files/testeDescomp.txt";
     // string outputFile2 = "files/bookseDescomp.txt";
-    // string outputFile2 = "files/img.bmp";
+    string outputFile2 = "files/img.bmp";
     compress(inputFile, outputFile);
     descompress(outputFile, outputFile2);
     return 0;
