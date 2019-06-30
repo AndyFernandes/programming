@@ -92,6 +92,18 @@ tabelaSimbolos gerarTabelaCodificacao(No* no, string codigo, tabelaSimbolos tabe
     return tabela;
 }
 
+void exibirTree(No* root){
+
+    cout << root->chave << " - ";
+    if(root->filhoEsquerdo != nullptr){
+        exibirTree(root->filhoEsquerdo);
+    }
+
+    if(root->filhoDireito != nullptr){
+        exibirTree(root->filhoDireito);
+    }
+}
+
 void codify(string inputFile, tabelaSimbolos tabelaCodigos, ofstream &outfile){
     char caracter; // é o que irá iterar no arquivo (ler o arquivo de caracter em caracter)
     string code; // serve para pegar o código correspondente ao caracter
@@ -108,14 +120,15 @@ void codify(string inputFile, tabelaSimbolos tabelaCodigos, ofstream &outfile){
             code = tabelaCodigos[caracter];
             for(int i = 0; i < code.length(); i++){
                 if(countByte == 8){
+                    if(myfile.eof()) break;
                     outfile.write((char*)&byteToWrite, sizeof(char));
                     countByte = 0;
                     byteToWrite = 0;
-                } else { // processo de apendação de bits no byteToWrite
-                    byteToWrite = byteToWrite << 1; 
-                    if(code[i] == '1') byteToWrite = byteToWrite | (char) 1;
-                    countByte++;
-                }
+                }  
+                // processo de apendação de bits no byteToWrite
+                byteToWrite = byteToWrite << 1; 
+                if(code[i] == '1') byteToWrite = byteToWrite | (char) 1;
+                countByte++;
             }
         }
 
@@ -149,20 +162,21 @@ No* readTree(string tree, int &posicao, No* no){
     char caracter = tree[posicao];
     // cout << caracter << " - ";
 
-    if(caracter == indicadorNulo) return no;
+    if(caracter == indicadorNulo){
+        return no;
+    } 
     else if(caracter == indicadorFolha){
         posicao++;
         caracter = tree[posicao];
         posicao++;
         no = newNo(caracter, 0, nullptr, nullptr);
         return no;
-    } else if(caracter == internNode){
+    } 
         no = newNo(internNode, 0, nullptr, nullptr);
         posicao++;
         no->filhoEsquerdo = readTree(tree, posicao, no);
         no->filhoDireito = readTree(tree, posicao, no);
         return no;
-    }
 }
 
 // arquivo de saida: [num de nos | arvore | qnt de bits | output]
@@ -177,8 +191,12 @@ void compress(string inputFile, string outputFile){
     cout << "Gerando Arvore de Huffman..." << endl;
     heap.construir(countSymbols);
     No* no = codificaoHuffman(heap);
+    exibirTree(no);
     tabelaSimbolos tabela;
     tabela = gerarTabelaCodificacao(no, "", tabela);
+    for(parTabela elem: tabela){
+        cout << elem.first << " : " << elem.second << endl;
+    }
 
     cout << "Escrevendo Arvore de Huffman..." << endl;
     ofstream outfile(outputFile, std::ios::binary); 
@@ -217,6 +235,7 @@ void descompress(string inputFile, string outputFile){
 
     int pos = 0;
     no = readTree(out, pos, no);
+    exibirTree(no);
     No* root = no;
     char extrabits;
     myfile.read(&extrabits, sizeof(char));
@@ -229,12 +248,10 @@ void descompress(string inputFile, string outputFile){
     int countBit = 0; // um contador para indicar se já foi lido 8 bits, aí se sim eu gravo o byte localizado na var abaixo
     while(!myfile.eof()){
         int bit = byteToWrite >> (7 - countBit) & (char) 1;
-
         if(bit == 1) no = no->filhoDireito;
         else no = no->filhoEsquerdo;
         countBit++;
         if(isLeaf(no)){
-            // cout << no->chave << " - ";
             outfile.write(&no->chave, sizeof(char));
             no = root;
         } 
@@ -265,9 +282,9 @@ int main(int argc,char* argv[]){
        else if (modo == "--descompress")
             descompress(inputFile, outputFile);
     }*/
-    string inputFile = "files/books.huf";
+    string inputFile = "files/teste.txt";
     string outputFile = "files/teste.huf";
-    string outputFile2 = "files/teste.txt";
+    string outputFile2 = "files/testeDescompress.txt";
     compress(inputFile, outputFile);
     descompress(outputFile, outputFile2);
     return 0;
