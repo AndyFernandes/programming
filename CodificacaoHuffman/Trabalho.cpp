@@ -68,8 +68,8 @@ string readFile(string path){
         }
         myfile.close();
         return text;
-    }
-    else cout << "Unable to open file";
+    } else cout << "Unable to open file";
+    myfile.close();
     return "";
 }
 
@@ -105,7 +105,7 @@ void codify(string inputFile, tabelaSimbolos tabelaCodigos, ofstream &outfile){
     int countByte = 0; // um contador para indicar se já foi lido 8 bits, aí se sim eu gravo o byte localizado na var abaixo
     char byteToWrite = 0; // responsável por guardar o byte a ser armazenado no arquivo -> passará por um processo de "apendação" dos codigos relacionados aos caracteres até completar 8 bits
     char extrabits = 0; // serve para informar a quantidade de bits que precisou para preencher o ultimo byte do arquivo
-    
+
     streamoff extraBitsAddress = outfile.tellp(); // pega a "posicao" da var extrabits no arquivo, pois será necessário modifica-la no final
     outfile.write(&extrabits, sizeof(char));
     ifstream myfile (inputFile); // abertura do arquivo
@@ -128,9 +128,11 @@ void codify(string inputFile, tabelaSimbolos tabelaCodigos, ofstream &outfile){
 
         if(countByte != 0){ // processo de ver a qnt de bits extras e armazenas na posicao pegada la em cima
             extrabits = (char) bytes - countByte; // simboliza o tanto de bits que falta escrever pra completar 1 byte
+            cout << "EXTRABITS:" << (int) extrabits << endl;
             byteToWrite = byteToWrite << extrabits; // da um shiftada do tanto de extrabits
             outfile.write((char*)&byteToWrite, sizeof(char));
             outfile.seekp(extraBitsAddress); //atualizando o valor corredo do extrabits no arquivo
+            outfile.write(&extrabits, sizeof(char));
         }
         myfile.close();
     }
@@ -159,7 +161,7 @@ No* readTree(string tree, int &posicao, No* no){
         posicao++;
         caracter = tree[posicao];
         posicao++;
-        cout << caracter << " - ";
+        // cout << caracter << " - ";
         no = newNo(caracter, 0, nullptr, nullptr);
         return no;
     } else if(caracter == internNode){
@@ -167,7 +169,6 @@ No* readTree(string tree, int &posicao, No* no){
         posicao++;
         no->filhoEsquerdo = readTree(tree, posicao, no);
         no->filhoDireito = readTree(tree, posicao, no);
-        cout << no->filhoEsquerdo->chave;
         return no;
     }
 }
@@ -196,45 +197,47 @@ void compress(string inputFile, string outputFile){
 
     int size = tree.size();
     outfile.write((char*)&size, sizeof(int));
-    outfile.write(&tree[0], tree.size());
+    outfile.write(tree.data(), size);
     codify(inputFile, tabela, outfile);
 
     outfile.close();
     cout << "Done!\n";
 }
 
-/*void descompress(string inputFile, string outputFile){
-    // string texto = readFile(inputFile);
-    // vector<string> splites = split(texto, '#');
-    // int numNodes = stoi(splites.at(0));
-    // cout << "Number of nodes: " << numNodes << endl;
-    // No* no;
-    // no = readTree(no, splites.at(1), numNodes);
-
+void descompress(string inputFile, string outputFile){
     ifstream myfile (inputFile, std::ios::binary); 
     if (!myfile.is_open()){
         cout << "Error to open file" << endl;
         return;
     }
 
-    char numberNodes;
-    myfile.read((char*)&numberNodes, sizeof(char));
-    cout << (int) numberNodes;
+    int numberNodes;
+    myfile.read((char*)&numberNodes, sizeof(int));
+    cout << numberNodes;
 
-    No no;
-    readTree();
+    No* no;
+    string out;
+    for(int i = 0; i < numberNodes; ++i){
+        char byte;
+        myfile.read(&byte, sizeof(char));
+        out += byte;
+    }
+    cout << out;
+    int pos = 0;
+    no = readTree(out, pos, no);
     char extrabits;
-    myfile.read((char*)&extrabits, sizeof(char));
-
+    myfile.read(&extrabits, sizeof(char));
+    cout << (int) extrabits;
     ofstream outfile (outputFile, std::ios::binary);
     char byteToWrite = 0;
     myfile.read((char*)&byteToWrite, sizeof(char));
 
     while(!myfile.eof()){
-
+        
     }
-
-}*/
+    myfile.close();
+    outfile.close();
+}
 
 int main(int argc,char* argv[]){
     /* if(argc>=2) {
@@ -254,59 +257,6 @@ int main(int argc,char* argv[]){
     string inputFile = "files/teste.txt";
     string outputFile = "files/teste.huf";
     compress(inputFile, outputFile);
-    //descompress(outputFile, inputFile);
-
-    ifstream myfile (outputFile, std::ios::binary); 
-   
-    int numberNodes = 0;
-    myfile.read((char*)&numberNodes, sizeof(int));
-    cout << numberNodes;
-
-    No* no;
-    string out;
-    for(int i = 0; i < numberNodes; ++i){
-        char byte;
-        myfile.read(&byte, sizeof(char));
-        out += byte;
-    }
-    
-    int pos = 0;
-    readTree(out, pos, no);
-    cout << no << " POUUU" << endl;
+    descompress(outputFile, inputFile);
     return 0;
 }
-
-/* 
-LÓGICA:
-    # PARTE 1: Codificar
-    1. Primeiro construir um dicionário que conta a ocorrencia de cada caractere
-    2. Depois construir uma heap, repassando o dicionário 
-        -> Ajeitar minha heap para suportar a estrutura de nós -> sempre ordenará olhando pela quantidade
-    
-    3. Algoritmo de Huffman -> retorno um nó (o único restante)
-    4. A partir desse nó iremos gerar a tabelinha de símbolos
-    5. Ai agora seria codificar o arquivo/string
-    6. Gravar a arvore no inicio do arquivo: -> separar por ',' as tuplas, e char:code 
-        a:qnt,b:qnt
-    ------------------------------
-
-    # PARTE 2: Decodificar
-    1. Ler arquivo em uma string
-    2. Splitar string por '#' 
-    3. Reconstruir tabela de simbolos
-    4. Decodificar
-    5. Gravar o arquivo
-*/
-/* 
-//TODO
-// [num de nós | arvore | numero de bytes]
-// arvore -> vector[NoArvore]
-// string escreverArvore(tabelaSimbolos tabela){
-//     string saida;
-//     for(parTabela elemento: tabela){
-//         saida += elemento.first + ":" + elemento.second + ",";
-//     }
-//     saida += "%#%";
-//     return saida;
-// }
-*/
