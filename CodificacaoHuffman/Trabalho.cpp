@@ -11,6 +11,7 @@ using namespace std;
 #define indicadorNulo '#' // indica nó nulo
 #define indicadorFolha '$' // indica nó folha
 
+// char -> unsignedchar
 void printNo(No* no, int size){
     for(No* i = no; i != no+size; i ++)
         cout << i->chave << " : " << i->qnt << endl;
@@ -154,14 +155,13 @@ void writeTree(No* no, vector<char> &tree){
 
 No* readTree(string tree, int &posicao, No* no){
     char caracter = tree[posicao];
-    cout << caracter << " - ";
+    // cout << caracter << " - ";
 
     if(caracter == indicadorNulo) return no;
     else if(caracter == indicadorFolha){
         posicao++;
         caracter = tree[posicao];
         posicao++;
-        // cout << caracter << " - ";
         no = newNo(caracter, 0, nullptr, nullptr);
         return no;
     } else if(caracter == internNode){
@@ -173,35 +173,34 @@ No* readTree(string tree, int &posicao, No* no){
     }
 }
 
-// arquivo de saida: [num de nos | arvore | qnt de bits | # | output]
+// arquivo de saida: [num de nos | arvore | qnt de bits | output]
 void compress(string inputFile, string outputFile){
     Heap heap;
+    cout << "Lendo arquivo " << inputFile << endl;
     string texto = readFile(inputFile);
     char c[texto.size() + 1];
     strcpy(c, &texto[0]);
     dict countSymbols = countChar(c);
-    //for(par elemento: countSymbols){
-    //     cout << elemento.first << " : " << elemento.second << endl;
-    //}
+
+    cout << "Gerando Arvore de Huffman..." << endl;
     heap.construir(countSymbols);
     No* no = codificaoHuffman(heap);
     tabelaSimbolos tabela;
     tabela = gerarTabelaCodificacao(no, "", tabela);
-    //for(parTabela elemento: tabela){
-    //     cout << elemento.first << " : " << elemento.second << endl;
-    //}
 
+    cout << "Escrevendo Arvore de Huffman..." << endl;
     ofstream outfile(outputFile, std::ios::binary); 
     vector<char> tree;
     writeTree(no, tree);
-
     int size = tree.size();
     outfile.write((char*)&size, sizeof(int));
     outfile.write(tree.data(), size);
+
+    cout << "Codificando arquivo..." << endl;
     codify(inputFile, tabela, outfile);
 
     outfile.close();
-    cout << "Done!\n";
+    cout << "Done!" << endl;
 }
 
 void descompress(string inputFile, string outputFile){
@@ -223,13 +222,13 @@ void descompress(string inputFile, string outputFile){
         myfile.read(&byte, sizeof(char));
         out += byte;
     }
-    cout << out;
+
     int pos = 0;
     no = readTree(out, pos, no);
     
     char extrabits;
     myfile.read(&extrabits, sizeof(char));
-    cout << (int) extrabits;
+    cout << "Quantidade de EXTRABITS: " << (int) extrabits << endl;
     
     ofstream outfile (outputFile, std::ios::binary);
     
