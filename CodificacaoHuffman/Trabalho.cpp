@@ -40,29 +40,33 @@ vector<string> split (const string &s, char delim) {
     return result;
 }
 
-dict countChar(char* pText){
-    dict m;
-    while(*pText != '\0'){
-        if (m[*pText]) m[*pText] += 1;
-        else m[*pText] = 1;
-        pText++;
-    }
-    return m;
+void countChar(dict &dic, char caracter){
+    // dict m;
+    // while(*pText != '\0'){
+        if (dic[caracter]) dic[caracter] += 1;
+        else dic[caracter] = 1;
+        // pText++;
+    // }
+    // return m;
 }
 
-string readFile(string path){
+dict readFile(string path){
     string text;
     char caracter;
+    dict dic;
     ifstream myfile (path); 
-    if (myfile.is_open()){
+    // if (myfile.is_open()){
         while (myfile >> noskipws >> caracter){ 
-            text += caracter; 
+            // text += caracter;
+            countChar(dic, caracter);
         }
         myfile.close();
-        return text;
-    } else cout << "Unable to open file";
-    myfile.close();
-    return "";
+        // cout << text;
+        // return text;
+        return dic;
+    // } else cout << "Unable to open file";
+    // myfile.close();
+    // return nullptr;
 }
 
 No* codificaoHuffman(Heap heap){
@@ -181,11 +185,12 @@ No* readTree(string tree, int &posicao, No* no){
 // arquivo de saida: [num de nos | arvore | qnt de bits | output]
 void compress(string inputFile, string outputFile){
     Heap heap;
-    cout << "Lendo arquivo " << inputFile << endl;
-    string texto = readFile(inputFile);
-    char c[texto.size() + 1];
-    strcpy(c, &texto[0]);
-    dict countSymbols = countChar(c);
+    // cout << "Lendo arquivo " << inputFile << endl;
+    // string texto = readFile(inputFile);
+    // char c[texto.size() + 1];
+    // strcpy(c, &texto[0]);
+    dict countSymbols = readFile(inputFile);
+    // dict countSymbols = countChar(c);
 
     cout << "Gerando Arvore de Huffman..." << endl;
     
@@ -287,12 +292,16 @@ int main(int argc,char* argv[]){
        else if (modo == "--descompress")
             descompress(inputFile, outputFile);
     }*/
-    //string inputFile = "files/Stavechurch-heddal.bmp";
-    string inputFile = "files/teste.txt";
+    // string inputFile = "files/Stavechurch-heddal.bmp";
+    string inputFile = "files/ch05-patterns.pdf";
+    // string inputFile = "files/teste.txt";
+    // string inputFile = "files/books.txt";
     // string inputFile = "files/Stavechurch-heddal.bmp";
     string outputFile = "files/teste.huf";
-    //string outputFile2 = "files/img.bmp";
-    string outputFile2 = "files/testeDescomp.txt";
+    // string outputFile2 = "files/img.bmp";
+    string outputFile2 = "files/pdfDescompress.pdf";
+    // string outputFile2 = "files/testeDescomp.txt";
+    // string outputFile2 = "files/bookseDescomp.txt";
     // string outputFile2 = "files/img.bmp";
     compress(inputFile, outputFile);
     descompress(outputFile, outputFile2);
