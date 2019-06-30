@@ -52,12 +52,11 @@ dict countChar(char* pText){
 
 string readFile(string path){
     string text;
-    string line;
+    char caracter;
     ifstream myfile (path); 
     if (myfile.is_open()){
-        while (! myfile.eof()){ 
-            getline (myfile, line); 
-            text += line; 
+        while (myfile >> noskipws >> caracter){ 
+            text += caracter; 
         }
         myfile.close();
         return text;
@@ -189,9 +188,15 @@ void compress(string inputFile, string outputFile){
     dict countSymbols = countChar(c);
 
     cout << "Gerando Arvore de Huffman..." << endl;
-    heap.construir(countSymbols);
-    No* no = codificaoHuffman(heap);
-    exibirTree(no);
+    
+    No* no;
+    if(countSymbols.empty()) no = nullptr;
+    else {
+        heap.construir(countSymbols);
+        no = codificaoHuffman(heap);
+        exibirTree(no);
+    }
+    
     tabelaSimbolos tabela;
     tabela = gerarTabelaCodificacao(no, "", tabela);
     for(parTabela elem: tabela){
@@ -282,9 +287,13 @@ int main(int argc,char* argv[]){
        else if (modo == "--descompress")
             descompress(inputFile, outputFile);
     }*/
+    //string inputFile = "files/Stavechurch-heddal.bmp";
     string inputFile = "files/teste.txt";
+    // string inputFile = "files/Stavechurch-heddal.bmp";
     string outputFile = "files/teste.huf";
-    string outputFile2 = "files/testeDescompress.txt";
+    //string outputFile2 = "files/img.bmp";
+    string outputFile2 = "files/testeDescomp.txt";
+    // string outputFile2 = "files/img.bmp";
     compress(inputFile, outputFile);
     descompress(outputFile, outputFile2);
     return 0;
