@@ -119,7 +119,7 @@ void atualizarAlturas(Noh* no){
 
 // Retorna um ponteiro para o novo nó ou nulo se erro de alocação
 Noh* inserir(DicAVL &D, TC c, TV v){
-    cout << "Inserção da chave: " << c << endl;
+    cout << "Insercao da chave: " << c << endl;
     Noh* novoNo = newNo(c, v, 1);
     Noh* root = D.raiz;
     Noh* noAnterior = nullptr;
@@ -135,6 +135,7 @@ Noh* inserir(DicAVL &D, TC c, TV v){
     // Pega o nó a quem vou adicionar o novo nó
     while(root != nullptr){
         noAnterior = root;
+        // cout << "Passei aqui 2" << endl;
         if(c < root->chave) root = root->esq;
         else if(c > root->chave) root = root->dir;
     }
@@ -150,9 +151,11 @@ Noh* inserir(DicAVL &D, TC c, TV v){
 
     // Propagando o +1 nas alturas dos nós posteriores ao inserido e balanceando a árvore (caso esteja desbalanceada)
     do {
-        cout << "Passei aqui3";
+        // cout << "Passei aqui3" << endl;
         root->h = max(height(root->esq), height(root->dir)) + 1;
+        // cout << root->h << endl;
         int balance = getBalance(root);
+        // cout << balance << endl;
 
         if(balance > 1 && c < root->esq->chave) root = rotationRight(D, root); // Left Left Case
         else if(balance < -1 && c > root->dir->chave) root = rotationLeft(D, root); // Right Right Case
@@ -164,14 +167,80 @@ Noh* inserir(DicAVL &D, TC c, TV v){
             root = rotationLeft(D, root);
         }
         root = root->pai;
-        cout << root->chave;
-    } while(root!=nullptr);
-    cout << "Passei aqui4";
+        // if(root != nullptr) cout << root->chave << endl;
+    } while(root != nullptr);
+    // cout << "Passei aqui4" << endl;
     return novoNo;
 } 
 
+// Retorna o nó maissss a esquerda do nó passado
+Noh* minNode(Noh* no){
+    Noh* corrente = no;
+    while(corrente->esq != nullptr)
+        corrente = corrente->esq;
+    return corrente;
+}
+
 // n aponta para o nó a ser removido
 void remover(DicAVL &D, Noh *n){
+    Noh* root = D.raiz;
+    Noh* noAnterior = nullptr;
+    int balance;
+    // se a raiz for nula.. nada a remover
+    if(root == nullptr) return;
+
+    // Verificando se o nó realmente pertence ao dicionário
+    Noh* n = procurar(D, n->chave);
+    if(n == nullptr) return;
+
+    // Caso base: é a raiz da árvore ou é um nó que tem apenas uma subarv esquerda ou direita
+    if(n->pai == nullptr && n->esq != nullptr && n->dir == nullptr){ // nó raiz com 1 filho
+        D.raiz = n->esq;
+        n->esq->pai = nullptr;
+        free(n);
+        return;
+    } else if(n->pai == nullptr && n->dir != nullptr && n->esq == nullptr){ // nó raiz com 1 filho
+        D.raiz = n->dir;
+        n->dir->pai = nullptr;
+        free(n);
+        return;
+    } else if(n->pai == nullptr && n->dir == nullptr && n->esq == nullptr){ // nó raiz sem filhos
+        D.raiz = nullptr;
+        free(n);
+        return;
+    } else { // nó com 2 filhos
+        Noh* temp = minNode(n->dir);
+
+        /*do {
+            balance = getBalance(n);
+            if(balance == 1 || balance == 0){
+                if(n->dir->h > n->esq->h){ // pega o nó da árvore direita pra substituir x
+                    
+                } else { // pega o nó da árvore esquerda pra substituir x
+
+                }
+            }
+
+        } while(n != nullptr);*/
+    }
+
+    // Case base2: é um nó folha
+    if(isLeaf(n)){
+        free(n);
+        if(n->pai->esq == n) n->pai->esq = nullptr;
+        else if(n->pai->dir == n) n->pai->dir = nullptr;
+        // TODO: atualizar altura do resto da árvore
+        // TODO2: Ver se é necessário balancear
+    }
+
+
+
+
+    do{
+
+    }while();
+
+
 
 } 
 
