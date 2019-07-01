@@ -1,26 +1,29 @@
-#include <stdio.h>
-#include <stdlib.h>  
-#include<string>
-using namespace std;
+typedef double TC; 
+typedef float TV;
 
-class No {
-    public:
-        int chave;
-        int value;
-        int h;
-        No *filhoEsquerdo;
-        No *filhoDireito;
+struct Noh { 
+    TC chave; 
+    TV valor; 
+    Noh *esq, *dir, *pai; 
+    int h; 
 };
 
-class AVL {
-    public:
-        int size;
-        No* root;
+// Nulo quando árvore vazia.
+struct DicAVL { 
+    Noh *raiz; 
+}; 
 
-        No* rotationLeft(No *no);
-        No* rotationRight(No *no);
-        bool inserir(int chave, int value, No* no);
-        No* search(int chave, No* no);
-        bool remove(int chave, No *no);
-        void preOrder(No* no);
-};
+// Inicializa D como uma árvore vazia.
+void inicializar (DicAVL &D);
+
+// Retorna um ponteiro para o novo nó ou nulo se erro de alocação
+Noh* inserir (DicAVL &D, TC c, TV v);
+
+// Retorna um ponteiro para o nó da chave procurada, ou nulo se a chave não estiver em D.
+Noh* procurar (DicAVL &D, TC c); 
+
+// n aponta para o nó a ser removido
+void remover (DicAVL &D, Noh *n);
+
+// Desaloca os nós da árvore.
+void terminar (DicAVL &D);

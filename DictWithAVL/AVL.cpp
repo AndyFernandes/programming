@@ -1,66 +1,114 @@
 #include <stdio.h>
 #include "AVL.hpp"
 
-No* AVL::rotationLeft(No *x){
-    No* y = x->filhoDireito;
-    No* filhoEsqY = y->filhoEsquerdo;
+// Inicializa D como uma árvore vazia.
+void inicializar (DicAVL &D){
+    D.raiz = nullptr;
+} 
 
-    x->filhoEsquerdo = filhoEsqY;
-    y->filhoEsquerdo = x;
+int height(Noh *no){
+    if(no == nullptr) return 0;
+    return no->h;
+}
+
+int max(int a, int b){
+    return (a > b)? a : b;
+}
+
+Noh* rotationLeft(Noh *x){
+    Noh* paiX = x->pai;
+    Noh* y = x->dir;
+    Noh* filhoEsqY = y->esq;
+
+     // Ponteiro de PaiX -> muda filho do lugar de X pra Y 
+    if(paiX != nullptr){
+        if(paiX->esq == x) paiX->esq = y;
+        else if(paiX->dir == x) paiX->dir = y;
+    }
+
+     // X -> muda pai e muda filho direito
+    x->pai = y;
+    x->dir = filhoEsqY;
+
+    // Y -> muda pai e muda filho esquerdo
+    y->pai = paiX;
+    y->esq = x; 
+    
+    // Filho direito de Y -> muda pai
+    filhoEsqY->pai = x;
 
     //Atualizando alturas
-    if(y->filhoEsquerdo->h > (y->filhoDireito->h + 1)) y->h = y->filhoEsquerdo->h;
-    else y->h = y->filhoDireito->h + 1;
-
-    if(x->filhoEsquerdo->h > (x->filhoDireito->h + 1)) x->h = x->filhoEsquerdo->h;
-    else x->h = x->filhoDireito->h + 1;
+    y->h = max(height(y->esq), height(y->dir)) + 1;
+    x->h = max(height(x->esq), height(x->dir)) + 1;
 
     return y; 
 }
 
-No* AVL::rotationRight(No *y){
-    No* x = y->filhoEsquerdo;
-    No* filhoDirX = x->filhoDireito;
+Noh* rotationRight(Noh *y){
+    Noh* paiY = y->pai;
+    Noh* x = y->esq;
+    Noh* filhoDirX = x->dir;
 
-    x->filhoDireito = y;
-    y->filhoDireito = filhoDirX;
+    // Ponteiro de PaiY -> muda filho do lugar de Y 
+    if(paiY != nullptr){ // Atualizando ponteiro do filho do pai de Y para no lugar de y ser x
+        if(paiY->esq == y) paiY->esq = x;
+        else if(paiY->dir == y) paiY->dir = x;
+    }
+
+    // X -> muda pai e muda filho direito
+    x->pai = paiY;
+    x->dir = y; // Y é agora filho direito de y
+
+    // Y -> muda pai e muda filho esquerdo
+    y->pai = x; // X agora é o pai de y
+    y->esq = filhoDirX; // Filho Direito de X agora vira filho Esquerdo de Y
+    
+    // Filho direito de Y -> muda pai
+    filhoDirX->pai = y;
 
     //Atualizando alturas
-    if(y->filhoEsquerdo->h > (y->filhoDireito->h + 1)) y->h = y->filhoEsquerdo->h;
-    else y->h = y->filhoDireito->h + 1;
-
-    if(x->filhoEsquerdo->h > (x->filhoDireito->h + 1)) x->h = x->filhoEsquerdo->h;
-    else x->h = x->filhoDireito->h + 1;
+    y->h = max(height(y->esq), height(y->dir)) + 1;
+    x->h = max(height(x->esq), height(x->dir)) + 1;
+    
     return x;
 }
 
-bool AVL::inserir(int chave, int value, No *no){
-    // escrever casos
+// Retorna um ponteiro para o nó da chave procurada, ou nulo se a chave não estiver em D.
+Noh* procurar(DicAVL &D, TC c){
+    Noh* no = D.raiz;
 
-    // 1. lado 
-    return true;
+    while(no != nullptr){
+        TC chave = no->chave;
+        if(chave == c) return no;
+        else if(chave > c) no = no->esq;
+        else if(chave < c) no = no->dir;
+    }
+    return nullptr;
 }
 
-No* AVL::search(int chave, No *no){
-    if(chave == null && no == nullptr)
-        return -1;
-
-    if(no->chave == chave && no == nullptr)
-        return no;
-    else if(no->chave > chave)
-        return search(chave, no->filhoEsquerdo);
-    else
-        return search(chave, no->filhoDireito);
+bool isLeaf(Noh* no){
+    if(no->esq == nullptr && no->dir == nullptr) return true;
+    return false;
 }
 
-bool AVL::remove(int chave, No *no){
-    // escrever casos
-    return true;
-}
+// Retorna um ponteiro para o novo nó ou nulo se erro de alocação
+Noh* inserir (DicAVL &D, TC c, TV v){
 
-void preOrder(No *no){
-    if(no == nullptr) return;
-    cout << no.chave << " ";
-    preOrder(no->filhoEsquerdo);
-    preOrder(no->filhoDireito);
-}
+} 
+
+// n aponta para o nó a ser removido
+void remover (DicAVL &D, Noh *n){
+
+} 
+
+// Desaloca os nós da árvore.
+void terminar (DicAVL &D){
+    // acessar a raiz do dicionario e visitar em pré-ordem desalocando os nós
+    Noh* no = D.raiz;
+
+    while(no != nullptr){
+        if(isLeaf(no)) free(no);
+        else if(chave > c) no = no->esq;
+        else if(chave < c) no = no->dir;
+    }
+} 
