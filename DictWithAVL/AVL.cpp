@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "AVL.h"
+#include "AVL.hpp"
 
 No* AVL::rotationLeft(No *x){
     No* y = x->filhoDireito;
