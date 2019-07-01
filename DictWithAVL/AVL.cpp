@@ -21,13 +21,13 @@ bool isLeaf(Noh* no){
     return false;
 }
 
-Noh* newNo(TC chave, TV value, Noh* pai, Noh* esq, Noh* dir, int h){
-    Noh *no;
+Noh* newNo(TC chave, TV value, int h){
+    Noh *no = new Noh();
     no->chave = chave;
     no->valor = value;
-    no->pai = pai;
-    no->esq = esq;
-    no->dir = dir;
+    no->pai = nullptr;
+    no->esq = nullptr;
+    no->dir = nullptr;
     no->h = h;
     return no;
 }
@@ -101,10 +101,13 @@ Noh* procurar(DicAVL &D, TC c){
 
     while(no != nullptr){
         TC chave = no->chave;
+        // cout << no->chave;
         if(chave == c) return no;
         else if(chave > c) no = no->esq;
         else if(chave < c) no = no->dir;
     }
+
+    cout << "No nao encontrado!" << endl;
     return nullptr;
 }
 
@@ -116,13 +119,17 @@ void atualizarAlturas(Noh* no){
 
 // Retorna um ponteiro para o novo nó ou nulo se erro de alocação
 Noh* inserir(DicAVL &D, TC c, TV v){
-    Noh* novoNo = newNo(c, v, nullptr, nullptr, nullptr, 1);
+    cout << "Inserção da chave: " << c << endl;
+    Noh* novoNo = newNo(c, v, 1);
     Noh* root = D.raiz;
-    Noh* noAnterior;
-
+    Noh* noAnterior = nullptr;
+   
     // caso a. Raiz nula => raiz é o nó
-    if(root == nullptr) D.raiz = novoNo;
-
+    if(root == nullptr){
+        D.raiz = novoNo;
+        return novoNo;
+    } 
+    
     // caso b. Raiz não nula => Insere e realiza balanceamento
     
     // Pega o nó a quem vou adicionar o novo nó
@@ -143,6 +150,7 @@ Noh* inserir(DicAVL &D, TC c, TV v){
 
     // Propagando o +1 nas alturas dos nós posteriores ao inserido e balanceando a árvore (caso esteja desbalanceada)
     do {
+        cout << "Passei aqui3";
         root->h = max(height(root->esq), height(root->dir)) + 1;
         int balance = getBalance(root);
 
@@ -158,6 +166,7 @@ Noh* inserir(DicAVL &D, TC c, TV v){
         root = root->pai;
         cout << root->chave;
     } while(root!=nullptr);
+    cout << "Passei aqui4";
     return novoNo;
 } 
 

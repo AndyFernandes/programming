@@ -5,8 +5,13 @@ using namespace std;
 int main(){
     DicAVL dicionario;
     inicializar(dicionario);
+    // cout << dicionario.raiz->chave << endl;
     Noh *no1 = inserir(dicionario, 204, -21);
-    // Noh *no2 = inserir(dicionario, 169.75, 59.5);
+    // cout << dicionario.raiz->chave << endl;
+    Noh* no = procurar(dicionario, 230);
+    // cout << no->chave;
+    Noh *no2 = inserir(dicionario, 169.75, 59.5);
+    cout << dicionario.raiz->chave << endl;
     // Noh *no3 = inserir(dicionario, 246.75, -60);
     // Noh *no4 = inserir(dicionario, -98.75, 53.5);
     // Noh *no5 = inserir(dicionario, -133.25, 10.5);
@@ -38,7 +43,5 @@ int main(){
     // procurar(dicionario, -169.75);
     // remover(dicionario, no2);
     // procurar(dicionario, -59.25);
-
-    cout << dicionario.raiz->chave;
     return 0;
 }
