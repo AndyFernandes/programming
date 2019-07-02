@@ -46,8 +46,10 @@ void countChar(dict &dic, char caracter){
 dict readFile(string path){
     char caracter;
     dict dic;
-    ifstream myfile(path);
-    while (myfile >> noskipws >> caracter){ 
+    ifstream myfile(path, std::ios::binary);
+    while (myfile >> noskipws >> caracter){
+        if(myfile.eof()) break;
+        // cout << caracter;
         countChar(dic, caracter);
     }
     myfile.close();
@@ -147,9 +149,12 @@ void codify(string inputFile, tabelaSimbolos tabelaCodigos, ofstream &outfile){
     int countByte = 0; // um contador para indicar se já foi lido 8 bits, aí se sim eu gravo o byte localizado na var abaixo
     char byteToWrite = 0; // responsável por guardar o byte a ser armazenado no arquivo -> passará por um processo de "apendação" dos codigos relacionados aos caracteres até completar 8 bits
     char extrabits = 0; // serve para informar a quantidade de bits que precisou para preencher o ultimo byte do arquivo
-
+    int numBytes = 0; // serve para informar o número de bytes gravados no arquivo
     streamoff extraBitsAddress = outfile.tellp(); // pega a "posicao" da var extrabits no arquivo, pois será necessário modifica-la no final
     outfile.write(&extrabits, sizeof(char));
+    streamoff numBytesAddress = outfile.tellp(); // pega a "posicao" da var numBytes no arquivo, pois será necessário modifica-la no final
+    outfile.write((char*)&numBytes, sizeof(int));
+
     ifstream myfile (inputFile, std::ios::binary); // abertura do arquivo
 
     if (myfile.is_open()){
@@ -161,6 +166,7 @@ void codify(string inputFile, tabelaSimbolos tabelaCodigos, ofstream &outfile){
                     outfile.write(&byteToWrite, sizeof(char));
                     countByte = 0;
                     byteToWrite = 0;
+                    numBytes++;
                 }  
                 // processo de apendação de bits no byteToWrite
                 byteToWrite = byteToWrite << 1; 
@@ -171,11 +177,15 @@ void codify(string inputFile, tabelaSimbolos tabelaCodigos, ofstream &outfile){
 
         if(countByte != 8){ // processo de ver a qnt de bits extras e armazenas na posicao pegada la em cima
             extrabits = (char) bytes - countByte; // simboliza o tanto de bits que falta escrever pra completar 1 byte
+            numBytes++; // o ultimo byte vai ser o completado
             cout << "Quantidade de bits extras utilizados: " << (int) extrabits << endl;
+            cout << "Quantidade de Bytes gravados: " << numBytes << endl;
             byteToWrite = byteToWrite << extrabits; // da um shiftada do tanto de extrabits
             outfile.write((char*)&byteToWrite, sizeof(char));
-            outfile.seekp(extraBitsAddress); //atualizando o valor corredo do extrabits no arquivo
+            outfile.seekp(extraBitsAddress); //atualizando o valor correto do extrabits no arquivo
             outfile.write(&extrabits, sizeof(char));
+            outfile.seekp(numBytesAddress); //atualizando o valor correto da var numBytes no arquivo
+            outfile.write((char*)&numBytes, sizeof(int));
         }
         myfile.close();
     }
@@ -218,9 +228,9 @@ void compress(string inputFile, string outputFile){
     
     tabelaSimbolos tabela;
     tabela = gerarTabelaCodificacao(no, "", tabela);
-    // for(parTabela elem: tabela){
-    //     cout << elem.first << " : " << elem.second << endl;
-    // }
+    for(parTabela elem: tabela){
+        cout << elem.first << " : " << elem.second << endl;
+    }
 
     cout << "Escrevendo Arvore de Huffman..." << endl;
     ofstream outfile;
@@ -270,19 +280,30 @@ void descompress(string inputFile, string outputFile){
     // exibirTree(no);
     No* root = no;
     char extrabits;
+    int numBytes;
+    
     myfile.read(&extrabits, sizeof(char));
     cout << "Quantidade de EXTRABITS: " << (int) extrabits << endl;
+    myfile.read((char*)&numBytes, sizeof(int));
+    cout << "Quantidade de Bytes: " << numBytes << endl;
     
     ofstream outfile (outputFile, std::ios::binary);
     
     char byteToWrite = 0;
     myfile.read((char*)&byteToWrite, sizeof(char));
+    
     int countBit = 0; // um contador para indicar se já foi lido 8 bits, aí se sim eu gravo o byte localizado na var abaixo
-    while(!myfile.eof()){
+    long iterarBits = 0;
+    long totalBits = ((numBytes-1)* bytes) + extrabits;
+    // cout << "Total de bits" << totalBits << endl;
+    while(!myfile.eof() && iterarBits < totalBits){
         int bit = byteToWrite >> (7 - countBit) & (char) 1;
+        
         if(bit == 1) no = no->filhoDireito;
         else no = no->filhoEsquerdo;
+        
         countBit++;
+        iterarBits++;
         if(isLeaf(no)){
             outfile.write(&no->chave, sizeof(char));
             no = root;
@@ -293,6 +314,7 @@ void descompress(string inputFile, string outputFile){
             countBit = 0;
         }
     }
+    // cout << "Iterar bits " << iterarBits << endl;
 
     cout << "Descompressao realiza com sucesso!";
     myfile.close();

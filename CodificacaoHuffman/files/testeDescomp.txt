@@ -1,4 +1,0 @@
-arara
-azul
-avoa
-lindamenter

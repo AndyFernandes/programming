@@ -1,4 +1,4 @@
-arara
-azul
-avoa
+arara 
+azul 
+avoa 
 lindamente
