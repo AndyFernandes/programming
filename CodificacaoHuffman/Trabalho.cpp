@@ -295,8 +295,12 @@ void descompress(string inputFile, string outputFile){
     int countBit = 0; // um contador para indicar se já foi lido 8 bits, aí se sim eu gravo o byte localizado na var abaixo
     long iterarBits = 0;
     long totalBits = ((numBytes-1)* bytes) + extrabits;
+    int countByte = 0;
     // cout << "Total de bits" << totalBits << endl;
-    while(!myfile.eof() && iterarBits < totalBits){
+    // if (limite == (qtdBytesEscritos - 1) && numBitLidos == qtdUltBits) {
+    //                    break;
+    // while(!myfile.eof() && iterarBits < totalBits){
+    while(!myfile.eof()){
         int bit = byteToWrite >> (7 - countBit) & (char) 1;
         
         if(bit == 1) no = no->filhoDireito;
@@ -304,14 +308,17 @@ void descompress(string inputFile, string outputFile){
         
         countBit++;
         iterarBits++;
+        
         if(isLeaf(no)){
             outfile.write(&no->chave, sizeof(char));
+            if(countByte == (numBytes - 1) && countBit == (bytes-extrabits)) break;
             no = root;
         } 
 
         if(countBit == bytes){
             myfile.read((char*)&byteToWrite, sizeof(char));
             countBit = 0;
+            countByte++;
         }
     }
     // cout << "Iterar bits " << iterarBits << endl;
