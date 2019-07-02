@@ -4,6 +4,8 @@
 #include <cstring>
 #include <sstream>
 #include <vector>
+#include <time.h>
+#include <chrono>
 using namespace std;
 
 #define bytes 8
@@ -223,9 +225,11 @@ void compress(string inputFile, string outputFile){
     codify(inputFile, tabela, outfile);
 
     outfile.close();
-    cout << "Compressao finalizada!" << endl;
+    cout << "Compressao realizada com sucesso!" << endl;
 }
 
+// Função responsável por realizar a descompressão do arquivo
+// caso o arquivo lido seja vazio: só sai e gera o arquivo .txt vazio
 void descompress(string inputFile, string outputFile){
     ifstream myfile (inputFile, std::ios::binary); 
     if (!myfile.is_open()){
@@ -244,7 +248,6 @@ void descompress(string inputFile, string outputFile){
     cout << "Numero de nos: " << numberNodes << endl;
 
     No* no;
-    
     string out;
     for(int i = 0; i < numberNodes; ++i){
         char byte;
@@ -281,7 +284,7 @@ void descompress(string inputFile, string outputFile){
         }
     }
 
-    cout << "Done!";
+    cout << "Descompressao realiza com sucesso!";
     myfile.close();
     outfile.close();
 }
@@ -296,10 +299,22 @@ int main(int argc,char* argv[]){
        cout << "InputFile: " << inputFile << endl;
        cout << "OutputFile: " << outputFile << endl << endl;
 
-       if(modo == "--compress")
-           compress(inputFile, outputFile);
-       else if (modo == "--descompress")
-            descompress(inputFile, outputFile);
+       if(modo == "--compress"){
+            auto start = std::chrono::high_resolution_clock::now();
+            compress(inputFile, outputFile);
+            auto stop = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+            cout << "Tempo levado para comprimir arquivo: " << duration.count() << " ms" << endl;
+       } else if (modo == "--descompress"){
+           auto start = std::chrono::high_resolution_clock::now();
+           descompress(inputFile, outputFile);
+           auto stop = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+            cout << "Tempo levado para descomprimir arquivo: " << duration.count() << " ms" << endl;
+       } else {
+           cout << "Comando nao detectado, por favor, tente novamente." << endl;
+       }
+            
     }
     //string inputFile = "files/Stavechurch-heddal.bmp";
     // string inputFile = "files/ch05-patterns.pdf";
