@@ -25,14 +25,14 @@ bool isLeaf(No* no){
 }
 
 // Cria um novo nó
-No* newNo(char chave, int qnt, No* filhoEsquerdo, No* filhoDireito){
-    No* no = (No*) malloc(sizeof(No));
-    no->chave = chave;
-    no->qnt = qnt;
-    no->filhoEsquerdo = filhoEsquerdo;
-    no->filhoDireito = filhoDireito;
-    return no;
-}
+// No* newNo(char chave, int qnt, No* filhoEsquerdo, No* filhoDireito){
+//     No* no = (No*) malloc(sizeof(No));
+//     no->chave = chave;
+//     no->qnt = qnt;
+//     no->filhoEsquerdo = filhoEsquerdo;
+//     no->filhoDireito = filhoDireito;
+//     return no;
+// }
 
 // Conta ocorrências de caracteres e armazena-os em um dicionário no estilo 'caracter': numero_ocorencias
 void countChar(dict &dic, char caracter){
@@ -46,10 +46,9 @@ void countChar(dict &dic, char caracter){
 dict readFile(string path){
     char caracter;
     dict dic;
-    ifstream myfile(path, std::ios::binary);
+    ifstream myfile(path);
     while (myfile >> noskipws >> caracter){ 
         countChar(dic, caracter);
-        // cout << caracter;
     }
     myfile.close();
     return dic;
@@ -59,15 +58,20 @@ dict readFile(string path){
 No* codificaoHuffman(Heap heap){
     No* left;
     No* right;
-    No sum;
+    No* sum;
 
     while(heap.heapSize != 1){
         left = heap.extractMinimum();
         right = heap.extractMinimum();
-        sum.chave = internNode;
-        sum.qnt = left->qnt + right->qnt;
-        sum.filhoEsquerdo = left;
-        sum.filhoDireito = right;
+        cout << "Left: " << left->chave << " : " << left->qnt << endl;
+        cout << "Right: " << right->chave << " : " << right->qnt << endl;
+        sum = (No*) malloc(sizeof(No));
+        sum->chave = internNode;
+        sum->qnt = left->qnt + right->qnt;
+        sum->filhoEsquerdo = left;
+        sum->filhoDireito = right;
+        cout << "SUM: " << sum->chave << " : " << sum->qnt << endl;
+        cout << "--------------------------" << endl;
         heap.insert(sum);
     }
     return heap.extractMinimum();
@@ -152,7 +156,7 @@ void codify(string inputFile, tabelaSimbolos tabelaCodigos, ofstream &outfile){
             for(int i = 0; i < code.length(); i++){
                 if(countByte == 8){
                     if(myfile.eof()) break;
-                    outfile.write((char*)&byteToWrite, sizeof(char));
+                    outfile.write(&byteToWrite, sizeof(char));
                     countByte = 0;
                     byteToWrite = 0;
                 }  
@@ -194,6 +198,9 @@ void compress(string inputFile, string outputFile){
     cout << "Contagem de ocorrencias de caracteres..." << endl;
     dict countSymbols = readFile(inputFile);
     // dict countSymbols = countChar(c);
+    for(par elem: countSymbols){
+        cout << elem.first << " : " << elem.second << endl;
+    }
 
     cout << "Gerando Arvore de Huffman..." << endl;
     No* no;
@@ -205,16 +212,17 @@ void compress(string inputFile, string outputFile){
     }
     heap.construir(countSymbols);
     no = codificaoHuffman(heap);
-    // exibirTree(no);
+    exibirTree(no);
     
     tabelaSimbolos tabela;
     tabela = gerarTabelaCodificacao(no, "", tabela);
-    // for(parTabela elem: tabela){
-    //     cout << elem.first << " : " << elem.second << endl;
-    // }
+    for(parTabela elem: tabela){
+        cout << elem.first << " : " << elem.second << endl;
+    }
 
     cout << "Escrevendo Arvore de Huffman..." << endl;
-    ofstream outfile(outputFile, std::ios::binary); 
+    ofstream outfile;
+    outfile.open(outputFile, std::ios::binary); 
     vector<char> tree;
     writeTree(no, tree);
     int size = tree.size();

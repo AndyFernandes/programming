@@ -20,10 +20,10 @@ class Heap {
     public:
 
     int heapSize;
-    No* heap;
+    No** heap;
 
     void construir(dict tabela);
-    void heapify(No* pVector, int pIndex);
+    void heapify(No** pVector, int pIndex);
 
     int getParent(int pIndex);
 
@@ -31,13 +31,13 @@ class Heap {
 
     int getRight(int pIndex);
 
-    void insert(No x);
+    void insert(No* x);
 
-    No minimum();
+    No* minimum();
 
     No* extractMinimum();
 
-    void Swap(No* p, int pIndex, int largest);
+    void Swap(No** p, int pIndex, int largest);
 };
 
-
+No* newNo(char chave, int qnt, No* filhoEsquerdo, No* filhoDireito);
