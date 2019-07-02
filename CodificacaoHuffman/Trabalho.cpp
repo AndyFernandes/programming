@@ -16,11 +16,13 @@ void printNo(No* no, int size){
         cout << i->chave << " : " << i->qnt << endl;
 }
 
+// Verifica se um nó é folha
 bool isLeaf(No* no){
     if(no->filhoDireito == nullptr && no->filhoEsquerdo == nullptr) return true;
     return false;
 }
 
+// Cria um novo nó
 No* newNo(char chave, int qnt, No* filhoEsquerdo, No* filhoDireito){
     No* no = (No*) malloc(sizeof(No));
     no->chave = chave;
@@ -30,11 +32,15 @@ No* newNo(char chave, int qnt, No* filhoEsquerdo, No* filhoDireito){
     return no;
 }
 
+// Conta ocorrências de caracteres e armazena-os em um dicionário no estilo 'caracter': numero_ocorencias
 void countChar(dict &dic, char caracter){
     if (dic[caracter]) dic[caracter] += 1;
     else dic[caracter] = 1;
 }
 
+// Ler um arquivo
+// Função utilizada na Compreensão
+// Por motivos de tamanho de arquivo e etc tive que ler de caracter em caracter e ir chamando a função acima
 dict readFile(string path){
     char caracter;
     dict dic;
@@ -47,6 +53,7 @@ dict readFile(string path){
     return dic;
 }
 
+// Cria a Árvore de Huffman, seguindo as propriedades de Heap
 No* codificaoHuffman(Heap heap){
     No* left;
     No* right;
@@ -64,6 +71,7 @@ No* codificaoHuffman(Heap heap){
     return heap.extractMinimum();
 }
 
+// Através da Árvore de Huffman, para cada caracter obtemos o seu código e armazenados em um dicionário para facilitar a codificação
 tabelaSimbolos gerarTabelaCodificacao(No* no, string codigo, tabelaSimbolos tabela){
     if(no->filhoDireito == nullptr && no->filhoEsquerdo == nullptr) tabela[no->chave] = codigo;
     else {
@@ -73,6 +81,7 @@ tabelaSimbolos gerarTabelaCodificacao(No* no, string codigo, tabelaSimbolos tabe
     return tabela;
 }
 
+// Função para printar a Árvore de Huffman -> usada para debbugar
 void exibirTree(No* root){
 
     cout << root->chave << " - ";
@@ -85,7 +94,8 @@ void exibirTree(No* root){
     }
 }
 
-// Percorrer via pré-ordem: Primeiro a esquerda e depois a direita
+// Função para escrever a Árvore de Huffman em um vector. Utilizada na compreensão
+// Percorrer via pós-ordem: Primeiro a esquerda e depois a direita
 void writeTree(No* no, vector<char> &tree){
     if(no == nullptr) // nó nulo
         tree.push_back(indicadorNulo);
@@ -99,6 +109,7 @@ void writeTree(No* no, vector<char> &tree){
     }
 }
 
+// Função para ler a Árvore de Huffman
 No* readTree(string tree, int &posicao, No* no){
     char caracter = tree[posicao];
     // cout << caracter << " - ";
@@ -120,6 +131,8 @@ No* readTree(string tree, int &posicao, No* no){
         return no;
 }
 
+// Função responsável por codificar o arquivo usando o dicionário gerado na função gerarTabelaCodificacao
+// Além disso, essa função armazena no arquivo a quantidade de bits usados para completar o último byt (se necessário)
 void codify(string inputFile, tabelaSimbolos tabelaCodigos, ofstream &outfile){
     char caracter; // é o que irá iterar no arquivo (ler o arquivo de caracter em caracter)
     string code; // serve para pegar o código correspondente ao caracter
@@ -150,7 +163,7 @@ void codify(string inputFile, tabelaSimbolos tabelaCodigos, ofstream &outfile){
 
         if(countByte != 8){ // processo de ver a qnt de bits extras e armazenas na posicao pegada la em cima
             extrabits = (char) bytes - countByte; // simboliza o tanto de bits que falta escrever pra completar 1 byte
-            cout << "EXTRABITS:" << (int) extrabits << endl;
+            cout << "Quantidade de bits extras utilizados: " << (int) extrabits << endl;
             byteToWrite = byteToWrite << extrabits; // da um shiftada do tanto de extrabits
             outfile.write((char*)&byteToWrite, sizeof(char));
             outfile.seekp(extraBitsAddress); //atualizando o valor corredo do extrabits no arquivo
@@ -160,25 +173,37 @@ void codify(string inputFile, tabelaSimbolos tabelaCodigos, ofstream &outfile){
     }
 }
 
-// arquivo de saida: [num de nos | arvore | qnt de bits | output]
+// Função responsável pela compressão do arquivo
+// arquivo de saida: [num de nos | arvore | qnt de bits extra | output]
+// caso arquivo lido seja vazio: só sai e gera o arquivo .huf vazio
 void compress(string inputFile, string outputFile){
     Heap heap;
     // cout << "Lendo arquivo " << inputFile << endl;
     // string texto = readFile(inputFile);
     // char c[texto.size() + 1];
     // strcpy(c, &texto[0]);
+    ifstream myfile(inputFile, std::ios::binary);
+    if (!myfile.is_open()){
+        cout << "Error to open file" << endl;
+        return;
+    }
+    myfile.close();
+
+    cout << "Contagem de ocorrencias de caracteres..." << endl;
     dict countSymbols = readFile(inputFile);
     // dict countSymbols = countChar(c);
 
     cout << "Gerando Arvore de Huffman..." << endl;
-    
     No* no;
-    if(countSymbols.empty()) no = nullptr;
-    else {
-        heap.construir(countSymbols);
-        no = codificaoHuffman(heap);
-        // exibirTree(no);
+    if(countSymbols.empty()){
+        ofstream outfile(outputFile, std::ios::binary);
+        outfile.close();
+        cout << "Done!" << endl;
+        return;
     }
+    heap.construir(countSymbols);
+    no = codificaoHuffman(heap);
+    // exibirTree(no);
     
     tabelaSimbolos tabela;
     tabela = gerarTabelaCodificacao(no, "", tabela);
@@ -198,13 +223,19 @@ void compress(string inputFile, string outputFile){
     codify(inputFile, tabela, outfile);
 
     outfile.close();
-    cout << "Done!" << endl;
+    cout << "Compressao finalizada!" << endl;
 }
 
 void descompress(string inputFile, string outputFile){
     ifstream myfile (inputFile, std::ios::binary); 
     if (!myfile.is_open()){
         cout << "Error to open file" << endl;
+        return;
+    } 
+    if(myfile.peek() == std::ifstream::traits_type::eof()){
+        ofstream outfile (outputFile, std::ios::binary);
+        outfile.close();
+        myfile.close();
         return;
     }
 
@@ -256,32 +287,32 @@ void descompress(string inputFile, string outputFile){
 }
 
 int main(int argc,char* argv[]){
-    /* if(argc>=2) {
+    if(argc>=2) {
        string modo = argv[1];
        string inputFile = argv[2];
        string outputFile = argv[3]; 
 
        cout << "MODO: " << modo << endl;
        cout << "InputFile: " << inputFile << endl;
-       cout << "OutputFile: " << outputFile << endl;
+       cout << "OutputFile: " << outputFile << endl << endl;
 
        if(modo == "--compress")
            compress(inputFile, outputFile);
        else if (modo == "--descompress")
             descompress(inputFile, outputFile);
-    }*/
-    string inputFile = "files/Stavechurch-heddal.bmp";
+    }
+    //string inputFile = "files/Stavechurch-heddal.bmp";
     // string inputFile = "files/ch05-patterns.pdf";
     // string inputFile = "files/teste.txt";
     // string inputFile = "files/books.txt";
     // string inputFile = "files/Stavechurch-heddal.bmp";
-    string outputFile = "files/teste.huf";
+    //string outputFile = "files/teste.huf";
     // string outputFile2 = "files/img.bmp";
     // string outputFile2 = "files/pdfDescompress.pdf";
     // string outputFile2 = "files/testeDescomp.txt";
     // string outputFile2 = "files/bookseDescomp.txt";
-    string outputFile2 = "files/img.bmp";
-    compress(inputFile, outputFile);
-    descompress(outputFile, outputFile2);
+    //string outputFile2 = "files/img.bmp";
+    //compress(inputFile, outputFile);
+    //descompress(outputFile, outputFile2);
     return 0;
 }
