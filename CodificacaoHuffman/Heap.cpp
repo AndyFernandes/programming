@@ -46,9 +46,9 @@ void Heap::construir(dict tabela){
         heapify(aux, index);
     }
     heap = aux;
-    for(int index = 0; index < heapSize; index++){
-        cout << heap[index]->chave << " : " << heap[index]->qnt << " | ";
-    }
+    // for(int index = 0; index < heapSize; index++){
+    //     cout << heap[index]->chave << " : " << heap[index]->qnt << " | ";
+    // }
 }
 
 void Heap::heapify(No** pVector, int pIndex){
@@ -90,8 +90,8 @@ void Heap::Swap(No** p, int pIndex, int largest){
 
 // ver questão do decremento
 void Heap::insert(No* x){
+    int k = heapSize;
     heapSize = heapSize + 1;
-    int k = heapSize - 1;
     while(k > 1 && heap[getParent(k)]->qnt > x->qnt){
         heap[k] = heap[getParent(k)];
         k = getParent(k);

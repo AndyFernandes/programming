@@ -63,15 +63,16 @@ No* codificaoHuffman(Heap heap){
     while(heap.heapSize != 1){
         left = heap.extractMinimum();
         right = heap.extractMinimum();
-        cout << "Left: " << left->chave << " : " << left->qnt << endl;
-        cout << "Right: " << right->chave << " : " << right->qnt << endl;
-        sum = (No*) malloc(sizeof(No));
-        sum->chave = internNode;
-        sum->qnt = left->qnt + right->qnt;
-        sum->filhoEsquerdo = left;
-        sum->filhoDireito = right;
-        cout << "SUM: " << sum->chave << " : " << sum->qnt << endl;
-        cout << "--------------------------" << endl;
+        // cout << "Left: " << left->chave << " : " << left->qnt << endl;
+        // cout << "Right: " << right->chave << " : " << right->qnt << endl;
+        sum = newNo(internNode, left->qnt + right->qnt, left, right);
+        // (No*) malloc(sizeof(No));
+        // sum->chave = internNode;
+        // sum->qnt = left->qnt + right->qnt;
+        // sum->filhoEsquerdo = left;
+        // sum->filhoDireito = right;
+        // cout << "SUM: " << sum->chave << " : " << sum->qnt << endl;
+        // cout << "--------------------------" << endl;
         heap.insert(sum);
     }
     return heap.extractMinimum();
@@ -79,10 +80,11 @@ No* codificaoHuffman(Heap heap){
 
 // Através da Árvore de Huffman, para cada caracter obtemos o seu código e armazenados em um dicionário para facilitar a codificação
 tabelaSimbolos gerarTabelaCodificacao(No* no, string codigo, tabelaSimbolos tabela){
+    if(!no) return tabela;
     if(no->filhoDireito == nullptr && no->filhoEsquerdo == nullptr) tabela[no->chave] = codigo;
     else {
-        tabela = gerarTabelaCodificacao(no->filhoEsquerdo, codigo + "0", tabela);
-        tabela = gerarTabelaCodificacao(no->filhoDireito, codigo + "1", tabela);
+        tabela = gerarTabelaCodificacao(no->filhoEsquerdo, codigo + '0', tabela);
+        tabela = gerarTabelaCodificacao(no->filhoDireito, codigo + '1', tabela);
     }
     return tabela;
 }
@@ -198,9 +200,9 @@ void compress(string inputFile, string outputFile){
     cout << "Contagem de ocorrencias de caracteres..." << endl;
     dict countSymbols = readFile(inputFile);
     // dict countSymbols = countChar(c);
-    for(par elem: countSymbols){
-        cout << elem.first << " : " << elem.second << endl;
-    }
+    // for(par elem: countSymbols){
+    //     cout << elem.first << " : " << elem.second << endl;
+    // }
 
     cout << "Gerando Arvore de Huffman..." << endl;
     No* no;
@@ -212,13 +214,13 @@ void compress(string inputFile, string outputFile){
     }
     heap.construir(countSymbols);
     no = codificaoHuffman(heap);
-    exibirTree(no);
+    // exibirTree(no);
     
     tabelaSimbolos tabela;
     tabela = gerarTabelaCodificacao(no, "", tabela);
-    for(parTabela elem: tabela){
-        cout << elem.first << " : " << elem.second << endl;
-    }
+    // for(parTabela elem: tabela){
+    //     cout << elem.first << " : " << elem.second << endl;
+    // }
 
     cout << "Escrevendo Arvore de Huffman..." << endl;
     ofstream outfile;
