@@ -270,14 +270,18 @@ void remover(DicAVL &D, Noh *n){
     }
 }
 
+void desalloc(Noh* node){
+    if(node == nullptr) return;
+    desalloc(node->esq);
+    desalloc(node->dir);
+    cout << "No desalocado: " << node->chave << endl;
+    delete(node);
+}
+
 // Desaloca os nós da árvore.
-/*void terminar (DicAVL &D){
+void terminar (DicAVL &D){
     // acessar a raiz do dicionario e visitar em pré-ordem desalocando os nós
     Noh* no = D.raiz;
-
-    while(no != nullptr){
-        if(isLeaf(no)) free(no);
-        else if(chave > c) no = no->esq;
-        else if(chave < c) no = no->dir;
-    }
-} */
+    desalloc(no);
+    D.raiz = nullptr;
+}
