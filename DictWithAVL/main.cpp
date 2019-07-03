@@ -4,7 +4,11 @@ using namespace std;
 
 void preOrder(Noh *root){  
     if(root != NULL)  {  
-        cout << root->chave << " ";  
+        cout << "CHAVE: " << root->chave;
+        if(root->pai != nullptr) cout << " | PAI: " << root->pai->chave;
+        if(root->esq != nullptr) cout << " | ESQ: " << root->esq->chave;
+        if(root->dir != nullptr) cout << " | DIR: " << root->dir->chave;
+        cout << endl;  
         preOrder(root->esq);  
         preOrder(root->dir);  
     }  
@@ -15,11 +19,20 @@ int main(){
     inicializar(dicionario);
     Noh* no = inserir(dicionario, 10, 10);
     no = inserir(dicionario, 20, 10);
+    no = inserir(dicionario, 5, 5);
     no = inserir(dicionario, 30, 10);
-    no = inserir(dicionario, 5, 10);
+    no = inserir(dicionario, 40, 10);
+    no = inserir(dicionario, 50, 10);
     no = inserir(dicionario, 2, 10);
+    // cout << endl << endl;
+    
+    // cout << endl << endl;
     no = inserir(dicionario, 25, 10);
     preOrder(dicionario.raiz);
+
+    cout << endl << endl << endl;
+    no = procurar(dicionario, 10);
+    cout << "CHAVE: "  << no->chave << " | " << no->valor << endl;
     // Noh *no1 = inserir(dicionario, 204, -21);
     // // cout << dicionario.raiz->chave << endl;
     // Noh* no = procurar(dicionario, 230);

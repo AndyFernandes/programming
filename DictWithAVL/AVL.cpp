@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "AVL.hpp"
 using namespace std;
+
 // Inicializa D como uma árvore vazia.
 void inicializar (DicAVL &D){
     D.raiz = nullptr;
@@ -32,65 +33,76 @@ Noh* newNo(TC chave, TV value, int h){
     return no;
 }
 
-int getBalance(Noh* no){
+int getBalance(Noh* no){ // Dá o fator de balanço de um nó: Está balanceado se retornar -1, 0 ou 1
     if(no == nullptr) return 0;
     return height(no->esq) - height(no->dir);
 }
 
-Noh* rotationLeft(DicAVL dicionario, Noh *x){
+Noh* rotationLeft(DicAVL &dicionario, Noh *x){
     Noh* paiX = x->pai;
     Noh* y = x->dir;
     Noh* filhoEsqY = y->esq;
 
+    // cout << "PASSEI AQUI LEFT" << endl;
      // Ponteiro de PaiX -> muda filho do lugar de X pra Y 
     if(paiX != nullptr){
         if(paiX->esq == x) paiX->esq = y;
         else if(paiX->dir == x) paiX->dir = y;
-    } else dicionario.raiz = y;
+    } else{
+        // cout << "ENTREI AQUI" << endl;
+        dicionario.raiz = y;
+    } 
 
-     // X -> muda pai e muda filho direito
-    x->pai = y;
-    x->dir = filhoEsqY;
+    // Filho direito de Y -> muda pai
+    if(filhoEsqY != nullptr) filhoEsqY->pai = x;
+
+    // X -> muda pai e muda filho direito
+    if(x != nullptr) x->pai = y;
+    if(x != nullptr) x->dir = filhoEsqY;
 
     // Y -> muda pai e muda filho esquerdo
-    y->pai = paiX;
-    y->esq = x; 
+    if(y != nullptr) y->pai = paiX;
+    if(y != nullptr) y->esq = x; 
     
-    // Filho direito de Y -> muda pai
-    filhoEsqY->pai = x;
-
     //Atualizando alturas
-    y->h = max(height(y->esq), height(y->dir)) + 1;
-    x->h = max(height(x->esq), height(x->dir)) + 1;
+    if(y !=nullptr) y->h = max(height(y->esq), height(y->dir)) + 1;
+    if(x != nullptr) x->h = max(height(x->esq), height(x->dir)) + 1;
 
     return y; 
 }
 
-Noh* rotationRight(DicAVL dicionario, Noh *y){
-    Noh* paiY = y->pai;
+Noh* rotationRight(DicAVL &dicionario, Noh *y){
+    Noh* paiY = y->pai; 
     Noh* x = y->esq;
-    Noh* filhoDirX = x->dir;
+    Noh* filhoDirX = x->dir; 
+
+    // cout << "PASSEI AQUI RIGHT" << endl;
+    // cout << "Y CHAVE: " << y->chave;
 
     // Ponteiro de PaiY -> muda filho do lugar de Y 
     if(paiY != nullptr){ // Atualizando ponteiro do filho do pai de Y para no lugar de y ser x
         if(paiY->esq == y) paiY->esq = x;
         else if(paiY->dir == y) paiY->dir = x;
+        // cout << "Passei daqui " << endl;
     } else dicionario.raiz = x;
 
-    // X -> muda pai e muda filho direito
-    x->pai = paiY;
-    x->dir = y; // Y é agora filho direito de y
-
-    // Y -> muda pai e muda filho esquerdo
-    y->pai = x; // X agora é o pai de y
-    y->esq = filhoDirX; // Filho Direito de X agora vira filho Esquerdo de Y
-    
     // Filho direito de Y -> muda pai
-    filhoDirX->pai = y;
-
+    if(filhoDirX != nullptr) filhoDirX->pai = y;
+    // cout << "Passei daqui 2" << endl;
+    // X -> muda pai e muda filho direito
+    if(x != nullptr) x->pai = paiY;
+    if(x != nullptr) x->dir = y; // Y é agora filho direito de y
+    // cout << "Passei daqui 3" << endl;
+    // Y -> muda pai e muda filho esquerdo
+    if(y != nullptr) y->pai = x; // X agora é o pai de y
+    if(y != nullptr) y->esq = filhoDirX; // Filho Direito de X agora vira filho Esquerdo de Y
+    
+    // cout << "Passei daqui 4" << endl;
     //Atualizando alturas
-    y->h = max(height(y->esq), height(y->dir)) + 1;
-    x->h = max(height(x->esq), height(x->dir)) + 1;
+    if(y!=nullptr) y->h = max(height(y->esq), height(y->dir)) + 1;
+    if(x!= nullptr) x->h = max(height(x->esq), height(x->dir)) + 1;
+    // cout << "Y->h " << y->h << endl;
+    // cout << "X->h " << x->h << endl;
     
     return x;
 }
@@ -119,10 +131,11 @@ void atualizarAlturas(Noh* no){
 
 // Retorna um ponteiro para o novo nó ou nulo se erro de alocação
 Noh* inserir(DicAVL &D, TC c, TV v){
-    cout << "Insercao da chave: " << c << endl;
+    cout << "Insercao da chave: " << c << " : " << v << endl;
     Noh* novoNo = newNo(c, v, 1);
     Noh* root = D.raiz;
     Noh* noAnterior = nullptr;
+    bool ladoAdicionado = true; // true -> lado esquerdo & false -> lado direito
    
     // caso a. Raiz nula => raiz é o nó
     if(root == nullptr){
@@ -136,18 +149,23 @@ Noh* inserir(DicAVL &D, TC c, TV v){
     while(root != nullptr){
         noAnterior = root;
         // cout << "Passei aqui 2" << endl;
-        if(c < root->chave) root = root->esq;
-        else if(c > root->chave) root = root->dir;
+        if(c < root->chave){
+            root = root->esq;
+            ladoAdicionado = true;
+        } else if(c > root->chave){
+            root = root->dir;
+            ladoAdicionado = false;
+        }
     }
 
     root = noAnterior;
 
+    // Ajuste de ponteiros de pai
+    novoNo->pai = root;
+
     // Insere novo nó
     if(c < root->chave) root->esq = novoNo;
     else if(c > root->chave) root->dir = novoNo;
-
-    // Ajuste de ponteiros de pai
-    novoNo->pai = root;
 
     // Propagando o +1 nas alturas dos nós posteriores ao inserido e balanceando a árvore (caso esteja desbalanceada)
     do {
@@ -157,12 +175,24 @@ Noh* inserir(DicAVL &D, TC c, TV v){
         int balance = getBalance(root);
         // cout << balance << endl;
 
-        if(balance > 1 && c < root->esq->chave) root = rotationRight(D, root); // Left Left Case
-        else if(balance < -1 && c > root->dir->chave) root = rotationLeft(D, root); // Right Right Case
-        else if(balance > 1 && c > root->esq->chave){ // Left Right Case
+        if(balance > 1 && c < root->esq->chave){
+        // if(balance > 1 && ladoAdicionado == true){
+            cout << "IF 1" << endl;
+            root = rotationRight(D, root); // Left Left Case
+        } else if(balance < -1 && c > root->dir->chave){
+        // else if(balance < -1 && ladoAdicionado == false){
+            cout << "IF 2" << endl;
+            // cout << root-> chave << endl;
+            root = rotationLeft(D, root); // Right Right Case
+        } else if(balance > 1 && c > root->esq->chave){ // Left Right Case
+        // else if(balance > 1 && ladoAdicionado == false){ // Left Right Case
+            cout << "IF 3" << endl;
             root->esq = rotationLeft(D, root->esq);
             root = rotationRight(D, root);
-        } else if(balance < -1 && c < root->dir->chave){ // Right Left Case
+        }else if(balance < -1 && c < root->dir->chave){ // Right Left Case 
+        // else if(balance < -1 && ladoAdicionado == true){ // Right Left Case
+            cout << "IF 4" << endl;
+            // cout << root->chave << endl;
             root->dir = rotationRight(D, root->dir);
             root = rotationLeft(D, root);
         }
@@ -182,7 +212,7 @@ Noh* minNode(Noh* no){
 }
 
 // n aponta para o nó a ser removido
-void remover(DicAVL &D, Noh *n){
+/*void remover(DicAVL &D, Noh *n){
     Noh* root = D.raiz;
     Noh* noAnterior = nullptr;
     int balance;
@@ -211,7 +241,7 @@ void remover(DicAVL &D, Noh *n){
     } else { // nó com 2 filhos
         Noh* temp = minNode(n->dir);
 
-        /*do {
+        do {
             balance = getBalance(n);
             if(balance == 1 || balance == 0){
                 if(n->dir->h > n->esq->h){ // pega o nó da árvore direita pra substituir x
@@ -221,7 +251,7 @@ void remover(DicAVL &D, Noh *n){
                 }
             }
 
-        } while(n != nullptr);*/
+        } while(n != nullptr);
     }
 
     // Case base2: é um nó folha
@@ -242,7 +272,7 @@ void remover(DicAVL &D, Noh *n){
 
 
 
-} 
+} */
 
 // Desaloca os nós da árvore.
 /*void terminar (DicAVL &D){
