@@ -43,16 +43,12 @@ Noh* rotationLeft(DicAVL &dicionario, Noh *x){
     Noh* y = x->dir;
     Noh* filhoEsqY = y->esq;
 
-    // cout << "PASSEI AQUI LEFT" << endl;
-     // Ponteiro de PaiX -> muda filho do lugar de X pra Y 
+    // Ponteiro de PaiX -> muda filho do lugar de X pra Y 
     if(paiX != nullptr){
         if(paiX->esq == x) paiX->esq = y;
         else if(paiX->dir == x) paiX->dir = y;
-    } else{
-        // cout << "ENTREI AQUI" << endl;
-        dicionario.raiz = y;
-    } 
-
+    } else dicionario.raiz = y;
+    
     // Filho direito de Y -> muda pai
     if(filhoEsqY != nullptr) filhoEsqY->pai = x;
 
@@ -76,34 +72,27 @@ Noh* rotationRight(DicAVL &dicionario, Noh *y){
     Noh* x = y->esq;
     Noh* filhoDirX = x->dir; 
 
-    // cout << "PASSEI AQUI RIGHT" << endl;
-    // cout << "Y CHAVE: " << y->chave;
-
     // Ponteiro de PaiY -> muda filho do lugar de Y 
     if(paiY != nullptr){ // Atualizando ponteiro do filho do pai de Y para no lugar de y ser x
         if(paiY->esq == y) paiY->esq = x;
         else if(paiY->dir == y) paiY->dir = x;
-        // cout << "Passei daqui " << endl;
     } else dicionario.raiz = x;
 
     // Filho direito de Y -> muda pai
     if(filhoDirX != nullptr) filhoDirX->pai = y;
-    // cout << "Passei daqui 2" << endl;
+  
     // X -> muda pai e muda filho direito
     if(x != nullptr) x->pai = paiY;
     if(x != nullptr) x->dir = y; // Y é agora filho direito de y
-    // cout << "Passei daqui 3" << endl;
+   
     // Y -> muda pai e muda filho esquerdo
     if(y != nullptr) y->pai = x; // X agora é o pai de y
     if(y != nullptr) y->esq = filhoDirX; // Filho Direito de X agora vira filho Esquerdo de Y
     
-    // cout << "Passei daqui 4" << endl;
+   
     //Atualizando alturas
     if(y!=nullptr) y->h = max(height(y->esq), height(y->dir)) + 1;
     if(x!= nullptr) x->h = max(height(x->esq), height(x->dir)) + 1;
-    // cout << "Y->h " << y->h << endl;
-    // cout << "X->h " << x->h << endl;
-    
     return x;
 }
 
@@ -146,14 +135,8 @@ Noh* inserir(DicAVL &D, TC c, TV v){
     // Pega o nó a quem vou adicionar o novo nó
     while(root != nullptr){
         noAnterior = root;
-        // cout << "Passei aqui 2" << endl;
-        if(c < root->chave){
-            root = root->esq;
-            ladoAdicionado = true;
-        } else if(c > root->chave){
-            root = root->dir;
-            ladoAdicionado = false;
-        }
+        if(c < root->chave)root = root->esq;
+        else if(c > root->chave) root = root->dir;
     }
 
     root = noAnterior;
@@ -163,39 +146,23 @@ Noh* inserir(DicAVL &D, TC c, TV v){
     // Insere novo nó
     if(c < root->chave) root->esq = novoNo;
     else if(c > root->chave) root->dir = novoNo;
+    
     // Propagando o +1 nas alturas dos nós posteriores ao inserido e balanceando a árvore (caso esteja desbalanceada)
     do {
-        // cout << "Passei aqui3" << endl;
         root->h = max(height(root->esq), height(root->dir)) + 1;
-        // cout << root->h << endl;
         int balance = getBalance(root);
-        // cout << balance << endl;
 
-        if(balance > 1 && c < root->esq->chave){
-        // if(balance > 1 && ladoAdicionado == true){
-            // cout << "IF 1" << endl;
-            root = rotationRight(D, root); // Left Left Case
-        } else if(balance < -1 && c > root->dir->chave){
-        // else if(balance < -1 && ladoAdicionado == false){
-            // cout << "IF 2" << endl;
-            // cout << root-> chave << endl;
-            root = rotationLeft(D, root); // Right Right Case
-        } else if(balance > 1 && c > root->esq->chave){ // Left Right Case
-        // else if(balance > 1 && ladoAdicionado == false){ // Left Right Case
-            // cout << "IF 3" << endl;
+        if(balance > 1 && c < root->esq->chave) root = rotationRight(D, root); // Left Left Case
+        else if(balance < -1 && c > root->dir->chave) root = rotationLeft(D, root); // Right Right Case
+        else if(balance > 1 && c > root->esq->chave){ // Left Right Case
             root->esq = rotationLeft(D, root->esq);
             root = rotationRight(D, root);
         }else if(balance < -1 && c < root->dir->chave){ // Right Left Case 
-        // else if(balance < -1 && ladoAdicionado == true){ // Right Left Case
-            // cout << "IF 4" << endl;
-            // cout << root->chave << endl;
             root->dir = rotationRight(D, root->dir);
             root = rotationLeft(D, root);
         }
         root = root->pai;
-        // if(root != nullptr) cout << root->chave << endl;
     } while(root != nullptr);
-    // cout << "Passei aqui4" << endl;
     return novoNo;
 } 
 
@@ -222,7 +189,7 @@ void remover(DicAVL &D, Noh *n){
 
     // Caso base a: é a raiz da árvore ou é um nó que tem apenas uma subarv DE 1 FOLHA esquerda ou direita 
     // a.1. É A RAIZ 
-    if(n->pai == nullptr){
+    if(paiN == nullptr){
         if(n->esq != nullptr && n->dir == nullptr && n->esq->esq == nullptr && n->esq->dir == nullptr){ // nó raiz com 1 filho
             D.raiz = n->esq;
             n->esq->pai = nullptr;
@@ -238,33 +205,46 @@ void remover(DicAVL &D, Noh *n){
             delete(n);
             return;
         }
-    } else { // a.2. NÃO É A RAIZ
-        if(n->esq != nullptr && n->dir == nullptr && n->esq->esq == nullptr && n->esq->dir == nullptr){ // Mas possui apenas 1 filho esquerdo, que é folha
+    } 
+    //  DUVIDAS A PARTIR DAQUIIIIIII
+    else { // a.2. NÃO É A RAIZ -> Basicamente são os casos de remoção que mexem (talvez) na altura da árvore, porém ainda continua AVL
+        // TODO PERGUNTAR ISSO AO PABLO -> PQ PODE SER AQUI QUE ELE POSSA TER UMA SUBARV DIR E ESQ E NÃO NECESSARIAMENTE NULA
+        // acho que eu to confundindo
+        if(n->esq != nullptr && n->dir == nullptr && isLeaf(n->esq)){ // Mas possui apenas 1 filho esquerdo, que é folha
+            // Reatribuição de pai ao filho esq de N e o filho esq de N toma o lugar dele no pai dele
             n->esq->pai = paiN;
-            // TODO: vê se é necessário ajustar altura pro pai de n
+            if(paiN->esq->chave == n->chave) paiN->esq = n->esq;
+            else if(paiN->dir->chave == n->chave) paiN->dir = n->esq;
+            paiN->h = max(height(paiN->dir), height(paiN->esq)) + 1;
             delete(n);
             return;
         } else if(n->dir != nullptr && n->esq == nullptr && n->dir->esq == nullptr && n->dir->dir == nullptr){ // Mas possui apenas 1 filho direito, que é folha
             n->dir->pai = paiN;
-            // TODO: vê se é necessário ajustar altura pro pai de n
+            if(paiN->esq->chave == n->chave) paiN->esq = n->dir;
+            else if(paiN->dir->chave == n->chave) paiN->dir = n->dir;
+            paiN->h = max(height(paiN->dir), height(paiN->esq)) + 1;
             delete(n);
             return;
-        } else if(n->dir == nullptr && n->esq == nullptr){ // nó sem filhos -> CASO DO NÓ FOLHA: CASO 2
-            // TODO: vê se é necessário ajustar altura pro pai de n
+        } else if(isLeaf(n)){ // nó sem filhos -> CASO DO NÓ FOLHA: CASO 2
+            if(paiN->esq->chave == n->chave) paiN->esq = nullptr;
+            else if(paiN->dir->chave == n->chave) paiN->dir = nullptr;
+            paiN->h = max(height(n->pai->dir), height(n->pai->esq)) + 1;
             delete(n);
             return;
          } else { // nó com 2 filhos
             Noh* temp = minNode(n->dir); // Pega o próximo nó que é maior que o nó n
             do {
                 balance = getBalance(n);
-                if(balance == 1 || balance == 0){
-                    if(n->dir->h > n->esq->h){ // pega o nó da árvore direita pra substituir x
-                        
-                    } else { // pega o nó da árvore esquerda pra substituir x
-
-                    }
+                if(balance > 1 && getBalance(n->esq) >= 0) n = rotationRight(D, n); //Left Left Case
+                if(balance < -1 && getBalance(n->dir) <= 0) n = rotationLeft(D, n); // Right Right Case
+                if(balance > 1 && getBalance(n->esq) < 0){
+                    n->esq = rotationLeft(D, n->esq);
+                    n = rotationRight(D, n);
                 }
-
+                if(balance < -1 && getBalance(n->dir) > 0){
+                    n->dir = rotationRight(D, n->dir);
+                    n = rotationLeft(D, n);
+                }
             } while(n != nullptr);
         }
     }
