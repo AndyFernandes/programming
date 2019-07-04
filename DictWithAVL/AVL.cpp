@@ -206,7 +206,7 @@ void remover(DicAVL &D, Noh *n){
             n->esq->pai = paiN;
             if(paiN->esq != nullptr && paiN->esq->chave == n->chave) paiN->esq = n->esq;
             else if(paiN->dir != nullptr && paiN->dir->chave == n->chave) paiN->dir = n->esq;
-            paiN->h = max(height(paiN->dir), height(paiN->esq)) + 1;
+            // paiN->h = max(height(paiN->dir), height(paiN->esq)) + 1;
             alterouAltura = true;
         }
         delete(n);
@@ -220,7 +220,7 @@ void remover(DicAVL &D, Noh *n){
             n->dir->pai = paiN;
             if(paiN->esq != nullptr && paiN->esq->chave == n->chave) paiN->esq = n->dir;
             else if(paiN->dir != nullptr && paiN->dir->chave == n->chave) paiN->dir = n->dir;
-            paiN->h = max(height(paiN->dir), height(paiN->esq)) + 1;
+            // paiN->h = max(height(paiN->dir), height(paiN->esq)) + 1;
             alterouAltura = true;
         }
         delete(n);
@@ -230,36 +230,52 @@ void remover(DicAVL &D, Noh *n){
         else { // n é um nó qualquer na árvore
             if(paiN->esq->chave == n->chave) paiN->esq = nullptr;
             else if(paiN->dir->chave == n->chave) paiN->dir = nullptr;
-            paiN->h = max(height(n->pai->dir), height(n->pai->esq)) + 1;
+            // paiN->h = max(height(n->pai->dir), height(n->pai->esq)) + 1;
             alterouAltura = true;
         }
         delete(n);
         return;
     } else {  // nó com 2 filhos
         Noh* temp = minNode(n->dir); // Pega o próximo nó que é maior que é folha
-        // bota esse nó no lugar do n
+        // botar esse nó no lugar do n
+        // 1o pega os filhos de n e atribui a temp
         temp->esq = n->esq;
         temp->dir = n->dir;
         
-        // atribuir ao pai de temp que agr é nullptr
-        // mudar altura do pai de temp
-        
-        temp->pai;
-    }
+        // 2o atribuir ao pai de temp que o filho que era tempp agr é nullptr
+        if(temp->pai->esq == temp) temp->pai->esq = nullptr;
+        else if(temp->pai->dir == temp) temp->pai->dir = nullptr;
 
-    do {
-            balance = getBalance(n);
-            if(balance > 1 && getBalance(n->esq) >= 0) n = rotationRight(D, n); //Left Left Case
-            if(balance < -1 && getBalance(n->dir) <= 0) n = rotationLeft(D, n); // Right Right Case
-            if(balance > 1 && getBalance(n->esq) < 0){
-                n->esq = rotationLeft(D, n->esq);
-                n = rotationRight(D, n);
+        // 3o atualizar em temp o ponteiro pro seu pai e ajeitar o ponteiro do PaiN onde o filho n era agr vai ser temp 
+        if(paiN == nullptr){ // é a raiz
+            temp->pai = nullptr;
+            D.raiz = temp;
+        } else {
+            temp->pai = paiN;
+            if(paiN->esq == n) paiN->esq = temp;
+            else if(paiN->dir == n) paiN->dir = temp;
+        }
+        delete(n);
+        // mudar altura do pai de temp
+        paiN = temp->pai;
+        alterouAltura = true;
+    }
+    if(alterouAltura){
+        do {
+            paiN->h = 1 + max(height(paiN->esq), height(paiN->dir));
+            balance = getBalance(paiN);
+            if(balance > 1 && getBalance(paiN->esq) >= 0) paiN = rotationRight(D, paiN); //Left Left Case
+            else if(balance < -1 && getBalance(paiN->dir) <= 0) paiN = rotationLeft(D, paiN); // Right Right Case
+            else if(balance > 1 && getBalance(paiN->esq) < 0){ // Left Right Case
+                paiN->esq = rotationLeft(D, paiN->esq);
+                paiN = rotationRight(D, paiN);
+            } else if(balance < -1 && getBalance(paiN->dir) > 0){ // Right Left Case
+                paiN->dir = rotationRight(D, paiN->dir);
+                paiN = rotationLeft(D, paiN);
             }
-            if(balance < -1 && getBalance(n->dir) > 0){
-                n->dir = rotationRight(D, n->dir);
-                n = rotationLeft(D, n);
-            }
-        } while(n != nullptr);
+            paiN = paiN->pai;
+        } while(paiN != nullptr);
+    }   
 }
 
 void desalloc(Noh* node){
