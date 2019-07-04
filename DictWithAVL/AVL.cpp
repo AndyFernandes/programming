@@ -245,35 +245,33 @@ void remover(DicAVL &D, Noh *n){
             alterouAltura = true; // tem de alterar a altura do pai de N
         }
     } else {  // nó com 2 filhos
-        cout << "2 nos" << endl;
+        // botar esse nó no lugar do n
         Noh* temp = minNode(n->dir); // Pega o próximo nó que é maior que é folha
-        // cout << "CHAVE: " << temp->chave << endl;
         Noh* paiTemp = temp->pai;
 
-        // if(paiTemp == D.raiz) cout << "E igual" << endl;
-        // botar esse nó no lugar do n
-        // 1o pega os filhos de n e atribui a temp
-        temp->esq = n->esq;
+        // FILHOS DE N
+        // 1o: Atualiza filhos de n pro pai deles agora ser temp
         n->esq->pai = temp;
+        temp->esq = n->esq;
         if(n->dir != temp){
             temp->dir = n->dir;
             n->dir->pai = temp;
-        } else temp->dir = nullptr;
-        
-        
-        // 2o atribuir ao pai de temp que o filho que era tempp agr é nullptr
-        if(paiTemp->esq == temp) paiTemp->esq = nullptr;
-        else if(paiTemp->dir == temp) paiTemp->dir = nullptr;
+        } else{
+            temp->dir = nullptr;
+            n->dir->pai = paiN;
+        } 
 
-        // 3o atualizar em temp o ponteiro pro seu pai e ajeitar o ponteiro do PaiN onde o filho n era agr vai ser temp 
-        if(paiN == nullptr){ // é a raiz
-            temp->pai = nullptr;
-            D.raiz = temp;
-        } else {
-            temp->pai = paiN;
+        // PAI DE TEMP
+        // 2o atribuir ao pai de temp que o filho que era tempp agr é nullptr
+        if(paiTemp != nullptr) paiTemp->esq = nullptr;
+
+        // PAI DE N = atribuição de filho do PAIN agora pra ser temp e atribuição do novo pai de temp
+        temp->pai = paiN;
+        if(paiN != nullptr){
+            // vendo qual filho n era do pai dele: se era esq ou direito
             if(paiN->esq == n) paiN->esq = temp;
             else if(paiN->dir == n) paiN->dir = temp;
-        }
+        } else D.raiz = temp;
      
         // mudar altura do pai de temp
         paiN = paiTemp;
