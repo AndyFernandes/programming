@@ -245,12 +245,20 @@ void remover(DicAVL &D, Noh *n){
             alterouAltura = true; // tem de alterar a altura do pai de N
         }
     } else {  // nó com 2 filhos
+        cout << "2 nos" << endl;
         Noh* temp = minNode(n->dir); // Pega o próximo nó que é maior que é folha
+        cout << "CHAVE: " << temp->chave << endl;
         Noh* paiTemp = temp->pai;
+
+        // if(paiTemp == D.raiz) cout << "E igual" << endl;
         // botar esse nó no lugar do n
         // 1o pega os filhos de n e atribui a temp
-        temp->esq = n->esq;
-        temp->dir = n->dir;
+        if(n->esq != temp) temp->esq = n->esq;
+        else temp->esq = nullptr;
+        if(n->dir != temp) temp->dir = n->dir;
+        else temp->dir = nullptr;
+        n->esq->pai = temp;
+        n->dir->pai = temp;
         
         // 2o atribuir ao pai de temp que o filho que era tempp agr é nullptr
         if(paiTemp->esq == temp) paiTemp->esq = nullptr;
@@ -275,12 +283,20 @@ void remover(DicAVL &D, Noh *n){
         do {
             paiN->h = 1 + max(height(paiN->esq), height(paiN->dir));
             balance = getBalance(paiN);
-            if(balance > 1 && getBalance(paiN->esq) >= 0) paiN = rotationRight(D, paiN); //Left Left Case
-            else if(balance < -1 && getBalance(paiN->dir) <= 0) paiN = rotationLeft(D, paiN); // Right Right Case
+            if(balance > 1 && getBalance(paiN->esq) >= 0){
+                cout << "IF 1" << endl;
+                paiN = rotationRight(D, paiN); //Left Left Case
+            } 
+            else if(balance < -1 && getBalance(paiN->dir) <= 0){
+                cout << "IF 2" << endl;
+                paiN = rotationLeft(D, paiN); // Right Right Case
+            } 
             else if(balance > 1 && getBalance(paiN->esq) < 0){ // Left Right Case
+                cout << "IF 3" << endl;
                 paiN->esq = rotationLeft(D, paiN->esq);
                 paiN = rotationRight(D, paiN);
             } else if(balance < -1 && getBalance(paiN->dir) > 0){ // Right Left Case
+                cout << "IF 4" << endl;              
                 paiN->dir = rotationRight(D, paiN->dir);
                 paiN = rotationLeft(D, paiN);
             }

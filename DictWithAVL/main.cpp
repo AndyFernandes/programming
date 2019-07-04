@@ -45,8 +45,8 @@ int main(){
     Noh *no9 = inserir(dicionario, 182.5, -68.5);
     Noh *no10 = inserir(dicionario, -59.25, -74);
     Noh *no11 = inserir(dicionario, -234.5, 99.5);
-    // no = inserir(dicionario, 25, 10);
-    // preOrder(dicionario.raiz);  
+    no = inserir(dicionario, 25, 10);
+    preOrder(dicionario.raiz);  
 
     ///////////////////////////////  TESTES PROCURAR /////////////////////////////
     // cout << endl << endl << endl;
@@ -84,19 +84,27 @@ int main(){
     remover(dicionario, no3);
     remover(dicionario, no8);
     remover(dicionario, no7);
-    // // remover(dicionario, no11);
+    // remover(dicionario, no11);
     remover(dicionario, no9);
     remover(dicionario, no1);
-    // remover(dicionario, no6);
-    // remover(dicionario, no5);
-    // remover(dicionario, no4);
-    // remover(dicionario, no11);
-    // remover(dicionario, no2);
-    // remover(dicionario, ins3);
+    remover(dicionario, no6);
+    remover(dicionario, no5);
+    remover(dicionario, no4);
+    remover(dicionario, no11);
+    remover(dicionario, no2);
+    remover(dicionario, ins3);
+
+    // Noh* ins2 = inserir(dicionario, 5, 5);
+    // Noh* ins4 = inserir(dicionario, 0, 0);
+    // Noh* ins5 = inserir(dicionario, 6, 6);
     
-    cout << endl << endl;
-    
-    preOrder(dicionario.raiz);  
+    // preOrder(dicionario.raiz);  
+    // cout << endl << endl;
+    // remover(dicionario, ins2);
+    // cout << "CHAVE: " << dicionario.raiz->chave;
+    // if(cout << " | ESQ: " << dicionario.raiz->esq->chave;
+    // cout << " | DIR: " << dicionario.raiz->dir->chave;
+    preOrder(dicionario.raiz);
     // terminar(dicionario);
     return 0;
 }
