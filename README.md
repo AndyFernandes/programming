@@ -32,6 +32,10 @@ Disciplina do curso de Ciência da Computação, Universidade Federal do Ceará.
 # Trabalho 3
 * [Codificação Huffman](CodificacaoHuffman/Trabalho.cpp).
 
+---
+
+# Trabalho 4
+* [Dicionário com árvore AVL](DictWithAVL/AVL.cpp).
 
 
 

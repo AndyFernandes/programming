@@ -27,26 +27,26 @@ int main(){
     Noh* ins7 = inserir(dicionario, -1, -1);
     Noh* ins8 = inserir(dicionario, 1, 1);
     Noh* ins9 = inserir(dicionario, 2, 2);
-    // Noh* no = inserir(dicionario, 10, 10);
-    // no = inserir(dicionario, 20, 10);
+    Noh* no = inserir(dicionario, 10, 10);
+    no = inserir(dicionario, 20, 10);
     // no = inserir(dicionario, 5, 5);
-    // no = inserir(dicionario, 30, 10);
-    // no = inserir(dicionario, 40, 10);
-    // no = inserir(dicionario, 50, 10);
+    no = inserir(dicionario, 30, 10);
+    no = inserir(dicionario, 40, 10);
+    no = inserir(dicionario, 50, 10);
     // no = inserir(dicionario, 2, 10);
-    // Noh *no1 = inserir(dicionario, 204, -21);
-    // Noh *no2 = inserir(dicionario, 169.75, 59.5);
-    // Noh *no3 = inserir(dicionario, 246.75, -60);
-    // Noh *no4 = inserir(dicionario, -98.75, 53.5);
-    // Noh *no5 = inserir(dicionario, -133.25, 10.5);
-    // Noh *no6 = inserir(dicionario, -13.5, 25.5);
-    // Noh *no7 = inserir(dicionario, -81, 2.5);
-    // Noh *no8 = inserir(dicionario, 271.25, 83);
-    // Noh *no9 = inserir(dicionario, 182.5, -68.5);
-    // Noh *no10 = inserir(dicionario, -59.25, -74);
-    // Noh *no11 = inserir(dicionario, -234.5, 99.5);
+    Noh *no1 = inserir(dicionario, 204, -21);
+    Noh *no2 = inserir(dicionario, 169.75, 59.5);
+    Noh *no3 = inserir(dicionario, 246.75, -60);
+    Noh *no4 = inserir(dicionario, -98.75, 53.5);
+    Noh *no5 = inserir(dicionario, -133.25, 10.5);
+    Noh *no6 = inserir(dicionario, -13.5, 25.5);
+    Noh *no7 = inserir(dicionario, -81, 2.5);
+    Noh *no8 = inserir(dicionario, 271.25, 83);
+    Noh *no9 = inserir(dicionario, 182.5, -68.5);
+    Noh *no10 = inserir(dicionario, -59.25, -74);
+    Noh *no11 = inserir(dicionario, -234.5, 99.5);
     // no = inserir(dicionario, 25, 10);
-    preOrder(dicionario.raiz);  
+    // preOrder(dicionario.raiz);  
 
     ///////////////////////////////  TESTES PROCURAR /////////////////////////////
     // cout << endl << endl << endl;
@@ -81,20 +81,21 @@ int main(){
     
     ///////////////////////////////  TESTES REMOÇÃO /////////////////////////////
     
-    // remover(dicionario, no3);
-    // remover(dicionario, no8);
-    // remover(dicionario, no7);
-    // remover(dicionario, no11);
-    // remover(dicionario, no9);
-    // remover(dicionario, no1);
+    remover(dicionario, no3);
+    remover(dicionario, no8);
+    remover(dicionario, no7);
+    // // remover(dicionario, no11);
+    remover(dicionario, no9);
+    remover(dicionario, no1);
     // remover(dicionario, no6);
     // remover(dicionario, no5);
     // remover(dicionario, no4);
     // remover(dicionario, no11);
     // remover(dicionario, no2);
+    // remover(dicionario, ins3);
     
     cout << endl << endl;
-    remover(dicionario, ins3);
+    
     preOrder(dicionario.raiz);  
     // terminar(dicionario);
     return 0;

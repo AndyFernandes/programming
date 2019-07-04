@@ -129,6 +129,22 @@ void atualizarAlturas(Noh* no){
 // Retorna um ponteiro para o novo nó ou nulo se erro de alocação
 Noh* inserir(DicAVL &D, TC c, TV v){
     cout << "Insercao da chave: " << c << " : " << v << endl;
+    // procurar no
+    Noh* noBusca = D.raiz;
+
+    while(noBusca != nullptr){
+        TC chave = noBusca->chave;
+        // cout << no->chave;
+        if(chave == c) break;
+        else if(chave > c) noBusca = noBusca->esq;
+        else if(chave < c) noBusca = noBusca->dir;
+    }
+
+    if(noBusca != nullptr){
+        cout << "No com chave = " << c << " ja existente!" << endl;
+        return nullptr;
+    }
+
     Noh* novoNo = newNo(c, v, 1);
     Noh* root = D.raiz;
     Noh* noAnterior = nullptr;
@@ -184,6 +200,7 @@ Noh* minNode(Noh* no){
 // n aponta para o nó a ser removido
 void remover(DicAVL &D, Noh *n){
     if(n == nullptr) return;
+    cout << "REMOCAO do no com chave: " << n->chave << endl;
 
     Noh* root = D.raiz;
     int balance;
