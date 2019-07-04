@@ -18,13 +18,22 @@ int main(){
     DicAVL dicionario;
     inicializar(dicionario);
     ///////////////////////////////  TESTES INSERÇÃO /////////////////////////////
-    Noh* no = inserir(dicionario, 10, 10);
-    no = inserir(dicionario, 20, 10);
-    no = inserir(dicionario, 5, 5);
-    no = inserir(dicionario, 30, 10);
-    no = inserir(dicionario, 40, 10);
-    no = inserir(dicionario, 50, 10);
-    no = inserir(dicionario, 2, 10);
+    Noh* ins1 = inserir(dicionario, 9, 9);
+    Noh* ins2 = inserir(dicionario, 5, 5);
+    Noh* ins3 = inserir(dicionario, 10, 10);
+    Noh* ins4 = inserir(dicionario, 0, 0);
+    Noh* ins5 = inserir(dicionario, 6, 6);
+    Noh* ins6 = inserir(dicionario, 11, 11);
+    Noh* ins7 = inserir(dicionario, -1, -1);
+    Noh* ins8 = inserir(dicionario, 1, 1);
+    Noh* ins9 = inserir(dicionario, 2, 2);
+    // Noh* no = inserir(dicionario, 10, 10);
+    // no = inserir(dicionario, 20, 10);
+    // no = inserir(dicionario, 5, 5);
+    // no = inserir(dicionario, 30, 10);
+    // no = inserir(dicionario, 40, 10);
+    // no = inserir(dicionario, 50, 10);
+    // no = inserir(dicionario, 2, 10);
     // Noh *no1 = inserir(dicionario, 204, -21);
     // Noh *no2 = inserir(dicionario, 169.75, 59.5);
     // Noh *no3 = inserir(dicionario, 246.75, -60);
@@ -36,7 +45,7 @@ int main(){
     // Noh *no9 = inserir(dicionario, 182.5, -68.5);
     // Noh *no10 = inserir(dicionario, -59.25, -74);
     // Noh *no11 = inserir(dicionario, -234.5, 99.5);
-    no = inserir(dicionario, 25, 10);
+    // no = inserir(dicionario, 25, 10);
     preOrder(dicionario.raiz);  
 
     ///////////////////////////////  TESTES PROCURAR /////////////////////////////
@@ -85,6 +94,8 @@ int main(){
     // remover(dicionario, no2);
     
     cout << endl << endl;
-    terminar(dicionario);
+    remover(dicionario, ins3);
+    preOrder(dicionario.raiz);  
+    // terminar(dicionario);
     return 0;
 }
