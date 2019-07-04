@@ -245,20 +245,27 @@ void remover(DicAVL &D, Noh *n){
             alterouAltura = true; // tem de alterar a altura do pai de N
         }
     } else {  // nó com 2 filhos
-        // botar esse nó no lugar do n
+        // PROFESSOR POR FAVOR OLHA AQUI
+        // botar esse nó TEMP no lugar do n
         Noh* temp = minNode(n->dir); // Pega o próximo nó que é maior que é folha
         Noh* paiTemp = temp->pai;
+
+        // Inicio das modificações necessárias de ponteiros: Terei de mexer em 5 nós
+        // TEMP: atualizar seu pai e seus filhos
+        // FILHO ESQ e DIR de N -> atualizar o seu pai para TEMP
+        // PAI DE N -> atualizar seu filho n para temp
+        // PAI DE TEMP -> zerar o ponteiro pro seu filho esquerdo
 
         // FILHOS DE N
         // 1o: Atualiza filhos de n pro pai deles agora ser temp
         n->esq->pai = temp;
         temp->esq = n->esq;
-        if(n->dir != temp){
+        if(n->dir != temp){ 
             temp->dir = n->dir;
             n->dir->pai = temp;
         } else{
             temp->dir = nullptr;
-            n->dir->pai = paiN;
+            n->dir->pai = paiN; // mas isso meio que é duplicado na linha 276
         } 
 
         // PAI DE TEMP
