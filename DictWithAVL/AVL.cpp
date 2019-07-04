@@ -8,20 +8,24 @@ void inicializar (DicAVL &D){
     D.raiz = nullptr;
 } 
 
+// Pega a altura do nó
 int height(Noh *no){
     if(no == nullptr) return 0;
     return no->h;
 }
 
+// Serve para ver qual a altura do nó, dado a altura dos seus filhos esq e dir
 int max(int a, int b){
     return (a > b)? a : b;
 }
 
+// Verificar se um nó é folha
 bool isLeaf(Noh* no){
     if(no->esq == nullptr && no->dir == nullptr) return true;
     return false;
 }
 
+// Aloca um novo nó
 Noh* newNo(TC chave, TV value, int h){
     Noh *no = new Noh();
     no->chave = chave;
@@ -33,11 +37,13 @@ Noh* newNo(TC chave, TV value, int h){
     return no;
 }
 
-int getBalance(Noh* no){ // Dá o fator de balanço de um nó: Está balanceado se retornar -1, 0 ou 1
+// Dá o fator de balanço de um nó: Está balanceado se retornar -1, 0 ou 1
+int getBalance(Noh* no){ 
     if(no == nullptr) return 0;
     return height(no->esq) - height(no->dir);
 }
 
+// Realiza a rotação a Esquerda de um nó, e muda o nó do dicionário se o pai desse nó for nulo (ser a raiz)
 Noh* rotationLeft(DicAVL &dicionario, Noh *x){
     Noh* paiX = x->pai;
     Noh* y = x->dir;
@@ -67,6 +73,7 @@ Noh* rotationLeft(DicAVL &dicionario, Noh *x){
     return y; 
 }
 
+// Realiza a rotação a Direita de um nó, e muda o nó do dicionário se o pai desse nó for nulo (ser a raiz)
 Noh* rotationRight(DicAVL &dicionario, Noh *y){
     Noh* paiY = y->pai; 
     Noh* x = y->esq;
@@ -112,6 +119,7 @@ Noh* procurar(DicAVL &D, TC c){
     return nullptr;
 }
 
+// Atualiza as alturas sucessivamente dos pais até chegar a raiz
 void atualizarAlturas(Noh* no){
     if(no != nullptr) return;
     no->h = max(height(no->esq), height(no->dir)) + 1;
@@ -166,7 +174,7 @@ Noh* inserir(DicAVL &D, TC c, TV v){
     return novoNo;
 } 
 
-// Retorna o nó maissss a esquerda do nó passado
+// Retorna o nó posterior ao nó passado (que será o sucessor do nó)
 Noh* minNode(Noh* no){
     Noh* corrente = no;
     while(corrente->esq != nullptr) corrente = corrente->esq;
@@ -186,68 +194,72 @@ void remover(DicAVL &D, Noh *n){
     n = procurar(D, n->chave);
     if(n == nullptr) return;
     Noh* paiN = n->pai;
+    bool alterouAltura = false;
 
     // Caso base a: é a raiz da árvore ou é um nó que tem apenas uma subarv DE 1 FOLHA esquerda ou direita 
-    // a.1. É A RAIZ 
-    if(paiN == nullptr){
-        if(n->esq != nullptr && n->dir == nullptr && n->esq->esq == nullptr && n->esq->dir == nullptr){ // nó raiz com 1 filho
+    if(n->esq != nullptr && n->dir == nullptr){ // nó n com 1 filho esquerdo
+        if(paiN == nullptr) { // n é a raiz
             D.raiz = n->esq;
             n->esq->pai = nullptr;
-            delete(n);
-            return;
-        } else if(n->dir != nullptr && n->esq == nullptr && n->dir->esq == nullptr && n->dir->dir == nullptr){ // nó raiz com 1 filho
-            D.raiz = n->dir;
-            n->dir->pai = nullptr;
-            delete(n);
-            return;
-        } else if(n->dir == nullptr && n->esq == nullptr){ // nó raiz sem filhos
-            D.raiz = nullptr;
-            delete(n);
-            return;
-        }
-    } 
-    //  DUVIDAS A PARTIR DAQUIIIIIII
-    else { // a.2. NÃO É A RAIZ -> Basicamente são os casos de remoção que mexem (talvez) na altura da árvore, porém ainda continua AVL
-        // TODO PERGUNTAR ISSO AO PABLO -> PQ PODE SER AQUI QUE ELE POSSA TER UMA SUBARV DIR E ESQ E NÃO NECESSARIAMENTE NULA
-        // acho que eu to confundindo
-        if(n->esq != nullptr && n->dir == nullptr && isLeaf(n->esq)){ // Mas possui apenas 1 filho esquerdo, que é folha
+        } else { // nó n é um nó qualquer
             // Reatribuição de pai ao filho esq de N e o filho esq de N toma o lugar dele no pai dele
             n->esq->pai = paiN;
-            if(paiN->esq->chave == n->chave) paiN->esq = n->esq;
-            else if(paiN->dir->chave == n->chave) paiN->dir = n->esq;
+            if(paiN->esq != nullptr && paiN->esq->chave == n->chave) paiN->esq = n->esq;
+            else if(paiN->dir != nullptr && paiN->dir->chave == n->chave) paiN->dir = n->esq;
             paiN->h = max(height(paiN->dir), height(paiN->esq)) + 1;
-            delete(n);
-            return;
-        } else if(n->dir != nullptr && n->esq == nullptr && n->dir->esq == nullptr && n->dir->dir == nullptr){ // Mas possui apenas 1 filho direito, que é folha
+            alterouAltura = true;
+        }
+        delete(n);
+        return;
+    } else if(n->dir != nullptr && n->esq == nullptr){ // nó n com 1 filho direito
+        if(paiN == nullptr) { // n é a raiz
+            D.raiz = n->dir;
+            n->dir->pai = nullptr;
+        } else { // nó n é um nó qualquer
+            // Reatribuição de pai ao filho dir de N e o filho dir de N toma o lugar dele no pai dele
             n->dir->pai = paiN;
-            if(paiN->esq->chave == n->chave) paiN->esq = n->dir;
-            else if(paiN->dir->chave == n->chave) paiN->dir = n->dir;
+            if(paiN->esq != nullptr && paiN->esq->chave == n->chave) paiN->esq = n->dir;
+            else if(paiN->dir != nullptr && paiN->dir->chave == n->chave) paiN->dir = n->dir;
             paiN->h = max(height(paiN->dir), height(paiN->esq)) + 1;
-            delete(n);
-            return;
-        } else if(isLeaf(n)){ // nó sem filhos -> CASO DO NÓ FOLHA: CASO 2
+            alterouAltura = true;
+        }
+        delete(n);
+        return;
+    } else if(isLeaf(n)){ // n é um nó folha
+        if(paiN == nullptr) D.raiz = nullptr; // n é o nó raiz
+        else { // n é um nó qualquer na árvore
             if(paiN->esq->chave == n->chave) paiN->esq = nullptr;
             else if(paiN->dir->chave == n->chave) paiN->dir = nullptr;
             paiN->h = max(height(n->pai->dir), height(n->pai->esq)) + 1;
-            delete(n);
-            return;
-         } else { // nó com 2 filhos
-            Noh* temp = minNode(n->dir); // Pega o próximo nó que é maior que o nó n
-            do {
-                balance = getBalance(n);
-                if(balance > 1 && getBalance(n->esq) >= 0) n = rotationRight(D, n); //Left Left Case
-                if(balance < -1 && getBalance(n->dir) <= 0) n = rotationLeft(D, n); // Right Right Case
-                if(balance > 1 && getBalance(n->esq) < 0){
-                    n->esq = rotationLeft(D, n->esq);
-                    n = rotationRight(D, n);
-                }
-                if(balance < -1 && getBalance(n->dir) > 0){
-                    n->dir = rotationRight(D, n->dir);
-                    n = rotationLeft(D, n);
-                }
-            } while(n != nullptr);
+            alterouAltura = true;
         }
+        delete(n);
+        return;
+    } else {  // nó com 2 filhos
+        Noh* temp = minNode(n->dir); // Pega o próximo nó que é maior que é folha
+        // bota esse nó no lugar do n
+        temp->esq = n->esq;
+        temp->dir = n->dir;
+        
+        // atribuir ao pai de temp que agr é nullptr
+        // mudar altura do pai de temp
+        
+        temp->pai;
     }
+
+    do {
+            balance = getBalance(n);
+            if(balance > 1 && getBalance(n->esq) >= 0) n = rotationRight(D, n); //Left Left Case
+            if(balance < -1 && getBalance(n->dir) <= 0) n = rotationLeft(D, n); // Right Right Case
+            if(balance > 1 && getBalance(n->esq) < 0){
+                n->esq = rotationLeft(D, n->esq);
+                n = rotationRight(D, n);
+            }
+            if(balance < -1 && getBalance(n->dir) > 0){
+                n->dir = rotationRight(D, n->dir);
+                n = rotationLeft(D, n);
+            }
+        } while(n != nullptr);
 }
 
 void desalloc(Noh* node){
