@@ -247,18 +247,19 @@ void remover(DicAVL &D, Noh *n){
     } else {  // nó com 2 filhos
         cout << "2 nos" << endl;
         Noh* temp = minNode(n->dir); // Pega o próximo nó que é maior que é folha
-        cout << "CHAVE: " << temp->chave << endl;
+        // cout << "CHAVE: " << temp->chave << endl;
         Noh* paiTemp = temp->pai;
 
         // if(paiTemp == D.raiz) cout << "E igual" << endl;
         // botar esse nó no lugar do n
         // 1o pega os filhos de n e atribui a temp
-        if(n->esq != temp) temp->esq = n->esq;
-        else temp->esq = nullptr;
-        if(n->dir != temp) temp->dir = n->dir;
-        else temp->dir = nullptr;
+        temp->esq = n->esq;
         n->esq->pai = temp;
-        n->dir->pai = temp;
+        if(n->dir != temp){
+            temp->dir = n->dir;
+            n->dir->pai = temp;
+        } else temp->dir = nullptr;
+        
         
         // 2o atribuir ao pai de temp que o filho que era tempp agr é nullptr
         if(paiTemp->esq == temp) paiTemp->esq = nullptr;
