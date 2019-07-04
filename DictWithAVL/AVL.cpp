@@ -193,6 +193,7 @@ void remover(DicAVL &D, Noh *n){
     // Verificando se o nó realmente pertence ao dicionário
     n = procurar(D, n->chave);
     if(n == nullptr) return;
+    
     Noh* paiN = n->pai;
     bool alterouAltura = false;
 
@@ -206,11 +207,8 @@ void remover(DicAVL &D, Noh *n){
             n->esq->pai = paiN;
             if(paiN->esq != nullptr && paiN->esq->chave == n->chave) paiN->esq = n->esq;
             else if(paiN->dir != nullptr && paiN->dir->chave == n->chave) paiN->dir = n->esq;
-            // paiN->h = max(height(paiN->dir), height(paiN->esq)) + 1;
-            alterouAltura = true;
+            alterouAltura = true; // tem de alterar a altura do pai de N
         }
-        delete(n);
-        return;
     } else if(n->dir != nullptr && n->esq == nullptr){ // nó n com 1 filho direito
         if(paiN == nullptr) { // n é a raiz
             D.raiz = n->dir;
@@ -220,31 +218,26 @@ void remover(DicAVL &D, Noh *n){
             n->dir->pai = paiN;
             if(paiN->esq != nullptr && paiN->esq->chave == n->chave) paiN->esq = n->dir;
             else if(paiN->dir != nullptr && paiN->dir->chave == n->chave) paiN->dir = n->dir;
-            // paiN->h = max(height(paiN->dir), height(paiN->esq)) + 1;
-            alterouAltura = true;
+            alterouAltura = true; // tem de alterar a altura do pai de N
         }
-        delete(n);
-        return;
     } else if(isLeaf(n)){ // n é um nó folha
         if(paiN == nullptr) D.raiz = nullptr; // n é o nó raiz
         else { // n é um nó qualquer na árvore
             if(paiN->esq->chave == n->chave) paiN->esq = nullptr;
             else if(paiN->dir->chave == n->chave) paiN->dir = nullptr;
-            // paiN->h = max(height(n->pai->dir), height(n->pai->esq)) + 1;
-            alterouAltura = true;
+            alterouAltura = true; // tem de alterar a altura do pai de N
         }
-        delete(n);
-        return;
     } else {  // nó com 2 filhos
         Noh* temp = minNode(n->dir); // Pega o próximo nó que é maior que é folha
+        Noh* paiTemp = temp->pai;
         // botar esse nó no lugar do n
         // 1o pega os filhos de n e atribui a temp
         temp->esq = n->esq;
         temp->dir = n->dir;
         
         // 2o atribuir ao pai de temp que o filho que era tempp agr é nullptr
-        if(temp->pai->esq == temp) temp->pai->esq = nullptr;
-        else if(temp->pai->dir == temp) temp->pai->dir = nullptr;
+        if(paiTemp->esq == temp) paiTemp->esq = nullptr;
+        else if(paiTemp->dir == temp) paiTemp->dir = nullptr;
 
         // 3o atualizar em temp o ponteiro pro seu pai e ajeitar o ponteiro do PaiN onde o filho n era agr vai ser temp 
         if(paiN == nullptr){ // é a raiz
@@ -255,11 +248,12 @@ void remover(DicAVL &D, Noh *n){
             if(paiN->esq == n) paiN->esq = temp;
             else if(paiN->dir == n) paiN->dir = temp;
         }
-        delete(n);
+     
         // mudar altura do pai de temp
-        paiN = temp->pai;
+        paiN = paiTemp;
         alterouAltura = true;
     }
+    delete(n);
     if(alterouAltura){
         do {
             paiN->h = 1 + max(height(paiN->esq), height(paiN->dir));
@@ -275,7 +269,7 @@ void remover(DicAVL &D, Noh *n){
             }
             paiN = paiN->pai;
         } while(paiN != nullptr);
-    }   
+    }
 }
 
 void desalloc(Noh* node){
