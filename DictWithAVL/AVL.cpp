@@ -337,6 +337,7 @@ void remover(DicAVL &D, Noh *n){
                 paiN->dir = rotationRight(D, paiN->dir);
                 paiN = rotationLeft(D, paiN);
             }
+            paiN->h = 1 + max(height(paiN->esq), height(paiN->dir));
             paiN = paiN->pai;
         } while(paiN != nullptr);
     }
