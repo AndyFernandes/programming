@@ -1,6 +1,6 @@
 #include <iostream>
 #include <stdio.h>
-#include "AVL.hpp"
+#include "avl.hpp"
 using namespace std;
 
 // Inicializa D como uma árvore vazia.
@@ -126,6 +126,27 @@ void atualizarAlturas(Noh* no){
     atualizarAlturas(no->pai);
 }
 
+int calcularAltura(Noh *raiz){
+
+    if(!raiz->dir) {
+      if(!raiz->esq){
+        return 1;
+      }else{
+          return raiz->esq->h + 1;
+      }
+    }else if(!raiz->esq) {
+        if(!raiz->dir){
+            return 1;
+        }else{
+            return raiz->dir->h + 1;
+        }
+    }else if(raiz->esq->h > raiz->dir->h){
+        return raiz->esq->h + 1;
+    } else{
+        return raiz->dir->h +1;
+    }
+}
+
 // Retorna um ponteiro para o novo nó ou nulo se erro de alocação
 Noh* inserir(DicAVL &D, TC c, TV v){
     cout << "Insercao da chave: " << c << " : " << v << endl;
@@ -153,6 +174,7 @@ Noh* inserir(DicAVL &D, TC c, TV v){
     // caso a. Raiz nula => raiz é o nó
     if(root == nullptr){
         D.raiz = novoNo;
+        cout << "novoNo h:" << novoNo->h << endl;
         return novoNo;
     } 
     // caso b. Raiz não nula => Insere e realiza balanceamento
@@ -163,7 +185,9 @@ Noh* inserir(DicAVL &D, TC c, TV v){
         else if(c > root->chave) root = root->dir;
     }
 
+    cout << "CHAVE NOANT" << noAnterior->chave << "NOANT->h" << noAnterior->h << endl << endl;
     root = noAnterior;
+    
     // Ajuste de ponteiros de pai
     novoNo->pai = root;
 
@@ -173,7 +197,9 @@ Noh* inserir(DicAVL &D, TC c, TV v){
     
     // Propagando o +1 nas alturas dos nós posteriores ao inserido e balanceando a árvore (caso esteja desbalanceada)
     do {
+        // cout << "1 - CHAVE ROOT" << root->chave << "ROOT->h" << root->h << endl;
         root->h = max(height(root->esq), height(root->dir)) + 1;
+        // cout << "2 - CHAVE ROOT" << root->chave << "ROOT->h" << root->h << endl;
         int balance = getBalance(root);
 
         if(balance > 1 && c < root->esq->chave) root = rotationRight(D, root); // Left Left Case
@@ -185,7 +211,11 @@ Noh* inserir(DicAVL &D, TC c, TV v){
             root->dir = rotationRight(D, root->dir);
             root = rotationLeft(D, root);
         }
+        // cout << "3 - CHAVE ROOT" << root->chave << "ROOT->h" << root->h << endl;
+        // cout << "----------------------" << endl << endl;
+        root->h = max(height(root->esq), height(root->dir)) + 1;
         root = root->pai;
+
     } while(root != nullptr);
     return novoNo;
 } 

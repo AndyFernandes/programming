@@ -4,7 +4,7 @@ using namespace std;
 
 void preOrder(Noh *root){  
     if(root != NULL)  {  
-        cout << "CHAVE: " << root->chave;
+        cout << "CHAVE: " << root->chave << " | ALTURA: " << root->h;
         if(root->pai != nullptr) cout << " | PAI: " << root->pai->chave;
         if(root->esq != nullptr) cout << " | ESQ: " << root->esq->chave;
         if(root->dir != nullptr) cout << " | DIR: " << root->dir->chave;
@@ -18,6 +18,9 @@ int main(){
     DicAVL dicionario;
     inicializar(dicionario);
     ///////////////////////////////  TESTES INSERÇÃO /////////////////////////////
+    // Noh* ins1 = inserir(dicionario, -133.25, 10.5);
+    // ins1 = inserir(dicionario, -13.5, 25.5);
+    // ins1 = inserir(dicionario, -81, 2.5);
     Noh* ins1 = inserir(dicionario, 9, 9);
     Noh* ins2 = inserir(dicionario, 5, 5);
     Noh* ins3 = inserir(dicionario, 10, 10);
@@ -47,6 +50,8 @@ int main(){
     Noh *no11 = inserir(dicionario, -234.5, 99.5);
     no = inserir(dicionario, 25, 10);
     preOrder(dicionario.raiz);  
+    cout << endl << endl << endl;
+    // cout << dicionario.raiz->h << endl;
 
     ///////////////////////////////  TESTES PROCURAR /////////////////////////////
     // cout << endl << endl << endl;
