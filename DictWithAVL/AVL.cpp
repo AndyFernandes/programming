@@ -96,7 +96,6 @@ Noh* rotationRight(DicAVL &dicionario, Noh *y){
     if(y != nullptr) y->pai = x; // X agora é o pai de y
     if(y != nullptr) y->esq = filhoDirX; // Filho Direito de X agora vira filho Esquerdo de Y
     
-   
     //Atualizando alturas
     if(y!=nullptr) y->h = max(height(y->esq), height(y->dir)) + 1;
     if(x!= nullptr) x->h = max(height(x->esq), height(x->dir)) + 1;
@@ -106,10 +105,8 @@ Noh* rotationRight(DicAVL &dicionario, Noh *y){
 // Retorna um ponteiro para o nó da chave procurada, ou nulo se a chave não estiver em D.
 Noh* procurar(DicAVL &D, TC c){
     Noh* no = D.raiz;
-
     while(no != nullptr){
         TC chave = no->chave;
-        // cout << no->chave;
         if(chave == c) return no;
         else if(chave > c) no = no->esq;
         else if(chave < c) no = no->dir;
@@ -126,27 +123,6 @@ void atualizarAlturas(Noh* no){
     atualizarAlturas(no->pai);
 }
 
-int calcularAltura(Noh *raiz){
-
-    if(!raiz->dir) {
-      if(!raiz->esq){
-        return 1;
-      }else{
-          return raiz->esq->h + 1;
-      }
-    }else if(!raiz->esq) {
-        if(!raiz->dir){
-            return 1;
-        }else{
-            return raiz->dir->h + 1;
-        }
-    }else if(raiz->esq->h > raiz->dir->h){
-        return raiz->esq->h + 1;
-    } else{
-        return raiz->dir->h +1;
-    }
-}
-
 // Retorna um ponteiro para o novo nó ou nulo se erro de alocação
 Noh* inserir(DicAVL &D, TC c, TV v){
     cout << "Insercao da chave: " << c << " : " << v << endl;
@@ -155,7 +131,6 @@ Noh* inserir(DicAVL &D, TC c, TV v){
 
     while(noBusca != nullptr){
         TC chave = noBusca->chave;
-        // cout << no->chave;
         if(chave == c) break;
         else if(chave > c) noBusca = noBusca->esq;
         else if(chave < c) noBusca = noBusca->dir;
@@ -174,7 +149,6 @@ Noh* inserir(DicAVL &D, TC c, TV v){
     // caso a. Raiz nula => raiz é o nó
     if(root == nullptr){
         D.raiz = novoNo;
-        cout << "novoNo h:" << novoNo->h << endl;
         return novoNo;
     } 
     // caso b. Raiz não nula => Insere e realiza balanceamento
@@ -197,9 +171,7 @@ Noh* inserir(DicAVL &D, TC c, TV v){
     
     // Propagando o +1 nas alturas dos nós posteriores ao inserido e balanceando a árvore (caso esteja desbalanceada)
     do {
-        // cout << "1 - CHAVE ROOT" << root->chave << "ROOT->h" << root->h << endl;
         root->h = max(height(root->esq), height(root->dir)) + 1;
-        // cout << "2 - CHAVE ROOT" << root->chave << "ROOT->h" << root->h << endl;
         int balance = getBalance(root);
 
         if(balance > 1 && c < root->esq->chave) root = rotationRight(D, root); // Left Left Case
@@ -211,8 +183,6 @@ Noh* inserir(DicAVL &D, TC c, TV v){
             root->dir = rotationRight(D, root->dir);
             root = rotationLeft(D, root);
         }
-        // cout << "3 - CHAVE ROOT" << root->chave << "ROOT->h" << root->h << endl;
-        // cout << "----------------------" << endl << endl;
         root->h = max(height(root->esq), height(root->dir)) + 1;
         root = root->pai;
 
@@ -232,8 +202,6 @@ void remover(DicAVL &D, Noh *n){
     if(n == nullptr) return;
     cout << "REMOCAO do no com chave: " << n->chave << endl;
     
-    // Noh* root = D.raiz;
-    // cout << "PASEEI AQUI -1";
     int balance;
     // se a raiz for nula.. nada a remover
     if(D.raiz == nullptr) return;
@@ -268,16 +236,13 @@ void remover(DicAVL &D, Noh *n){
             alterouAltura = true; // tem de alterar a altura do pai de N
         }
     } else if(isLeaf(n)){ // n é um nó folha
-        if(paiN == nullptr){
-            D.raiz = nullptr; // n é o nó raiz
-        } 
+        if(paiN == nullptr) D.raiz = nullptr; // n é o nó raiz
         else { // n é um nó qualquer na árvore
             if(paiN->esq != nullptr && paiN->esq->chave == n->chave) paiN->esq = nullptr;
             else if(paiN->dir != nullptr && paiN->dir->chave == n->chave) paiN->dir = nullptr;
             alterouAltura = true; // tem de alterar a altura do pai de N
         }
     } else {  // nó com 2 filhos
-        // PROFESSOR POR FAVOR OLHA AQUI
         // botar esse nó TEMP no lugar do n
         Noh* temp = minNode(n->dir); // Pega o próximo nó que é maior que é folha
         Noh* paiTemp = temp->pai;
@@ -320,23 +285,14 @@ void remover(DicAVL &D, Noh *n){
     delete(n);
     if(alterouAltura){
         do {
-            // cout << "Passei aqui2";
             paiN->h = 1 + max(height(paiN->esq), height(paiN->dir));
             balance = getBalance(paiN);
-            if(balance > 1 && getBalance(paiN->esq) >= 0){
-                // cout << "IF 1" << endl;
-                paiN = rotationRight(D, paiN); //Left Left Case
-            } 
-            else if(balance < -1 && getBalance(paiN->dir) <= 0){
-                // cout << "IF 2" << endl;
-                paiN = rotationLeft(D, paiN); // Right Right Case
-            } 
+            if(balance > 1 && getBalance(paiN->esq) >= 0) paiN = rotationRight(D, paiN); //Left Left Case
+            else if(balance < -1 && getBalance(paiN->dir) <= 0) paiN = rotationLeft(D, paiN); // Right Right Case
             else if(balance > 1 && getBalance(paiN->esq) < 0){ // Left Right Case
-                // cout << "IF 3" << endl;
                 paiN->esq = rotationLeft(D, paiN->esq);
                 paiN = rotationRight(D, paiN);
-            } else if(balance < -1 && getBalance(paiN->dir) > 0){ // Right Left Case
-                // cout << "IF 4" << endl;              
+            } else if(balance < -1 && getBalance(paiN->dir) > 0){ // Right Left Case          
                 paiN->dir = rotationRight(D, paiN->dir);
                 paiN = rotationLeft(D, paiN);
             }
