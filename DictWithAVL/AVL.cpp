@@ -281,7 +281,8 @@ void remover(DicAVL &D, Noh *n){
         } else D.raiz = temp;
      
         // mudar altura do pai de temp
-        paiN = paiTemp;
+        if(paiTemp && paiTemp != n) paiN = paiTemp;
+        else paiN = temp;
         alterouAltura = true;
     }
     delete(n);
