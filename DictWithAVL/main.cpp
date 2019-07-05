@@ -1,5 +1,5 @@
 #include <iostream>
-#include "AVL.cpp"
+#include "avl.cpp"
 using namespace std;
 
 void preOrder(Noh *root){  
@@ -18,10 +18,19 @@ int main(){
     DicAVL dicionario;
     inicializar(dicionario);
     ///////////////////////////////  TESTES INSERÇÃO /////////////////////////////
-    // Noh* ins1 = inserir(dicionario, -133.25, 10.5);
-    // ins1 = inserir(dicionario, -13.5, 25.5);
-    // ins1 = inserir(dicionario, -81, 2.5);
-    Noh* ins1 = inserir(dicionario, 9, 9);
+    // Noh* ins1 = inserir(dicionario, 14.5, -1);
+    // ins1 = procurar(dicionario, 14.5);
+    // ins1 = inserir(dicionario, 283.5, -41);
+    // ins1 = procurar(dicionario, 14.5);
+    // ins1 = procurar(dicionario, 283.5);
+    // preOrder(dicionario.raiz);  
+    // cout << endl << endl << endl;
+    // // cout << dicionario.raiz->chave;
+    // remover(dicionario, ins1);
+    Noh* ins1 = inserir(dicionario, -133.25, 10.5);
+    ins1 = inserir(dicionario, -13.5, 25.5);
+    ins1 = inserir(dicionario, -81, 2.5);
+     ins1 = inserir(dicionario, 9, 9);
     Noh* ins2 = inserir(dicionario, 5, 5);
     Noh* ins3 = inserir(dicionario, 10, 10);
     Noh* ins4 = inserir(dicionario, 0, 0);

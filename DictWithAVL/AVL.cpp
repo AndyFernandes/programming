@@ -185,7 +185,7 @@ Noh* inserir(DicAVL &D, TC c, TV v){
         else if(c > root->chave) root = root->dir;
     }
 
-    cout << "CHAVE NOANT" << noAnterior->chave << "NOANT->h" << noAnterior->h << endl << endl;
+    // cout << "CHAVE NOANT" << noAnterior->chave << "NOANT->h" << noAnterior->h << endl << endl;
     root = noAnterior;
     
     // Ajuste de ponteiros de pai
@@ -231,12 +231,12 @@ Noh* minNode(Noh* no){
 void remover(DicAVL &D, Noh *n){
     if(n == nullptr) return;
     cout << "REMOCAO do no com chave: " << n->chave << endl;
-
-    Noh* root = D.raiz;
+    
+    // Noh* root = D.raiz;
+    // cout << "PASEEI AQUI -1";
     int balance;
     // se a raiz for nula.. nada a remover
-    if(root == nullptr) return;
-
+    if(D.raiz == nullptr) return;
     // Verificando se o nó realmente pertence ao dicionário
     n = procurar(D, n->chave);
     if(n == nullptr) return;
@@ -268,10 +268,12 @@ void remover(DicAVL &D, Noh *n){
             alterouAltura = true; // tem de alterar a altura do pai de N
         }
     } else if(isLeaf(n)){ // n é um nó folha
-        if(paiN == nullptr) D.raiz = nullptr; // n é o nó raiz
+        if(paiN == nullptr){
+            D.raiz = nullptr; // n é o nó raiz
+        } 
         else { // n é um nó qualquer na árvore
-            if(paiN->esq->chave == n->chave) paiN->esq = nullptr;
-            else if(paiN->dir->chave == n->chave) paiN->dir = nullptr;
+            if(paiN->esq != nullptr && paiN->esq->chave == n->chave) paiN->esq = nullptr;
+            else if(paiN->dir != nullptr && paiN->dir->chave == n->chave) paiN->dir = nullptr;
             alterouAltura = true; // tem de alterar a altura do pai de N
         }
     } else {  // nó com 2 filhos
@@ -318,22 +320,23 @@ void remover(DicAVL &D, Noh *n){
     delete(n);
     if(alterouAltura){
         do {
+            // cout << "Passei aqui2";
             paiN->h = 1 + max(height(paiN->esq), height(paiN->dir));
             balance = getBalance(paiN);
             if(balance > 1 && getBalance(paiN->esq) >= 0){
-                cout << "IF 1" << endl;
+                // cout << "IF 1" << endl;
                 paiN = rotationRight(D, paiN); //Left Left Case
             } 
             else if(balance < -1 && getBalance(paiN->dir) <= 0){
-                cout << "IF 2" << endl;
+                // cout << "IF 2" << endl;
                 paiN = rotationLeft(D, paiN); // Right Right Case
             } 
             else if(balance > 1 && getBalance(paiN->esq) < 0){ // Left Right Case
-                cout << "IF 3" << endl;
+                // cout << "IF 3" << endl;
                 paiN->esq = rotationLeft(D, paiN->esq);
                 paiN = rotationRight(D, paiN);
             } else if(balance < -1 && getBalance(paiN->dir) > 0){ // Right Left Case
-                cout << "IF 4" << endl;              
+                // cout << "IF 4" << endl;              
                 paiN->dir = rotationRight(D, paiN->dir);
                 paiN = rotationLeft(D, paiN);
             }
